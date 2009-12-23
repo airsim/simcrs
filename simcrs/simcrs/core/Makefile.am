@@ -25,4 +25,5 @@ libsimcrs_la_LDFLAGS = \
 
 # Header files
 pkginclude_HEADERS = $(service_h_sources)
-nobase_nodist_pkginclude_HEADERS = $(top_builddir)/simcrs/config.h
+#nobase_nodist_pkginclude_HEADERS = $(top_builddir)/simcrs/config.h
+
