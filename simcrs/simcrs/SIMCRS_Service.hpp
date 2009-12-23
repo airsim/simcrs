@@ -1,0 +1,57 @@
+#ifndef __SIMCRS_SVC_SIMCRS_SERVICE_HPP
+#define __SIMCRS_SVC_SIMCRS_SERVICE_HPP
+
+// //////////////////////////////////////////////////////////////////////
+// Import section
+// //////////////////////////////////////////////////////////////////////
+// STL
+#include <iosfwd>
+#include <string>
+// Simcrs
+#include <simcrs/SIMCRS_Types.hpp>
+
+namespace SIMCRS {
+
+  // Forward declaration
+  class SIMCRS_ServiceContext;
+
+  
+  /** Interface for the SIMCRS Services. */
+  class SIMCRS_Service {
+  public:
+    // /////////// Business Methods /////////////
+    /** Register a booking (segment sell). */
+    void sell (const AirlineCode_T&, const PartySize_T&);
+
+    
+    // ////////// Constructors and destructors //////////
+    /** Constructor.
+        @param std::ostream& Output log stream (for instance, std::cout)
+        @param CRSCode_T& Code of the owner distribution system. */
+    SIMCRS_Service (std::ostream& ioLogStream, const CRSCode_T&);
+
+    /** Destructor. */
+    ~SIMCRS_Service();
+
+    
+  private:
+    // /////// Construction and Destruction helper methods ///////
+    /** Default constructor. */
+    SIMCRS_Service ();
+    /** Default copy constructor. */
+    SIMCRS_Service (const SIMCRS_Service&);
+
+    /** Initialise. */
+    void init (std::ostream& ioLogStream, const CRSCode_T&);
+
+    /** Finalise. */
+    void finalise ();
+
+    
+  private:
+    // ///////// Service Context /////////
+    /** Simcrs context. */
+    SIMCRS_ServiceContext* _simcrsServiceContext;
+  };
+}
+#endif // __SIMCRS_SVC_SIMCRS_SERVICE_HPP
