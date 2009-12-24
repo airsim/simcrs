@@ -7,6 +7,11 @@
 // Simcrs
 #include <simcrs/SIMCRS_Types.hpp>
 
+// Forward declarations
+namespace AIRINV {
+  class AIRINV_Service;
+}
+
 namespace SIMCRS {
 
   /** Command wrapping the travel request process. */
@@ -15,7 +20,8 @@ namespace SIMCRS {
   private:
 
     /** Register a booking (segment sell). */
-    static void sell (const CRSCode_T&, const AirlineCode_T&,
+    static void sell (AIRINV::AIRINV_Service&,
+                      const CRSCode_T&, const AirlineCode_T&,
                       const PartySize_T&);
 
   private:

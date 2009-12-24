@@ -21,7 +21,7 @@ libsimcrs_la_LIBADD = \
 	$(top_builddir)/simcrs/service/libsvc.la
 libsimcrs_la_LDFLAGS = \
 	$(BOOST_DATE_TIME_LIB) $(BOOST_PROGRAM_OPTIONS_LIB) \
-	$(SOCI_LIBS) -version-info $(GENERIC_LIBRARY_VERSION)
+	-version-info $(GENERIC_LIBRARY_VERSION)
 
 # Header files
 #pkginclude_HEADERS = $(service_h_sources)

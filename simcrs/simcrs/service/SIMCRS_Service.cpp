@@ -6,6 +6,8 @@
 // Boost
 #include <boost/date_time/gregorian/gregorian.hpp>
 #include <boost/date_time/posix_time/ptime.hpp>
+// Airline Inventory
+#include <airinv/AIRINV_Service.hpp>
 // Simcrs
 #include <simcrs/basic/BasConst_SIMCRS_Service.hpp>
 #include <simcrs/basic/BasChronometer.hpp>
@@ -57,6 +59,15 @@ namespace SIMCRS {
     SIMCRS_ServiceContext& lSIMCRS_ServiceContext = 
       FacSimcrsServiceContext::instance().create (iCRSCode);
     _simcrsServiceContext = &lSIMCRS_ServiceContext;
+
+    // TODO: do not hardcode the airline code (e.g., take it from a
+    // configuration file).
+    // Initialise the AIRINV service handler
+    const AIRINV::AirlineCode_T lAirlineCode = "AA";
+    AIRINV_ServicePtr_T lAIRINV_Service =
+      AIRINV_ServicePtr_T (new AIRINV::AIRINV_Service (ioLogStream,
+                                                       lAirlineCode));
+    lSIMCRS_ServiceContext.setAIRINV_Service (lAIRINV_Service);
   }
   
   // //////////////////////////////////////////////////////////////////////
@@ -76,6 +87,10 @@ namespace SIMCRS {
 
     try {
       
+      // Get a reference on the AIRINV service handler
+      AIRINV::AIRINV_Service& lAIRINV_Service =
+        lSIMCRS_ServiceContext.getAIRINV_Service();
+      
       // Retrieve the airline code
       const CRSCode_T& lCRSCode =
         lSIMCRS_ServiceContext.getCRSCode();
@@ -83,7 +98,8 @@ namespace SIMCRS {
       // Delegate the booking to the dedicated command
       BasChronometer lSellChronometer;
       lSellChronometer.start();
-      DistributionManager::sell (lCRSCode, iAirlineCode, iPartySize);
+      DistributionManager::sell (lAIRINV_Service,
+                                 lCRSCode, iAirlineCode, iPartySize);
       const double lSellMeasure = lSellChronometer.elapsed();
       
       // DEBUG
