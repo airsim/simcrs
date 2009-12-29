@@ -17,8 +17,15 @@ namespace AIRINV {
   class AIRINV_Service;
 }
 
+namespace AIRSCHED {
+  class AIRSCHED_Service;
+}
+
 /** Pointer on the AIRINV Service handler. */
 typedef boost::shared_ptr<AIRINV::AIRINV_Service> AIRINV_ServicePtr_T;
+
+/** Pointer on the AIRSCHED Service handler. */
+typedef boost::shared_ptr<AIRSCHED::AIRSCHED_Service> AIRSCHED_ServicePtr_T; 
 
 
 namespace SIMCRS {
@@ -38,7 +45,12 @@ namespace SIMCRS {
       return *_airinvService.get();
     }
 
+    /** Get a reference on the AIRSCHED service handler. */
+    AIRSCHED::AIRSCHED_Service& getAIRSCHED_Service () const {
+      return *_airschedService.get();
+    }
     
+
     // ///////// Setters //////////
     /** Set the CRS code. */
     void setCRSCode (const CRSCode_T& iCRSCode) {
@@ -48,6 +60,11 @@ namespace SIMCRS {
     /** Set the pointer on the AIRINV service handler. */
     void setAIRINV_Service (AIRINV_ServicePtr_T ioAIRINV_ServicePtr) {
       _airinvService = ioAIRINV_ServicePtr;
+    }
+
+    /** Set the pointer on the AIRSCHED service handler. */
+    void setAIRSCHED_Service (AIRSCHED_ServicePtr_T ioAIRSCHED_ServicePtr) {
+      _airschedService = ioAIRSCHED_ServicePtr;
     }
 
     
@@ -74,6 +91,9 @@ namespace SIMCRS {
     // ///////////// Children ////////////
     /** Airline Inventory Service Handler. */
     AIRINV_ServicePtr_T _airinvService;
+    
+    /** Airline Schedule Service Handler. */
+    AIRSCHED_ServicePtr_T _airschedService;
 
 
   private:
