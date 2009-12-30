@@ -25,6 +25,9 @@ int main (int argc, char* argv[]) {
     // Output log File
     std::string lLogFilename ("sell.log");
 
+    // Schedule input filename
+    std::string lScheduleFilename ("../samples/schedule01.csv");
+    
     // Set the log parameters
     std::ofstream logOutputFile;
     // Open and clean the log outputfile
@@ -32,7 +35,8 @@ int main (int argc, char* argv[]) {
     logOutputFile.clear();
     
     // Initialise the list of classes/buckets
-    SIMCRS::SIMCRS_Service simcrsService (logOutputFile, lCRSCode);
+    SIMCRS::SIMCRS_Service simcrsService (logOutputFile, lCRSCode,
+                                          lScheduleFilename);
 
     // Make a booking
     simcrsService.sell (lAirlineCode, lPartySize);
