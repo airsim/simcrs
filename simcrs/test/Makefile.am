@@ -4,7 +4,7 @@ include $(top_srcdir)/Makefile.common
 MAINTAINERCLEANFILES = Makefile.in
 
 ##
-SUBDIRS = stdair airsched airinv simcrs
+SUBDIRS = samples stdair airsched airinv simcrs
 
 EXTRA_DIST =
 

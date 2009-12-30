@@ -279,6 +279,7 @@ AC_CONFIG_FILES(
 	simcrs/batches/Makefile
 	extracppunit/Makefile
 	test/Makefile
+	test/samples/Makefile
 	test/stdair/Makefile
 	test/airsched/Makefile
 	test/airinv/Makefile
