@@ -38,9 +38,10 @@ namespace SIMCRS {
 
   // //////////////////////////////////////////////////////////////////////
   SIMCRS_Service::
-  SIMCRS_Service (std::ostream& ioLogStream, const CRSCode_T& iCRSCode)
+  SIMCRS_Service (std::ostream& ioLogStream, const CRSCode_T& iCRSCode,
+                  const std::string& iScheduleInputFilename)
     : _simcrsServiceContext (NULL) {
-    init (ioLogStream, iCRSCode);
+    init (ioLogStream, iCRSCode, iScheduleInputFilename);
   }
 
   // //////////////////////////////////////////////////////////////////////
@@ -68,7 +69,8 @@ namespace SIMCRS {
 
   // //////////////////////////////////////////////////////////////////////
   void SIMCRS_Service::init (std::ostream& ioLogStream,
-                             const CRSCode_T& iCRSCode) {
+                             const CRSCode_T& iCRSCode,
+                             const std::string& iScheduleInputFilename) {
     // Set the log file
     logInit (LOG::DEBUG, ioLogStream);
 
@@ -93,8 +95,6 @@ namespace SIMCRS {
 
     // TODO: do not hardcode the initialisation phase of the schedule
     // Initialise the schedule
-    // Schedule input file name
-    std::string lScheduleInputFilename ("samples/schedule01.csv");
     // Create a dummy AirlineFeature object for the test.
     stdair::AirlineFeatureSet& lAirlineFeatureSet =
       stdair::FacBomContent::instance().create<stdair::AirlineFeatureSet>();
@@ -106,7 +106,7 @@ namespace SIMCRS {
     const stdair::Date_T lStartAnalysisDate (2000, 1, 1);
 
     stdair::BomRoot& lBomRoot =
-      AIRSCHED::AIRSCHED_Service::generateInventories (lScheduleInputFilename,
+      AIRSCHED::AIRSCHED_Service::generateInventories (iScheduleInputFilename,
                                                        lAirlineFeatureSet,
                                                        lStartAnalysisDate);
     // Display the all the inventories.

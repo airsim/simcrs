@@ -17,18 +17,19 @@ namespace SIMCRS {
 
   
   /** Interface for the SIMCRS Services. */
-  class SIMCRS_Service {
-  public:
-    // /////////// Business Methods /////////////
-    /** Register a booking (segment sell). */
-    void sell (const AirlineCode_T&, const PartySize_T&);
+  class SIMCRS_Service {  
+  private:
+    // ///////// Service Context /////////
+    /** Simcrs context. */
+    SIMCRS_ServiceContext* _simcrsServiceContext;
 
-    
+
+  public:
     // ////////// Constructors and destructors //////////
     /** Constructor.
         @param std::ostream& Output log stream (for instance, std::cout)
         @param CRSCode_T& Code of the owner distribution system. */
-    SIMCRS_Service (std::ostream& ioLogStream, const CRSCode_T&);
+    SIMCRS_Service (std::ostream&, const CRSCode_T&, const std::string&);
 
     /** Destructor. */
     ~SIMCRS_Service();
@@ -42,16 +43,17 @@ namespace SIMCRS {
     SIMCRS_Service (const SIMCRS_Service&);
 
     /** Initialise. */
-    void init (std::ostream& ioLogStream, const CRSCode_T&);
+    void init (std::ostream& ioLogStream, const CRSCode_T&, const std::string&);
 
     /** Finalise. */
     void finalise ();
 
-    
-  private:
-    // ///////// Service Context /////////
-    /** Simcrs context. */
-    SIMCRS_ServiceContext* _simcrsServiceContext;
+  
+  public:
+    // /////////// Business Methods /////////////
+    /** Register a booking (segment sell). */
+    void sell (const AirlineCode_T&, const PartySize_T&);
+
   };
 }
 #endif // __SIMCRS_SVC_SIMCRS_SERVICE_HPP
