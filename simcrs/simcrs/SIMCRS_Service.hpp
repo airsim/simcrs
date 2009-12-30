@@ -18,10 +18,10 @@ namespace SIMCRS {
   
   /** Interface for the SIMCRS Services. */
   class SIMCRS_Service {  
-  private:
-    // ///////// Service Context /////////
-    /** Simcrs context. */
-    SIMCRS_ServiceContext* _simcrsServiceContext;
+  public:
+    // /////////// Business Methods /////////////
+    /** Register a booking (segment sell). */
+    void sell (const AirlineCode_T&, const PartySize_T&);
 
 
   public:
@@ -48,11 +48,11 @@ namespace SIMCRS {
     /** Finalise. */
     void finalise ();
 
-  
-  public:
-    // /////////// Business Methods /////////////
-    /** Register a booking (segment sell). */
-    void sell (const AirlineCode_T&, const PartySize_T&);
+
+  private:
+    // ///////// Service Context /////////
+    /** Simcrs context. */
+    SIMCRS_ServiceContext* _simcrsServiceContext;
 
   };
 }
