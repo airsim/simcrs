@@ -244,6 +244,30 @@ AC_CONFIG_FILES(
 	simcrs.pc
 	simcrs.spec
 	simcrs.m4
+	stdair/Makefile
+	stdair/basic/Makefile
+	stdair/bom/Makefile
+	stdair/factory/Makefile
+	stdair/config/Makefile
+	stdair/core/Makefile
+	airsched/Makefile
+	airsched/basic/Makefile
+	airsched/bom/Makefile
+	airsched/factory/Makefile
+	airsched/command/Makefile
+	airsched/service/Makefile
+	airsched/config/Makefile
+	airsched/core/Makefile
+	airsched/batches/Makefile
+	airinv/Makefile
+	airinv/basic/Makefile
+	airinv/bom/Makefile
+	airinv/factory/Makefile
+	airinv/command/Makefile
+	airinv/service/Makefile
+	airinv/config/Makefile
+	airinv/core/Makefile
+	airinv/batches/Makefile
 	simcrs/Makefile
 	simcrs/basic/Makefile
 	simcrs/bom/Makefile
@@ -253,7 +277,11 @@ AC_CONFIG_FILES(
 	simcrs/config/Makefile
 	simcrs/core/Makefile
 	simcrs/batches/Makefile
+	extracppunit/Makefile
 	test/Makefile
+	test/stdair/Makefile
+	test/airsched/Makefile
+	test/airinv/Makefile
 	test/simcrs/Makefile
 )
 AC_OUTPUT
