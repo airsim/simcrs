@@ -3,23 +3,14 @@
 // //////////////////////////////////////////////////////////////////////
 // STL
 #include <cassert>
+#include <ostream>
 // Boost
 #include <boost/date_time/gregorian/gregorian.hpp>
 #include <boost/date_time/posix_time/ptime.hpp>
-// STDAIR
+// Standard Airline Object Model
 #include <stdair/STDAIR_Types.hpp>
-#include <stdair/bom/BomRoot.hpp>
-#include <stdair/bom/Inventory.hpp>
-#include <stdair/bom/FlightDate.hpp>
-#include <stdair/bom/SegmentDate.hpp>
-#include <stdair/bom/LegDate.hpp>
-#include <stdair/bom/SegmentCabin.hpp>
-#include <stdair/bom/LegCabin.hpp>
-#include <stdair/bom/BookingClass.hpp>
-#include <stdair/bom/BomList.hpp>
-#include <stdair/bom/BomMap.hpp>
-#include <stdair/bom/AirlineFeatureSet.hpp>
 #include <stdair/bom/AirlineFeature.hpp>
+#include <stdair/bom/AirlineFeatureSet.hpp>
 #include <stdair/factory/FacBomContent.hpp>
 // Airline Inventory
 #include <airinv/AIRINV_Service.hpp>
@@ -39,14 +30,13 @@ namespace SIMCRS {
   // //////////////////////////////////////////////////////////////////////
   SIMCRS_Service::
   SIMCRS_Service (std::ostream& ioLogStream, const CRSCode_T& iCRSCode,
-                  const std::string& iScheduleInputFilename)
+                  const stdair::Filename_T& iScheduleInputFilename)
     : _simcrsServiceContext (NULL) {
     init (ioLogStream, iCRSCode, iScheduleInputFilename);
   }
 
   // //////////////////////////////////////////////////////////////////////
-  SIMCRS_Service::SIMCRS_Service ()
-    : _simcrsServiceContext (NULL) {
+  SIMCRS_Service::SIMCRS_Service () : _simcrsServiceContext (NULL) {
     assert (false);
   }
 
@@ -70,7 +60,7 @@ namespace SIMCRS {
   // //////////////////////////////////////////////////////////////////////
   void SIMCRS_Service::init (std::ostream& ioLogStream,
                              const CRSCode_T& iCRSCode,
-                             const std::string& iScheduleInputFilename) {
+                             const stdair::Filename_T& iScheduleInputFilename) {
     // Set the log file
     logInit (LOG::DEBUG, ioLogStream);
 
@@ -79,98 +69,47 @@ namespace SIMCRS {
       FacSimcrsServiceContext::instance().create (iCRSCode);
     _simcrsServiceContext = &lSIMCRS_ServiceContext;
 
+    
+    // /////////////// Airline Inventory Management (AirInv) /////////////
     // TODO: do not hardcode the airline code (e.g., take it from a
     // configuration file).
     // Initialise the AIRINV service handler
     const AIRINV::AirlineCode_T lAirlineCode = "AA";
+
+    // Note that the (Boost.)Smart Pointer keeps track of the references
+    // on the Service object, and deletes that object when it is no longer
+    // referenced (e.g., at the end of the process).
     AIRINV_ServicePtr_T lAIRINV_Service =
       AIRINV_ServicePtr_T (new AIRINV::AIRINV_Service (ioLogStream,
                                                        lAirlineCode));
+
+    // Store the AirInv service object within the (SimCRS) service context
     lSIMCRS_ServiceContext.setAIRINV_Service (lAIRINV_Service);
 
-    // Initialise the AIRSCHED service handler
-    AIRSCHED_ServicePtr_T lAIRSCHED_Service = 
-      AIRSCHED_ServicePtr_T (new AIRSCHED::AIRSCHED_Service (ioLogStream));
-    lSIMCRS_ServiceContext.setAIRSCHED_Service (lAIRSCHED_Service);
 
+    // ////////////// Airline Schedule Management (AirSched) /////////////
     // TODO: do not hardcode the initialisation phase of the schedule
     // Initialise the schedule
-    // Create a dummy AirlineFeature object for the test.
     stdair::AirlineFeatureSet& lAirlineFeatureSet =
       stdair::FacBomContent::instance().create<stdair::AirlineFeatureSet>();
-    stdair::AirlineFeatureKey_T lAirlineFeatureKey (lAirlineCode);
 
+    // TODO: do not harcode the airline code for the AirlineFeature object
+    stdair::AirlineFeatureKey_T lAirlineFeatureKey (lAirlineCode);
     stdair::AirlineFeature& lAirlineFeature = stdair::FacBomContent::instance().
       create<stdair::AirlineFeature> (lAirlineFeatureSet, lAirlineFeatureKey);
 
+    // TODO: do not hardcode the start analysis date
     const stdair::Date_T lStartAnalysisDate (2000, 1, 1);
 
-    stdair::BomRoot& lBomRoot =
-      AIRSCHED::AIRSCHED_Service::generateInventories (iScheduleInputFilename,
-                                                       lAirlineFeatureSet,
-                                                       lStartAnalysisDate);
-    // Display the all the inventories.
-    // Browse the BomRoot.
-    const stdair::InventoryList_T lInventoryList = lBomRoot.getInventoryList ();
-    for (stdair::InventoryList_T::iterator itInv = lInventoryList.begin();
-         itInv != lInventoryList.end(); ++itInv) {
-      const stdair::Inventory& lCurrentInventory = *itInv;
-      SIMCRS_LOG_DEBUG ("Inventory: " << lCurrentInventory.toString());
+    // Initialise the AIRSCHED service handler
+    AIRSCHED_ServicePtr_T lAIRSCHED_Service = 
+      AIRSCHED_ServicePtr_T (new AIRSCHED::
+                             AIRSCHED_Service (ioLogStream, lAirlineFeatureSet,
+                                               lStartAnalysisDate,
+                                               iScheduleInputFilename));
 
-      // Browse the Inventory.
-      const stdair::FlightDateList_T lFDList =
-        lCurrentInventory.getFlightDateList ();
-      for (stdair::FlightDateList_T::iterator itFD = lFDList.begin();
-           itFD != lFDList.end(); ++itFD) {
-        const stdair::FlightDate& lCurrentFD = *itFD;
-        SIMCRS_LOG_DEBUG ("Flight-date: " << lCurrentFD.toString());
-
-        // Browse the FlightDate.
-        const stdair::LegDateList_T lLDList = lCurrentFD.getLegDateList();
-        for (stdair::LegDateList_T::iterator itLD = lLDList.begin();
-             itLD != lLDList.end(); ++itLD) {
-          const stdair::LegDate& lCurrentLD = *itLD;
-          SIMCRS_LOG_DEBUG ("Leg-date: " << lCurrentLD.toString());
-          
-          // Browse the LegDate.
-          const stdair::LegCabinList_T lLCList = lCurrentLD.getLegCabinList();
-          for (stdair::LegCabinList_T::iterator itLC = lLCList.begin();
-               itLC != lLCList.end(); ++itLC) {
-            const stdair::LegCabin& lCurrentLC = *itLC;
-            SIMCRS_LOG_DEBUG ("Leg-cabin: " << lCurrentLC.toString());
-          }
-        }
-        
-        const stdair::SegmentDateList_T lSDList =
-          lCurrentFD.getSegmentDateList();
-        for (stdair::SegmentDateList_T::iterator itSD = lSDList.begin();
-             itSD != lSDList.end(); ++itSD) {
-          const stdair::SegmentDate& lCurrentSD = *itSD;
-          SIMCRS_LOG_DEBUG ("Segment-date: " << lCurrentSD.toString());
-
-          // Browse the SegmentDate.
-          const stdair::SegmentCabinList_T lSCList =
-            lCurrentSD.getSegmentCabinList();
-          for (stdair::SegmentCabinList_T::iterator itSC = lSCList.begin();
-               itSC != lSCList.end(); ++itSC) {
-            const stdair::SegmentCabin& lCurrentSC = *itSC;
-            SIMCRS_LOG_DEBUG ("Segment-cabin: " << lCurrentSC.toString());
-
-            // Browse the SegmentCabin
-            const stdair::BookingClassList_T lBCList =
-              lCurrentSC.getBookingClassList ();
-            for (stdair::BookingClassList_T::iterator itBC = lBCList.begin();
-                   itBC != lBCList.end(); ++itBC) {
-              const stdair::BookingClass& lCurrentBC = *itBC;
-              SIMCRS_LOG_DEBUG ("Booking class: " << lCurrentBC.toString());
-            }
-          }
-        }
-      }
-    }
-
-    lAIRSCHED_Service->setBomRoot (lBomRoot);
-    
+    // Store the AirSched service object within the (SimCRS) service context
+    lSIMCRS_ServiceContext.setAIRSCHED_Service (lAIRSCHED_Service);
   }
   
   // //////////////////////////////////////////////////////////////////////

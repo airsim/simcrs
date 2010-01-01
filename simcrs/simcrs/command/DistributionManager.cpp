@@ -2,10 +2,7 @@
 // Import section
 // //////////////////////////////////////////////////////////////////////
 // STL
-#include <iosfwd>
-#include <string>
-#include <vector>
-#include <exception>
+#include <cassert>
 // Airline Inventory
 #include <airinv/AIRINV_Service.hpp>
 // Simcrs

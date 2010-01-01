@@ -7,6 +7,8 @@
 // STL
 #include <iosfwd>
 #include <string>
+// StdAir
+#include <stdair/STDAIR_Types.hpp>
 // Simcrs
 #include <simcrs/SIMCRS_Types.hpp>
 
@@ -28,8 +30,9 @@ namespace SIMCRS {
     // ////////// Constructors and destructors //////////
     /** Constructor.
         @param std::ostream& Output log stream (for instance, std::cout)
-        @param CRSCode_T& Code of the owner distribution system. */
-    SIMCRS_Service (std::ostream&, const CRSCode_T&, const std::string&);
+        @param const CRSCode_T& Code of the owner of the distribution system.
+        @param const stdair::Filename_T& Filename of the input schedule file. */
+    SIMCRS_Service (std::ostream&, const CRSCode_T&, const stdair::Filename_T&);
 
     /** Destructor. */
     ~SIMCRS_Service();
@@ -42,8 +45,12 @@ namespace SIMCRS {
     /** Default copy constructor. */
     SIMCRS_Service (const SIMCRS_Service&);
 
-    /** Initialise. */
-    void init (std::ostream& ioLogStream, const CRSCode_T&, const std::string&);
+    /** Initialise.
+        @param std::ostream& Output log stream (for instance, std::cout)
+        @param const CRSCode_T& Code of the owner of the distribution system.
+        @param const stdair::Filename_T& Filename of the input schedule file. */
+    void init (std::ostream& ioLogStream, const CRSCode_T&,
+               const stdair::Filename_T&);
 
     /** Finalise. */
     void finalise ();
