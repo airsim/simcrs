@@ -95,8 +95,11 @@ namespace SIMCRS {
 
     // TODO: do not harcode the airline code for the AirlineFeature object
     stdair::AirlineFeatureKey_T lAirlineFeatureKey (lAirlineCode);
-    stdair::AirlineFeature& lAirlineFeature = stdair::FacBomContent::instance().
-      create<stdair::AirlineFeature> (lAirlineFeatureSet, lAirlineFeatureKey);
+    stdair::AirlineFeature& lAirlineFeature = stdair::FacBomContent::
+      instance().create<stdair::AirlineFeature> (lAirlineFeatureKey);
+    stdair::FacBomContent::
+      linkWithParent<stdair::AirlineFeature> (lAirlineFeature,
+                                              lAirlineFeatureSet);
 
     // TODO: do not hardcode the start analysis date
     const stdair::Date_T lStartAnalysisDate (2000, 1, 1);
