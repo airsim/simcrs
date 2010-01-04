@@ -51,12 +51,6 @@ namespace SIMCRS {
   // //////// Type definitions /////////
   /** CRS code. */
   typedef std::string CRSCode_T;
-
-  /** Airline code. */
-  typedef std::string AirlineCode_T;
-
-  /** Number of passengers (in a group) for a booking. */
-  typedef unsigned short PartySize_T;
   
 }
 #endif // __SIMCRS_SIMCRS_TYPES_HPP

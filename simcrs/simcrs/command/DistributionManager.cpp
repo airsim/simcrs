@@ -14,8 +14,8 @@ namespace SIMCRS {
   // //////////////////////////////////////////////////////////////////////
   void DistributionManager::sell (AIRINV::AIRINV_Service& ioAIRINV_Service,
                                   const CRSCode_T& iCRSCode,
-                                  const AirlineCode_T& iAirlineCode,
-                                  const PartySize_T& iPartySize) {
+                                  const stdair::AirlineCode_T& iAirlineCode,
+                                  const stdair::PartySize_T& iPartySize) {
 
     try {
 

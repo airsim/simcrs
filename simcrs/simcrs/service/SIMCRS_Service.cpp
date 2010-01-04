@@ -74,7 +74,7 @@ namespace SIMCRS {
     // TODO: do not hardcode the airline code (e.g., take it from a
     // configuration file).
     // Initialise the AIRINV service handler
-    const AIRINV::AirlineCode_T lAirlineCode = "AA";
+    const stdair::AirlineCode_T lAirlineCode = "BA";
 
     // Note that the (Boost.)Smart Pointer keeps track of the references
     // on the Service object, and deletes that object when it is no longer
@@ -118,8 +118,8 @@ namespace SIMCRS {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  void SIMCRS_Service::sell (const AirlineCode_T& iAirlineCode,
-                             const PartySize_T& iPartySize) {
+  void SIMCRS_Service::sell (const stdair::AirlineCode_T& iAirlineCode,
+                             const stdair::PartySize_T& iPartySize) {
     
     if (_simcrsServiceContext == NULL) {
       throw NonInitialisedServiceException();

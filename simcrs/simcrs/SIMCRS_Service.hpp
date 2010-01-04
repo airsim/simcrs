@@ -23,7 +23,7 @@ namespace SIMCRS {
   public:
     // /////////// Business Methods /////////////
     /** Register a booking (segment sell). */
-    void sell (const AirlineCode_T&, const PartySize_T&);
+    void sell (const stdair::AirlineCode_T&, const stdair::PartySize_T&);
 
 
   public:
@@ -64,3 +64,4 @@ namespace SIMCRS {
   };
 }
 #endif // __SIMCRS_SVC_SIMCRS_SERVICE_HPP
+

@@ -4,6 +4,8 @@
 // //////////////////////////////////////////////////////////////////////
 // Import section
 // //////////////////////////////////////////////////////////////////////
+// STDAIR
+#include <stdair/STDAIR_Types.hpp>
 // Simcrs
 #include <simcrs/SIMCRS_Types.hpp>
 
@@ -21,8 +23,8 @@ namespace SIMCRS {
 
     /** Register a booking (segment sell). */
     static void sell (AIRINV::AIRINV_Service&,
-                      const CRSCode_T&, const AirlineCode_T&,
-                      const PartySize_T&);
+                      const CRSCode_T&, const stdair::AirlineCode_T&,
+                      const stdair::PartySize_T&);
 
   private:
     /** Constructors. */
