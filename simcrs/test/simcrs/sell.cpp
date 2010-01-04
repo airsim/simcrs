@@ -4,6 +4,8 @@
 #include <sstream>
 #include <fstream>
 #include <string>
+// STDAIR
+#include <stdair/STDAIR_Types.hpp>
 // SIMCRS
 #include <simcrs/SIMCRS_Service.hpp>
 #include <simcrs/config/simcrs-paths.hpp>
@@ -20,7 +22,7 @@ int main (int argc, char* argv[]) {
     std::string lAirlineCode ("LH");
     
     // Number of passengers in the travelling group
-    SIMCRS::PartySize_T lPartySize = 5;
+    stdair::PartySize_T lPartySize = 5;
     
     // Output log File
     std::string lLogFilename ("sell.log");
