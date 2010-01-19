@@ -102,7 +102,7 @@ namespace SIMCRS {
                                               lAirlineFeatureSet);
 
     // TODO: do not hardcode the start analysis date
-    const stdair::Date_T lStartAnalysisDate (2000, 1, 1);
+    const stdair::Date_T lStartAnalysisDate (2000, boost::gregorian::Jan, 1);
 
     // Initialise the AIRSCHED service handler
     AIRSCHED_ServicePtr_T lAIRSCHED_Service = 
