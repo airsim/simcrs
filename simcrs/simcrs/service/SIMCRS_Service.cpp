@@ -9,6 +9,7 @@
 #include <boost/date_time/posix_time/ptime.hpp>
 // Standard Airline Object Model
 #include <stdair/STDAIR_Types.hpp>
+#include <stdair/basic/BasChronometer.hpp>
 #include <stdair/bom/AirlineFeature.hpp>
 #include <stdair/bom/AirlineFeatureSet.hpp>
 #include <stdair/factory/FacBomContent.hpp>
@@ -18,7 +19,6 @@
 #include <airsched/AIRSCHED_Service.hpp>
 // Simcrs
 #include <simcrs/basic/BasConst_SIMCRS_Service.hpp>
-#include <simcrs/basic/BasChronometer.hpp>
 #include <simcrs/command/DistributionManager.hpp>
 #include <simcrs/factory/FacSimcrsServiceContext.hpp>
 #include <simcrs/service/SIMCRS_ServiceContext.hpp>
@@ -141,7 +141,7 @@ namespace SIMCRS {
         lSIMCRS_ServiceContext.getCRSCode();
       
       // Delegate the booking to the dedicated command
-      BasChronometer lSellChronometer;
+      stdair::BasChronometer lSellChronometer;
       lSellChronometer.start();
       DistributionManager::sell (lAIRINV_Service,
                                  lCRSCode, iAirlineCode, iPartySize);
