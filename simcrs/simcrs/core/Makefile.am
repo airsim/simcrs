@@ -20,12 +20,7 @@ libsimcrs_la_LIBADD = \
 	$(top_builddir)/simcrs/command/libcmd.la \
 	$(top_builddir)/simcrs/service/libsvc.la
 libsimcrs_la_LDFLAGS = \
-	$(BOOST_DATE_TIME_LIB) $(BOOST_PROGRAM_OPTIONS_LIB) \
+	$(BOOST_DATE_TIME_LIB) $(BOOST_PROGRAM_OPTIONS_LIB) $(BOOST_FILESYSTEM_LIB) \
 	$(top_builddir)/stdair/core/libstdair.la \
 	$(top_builddir)/airsched/core/libairsched.la \
 	-version-info $(GENERIC_LIBRARY_VERSION)
-
-# Header files
-#pkginclude_HEADERS = $(service_h_sources)
-#nobase_nodist_pkginclude_HEADERS = $(top_builddir)/simcrs/config.h
-
