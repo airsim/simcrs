@@ -249,6 +249,7 @@ AC_CONFIG_FILES(
 	stdair/bom/Makefile
 	stdair/factory/Makefile
 	stdair/config/Makefile
+	stdair/service/Makefile
 	stdair/core/Makefile
 	airsched/Makefile
 	airsched/basic/Makefile
