@@ -3,11 +3,12 @@
 // //////////////////////////////////////////////////////////////////////
 // STL
 #include <cassert>
+// StdAir
+#include <stdair/service/Logger.hpp>
 // Airline Inventory
 #include <airinv/AIRINV_Service.hpp>
 // Simcrs
 #include <simcrs/command/DistributionManager.hpp>
-#include <simcrs/service/Logger.hpp>
 
 namespace SIMCRS {
 
@@ -20,7 +21,7 @@ namespace SIMCRS {
     try {
 
       // DEBUG
-      SIMCRS_LOG_DEBUG ("A booking will be made, reported by the "
+      STDAIR_LOG_DEBUG ("A booking will be made, reported by the "
                         << iCRSCode << " CRS, for the airline "
                         << iAirlineCode << ", and for " << iPartySize
                         << " passengers.");
@@ -29,10 +30,10 @@ namespace SIMCRS {
       ioAIRINV_Service.sell (iPartySize);
     
       // DEBUG
-      SIMCRS_LOG_DEBUG ("The booking has been made");
+      STDAIR_LOG_DEBUG ("The booking has been made");
       
     } catch (const std::exception& lStdError) {
-      SIMCRS_LOG_ERROR ("Error: " << lStdError.what());
+      STDAIR_LOG_ERROR ("Error: " << lStdError.what());
       throw BookingException();
     }
   }
