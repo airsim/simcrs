@@ -10,9 +10,12 @@
 // Standard Airline Object Model
 #include <stdair/STDAIR_Types.hpp>
 #include <stdair/basic/BasChronometer.hpp>
+#include <stdair/basic/BasFileMgr.hpp>
 #include <stdair/bom/AirlineFeature.hpp>
 #include <stdair/bom/AirlineFeatureSet.hpp>
+#include <stdair/bom/BomManager.hpp> // for display()
 #include <stdair/factory/FacBomContent.hpp>
+#include <stdair/service/Logger.hpp>
 // Airline Inventory
 #include <airinv/AIRINV_Service.hpp>
 // Airline Schedule
@@ -22,18 +25,9 @@
 #include <simcrs/command/DistributionManager.hpp>
 #include <simcrs/factory/FacSimcrsServiceContext.hpp>
 #include <simcrs/service/SIMCRS_ServiceContext.hpp>
-#include <simcrs/service/Logger.hpp>
 #include <simcrs/SIMCRS_Service.hpp>
 
 namespace SIMCRS {
-
-  // //////////////////////////////////////////////////////////////////////
-  SIMCRS_Service::
-  SIMCRS_Service (std::ostream& ioLogStream, const CRSCode_T& iCRSCode,
-                  const stdair::Filename_T& iScheduleInputFilename)
-    : _simcrsServiceContext (NULL) {
-    init (ioLogStream, iCRSCode, iScheduleInputFilename);
-  }
 
   // //////////////////////////////////////////////////////////////////////
   SIMCRS_Service::SIMCRS_Service () : _simcrsServiceContext (NULL) {
@@ -46,23 +40,50 @@ namespace SIMCRS {
   }
 
   // //////////////////////////////////////////////////////////////////////
+  SIMCRS_Service::
+  SIMCRS_Service (const CRSCode_T& iCRSCode,
+                  const stdair::Filename_T& iScheduleInputFilename)
+    : _simcrsServiceContext (NULL) {
+    // Initialise the context
+    init (iCRSCode, iScheduleInputFilename);
+  }
+
+  // //////////////////////////////////////////////////////////////////////
+  SIMCRS_Service::
+  SIMCRS_Service (const stdair::BasLogParams& iLogParams,
+                  const CRSCode_T& iCRSCode,
+                  const stdair::Filename_T& iScheduleInputFilename)
+    : _simcrsServiceContext (NULL) {
+    // Set the log file
+    logInit (iLogParams);
+
+    // Initialise the (remaining of the) context
+    init (iCRSCode, iScheduleInputFilename);
+  }
+
+  // //////////////////////////////////////////////////////////////////////
   SIMCRS_Service::~SIMCRS_Service () {
     // Delete/Clean all the objects from memory
     finalise();
   }
 
   // //////////////////////////////////////////////////////////////////////
-  void logInit (const LOG::EN_LogLevel iLogLevel,
-                std::ostream& ioLogOutputFile) {
-    Logger::instance().setLogParameters (iLogLevel, ioLogOutputFile);
+  void SIMCRS_Service::logInit (const stdair::BasLogParams& iLogParams) {
+    stdair::Logger::init (iLogParams);
   }
 
   // //////////////////////////////////////////////////////////////////////
-  void SIMCRS_Service::init (std::ostream& ioLogStream,
-                             const CRSCode_T& iCRSCode,
+  void SIMCRS_Service::init (const CRSCode_T& iCRSCode,
                              const stdair::Filename_T& iScheduleInputFilename) {
-    // Set the log file
-    logInit (LOG::DEBUG, ioLogStream);
+
+    // Check that the file path given as input corresponds to an actual file
+    const bool doesExistAndIsReadable =
+      stdair::BasFileMgr::doesExistAndIsReadable (iScheduleInputFilename);
+    if (doesExistAndIsReadable == false) {
+      STDAIR_LOG_ERROR ("The schedule input file, '" << iScheduleInputFilename
+                        << "', can not be retrieved on the file-system");
+      throw FileNotFoundException();
+    }
 
     // Initialise the context
     SIMCRS_ServiceContext& lSIMCRS_ServiceContext = 
@@ -80,8 +101,7 @@ namespace SIMCRS {
     // on the Service object, and deletes that object when it is no longer
     // referenced (e.g., at the end of the process).
     AIRINV_ServicePtr_T lAIRINV_Service =
-      AIRINV_ServicePtr_T (new AIRINV::AIRINV_Service (ioLogStream,
-                                                       lAirlineCode));
+      AIRINV_ServicePtr_T (new AIRINV::AIRINV_Service (lAirlineCode));
 
     // Store the AirInv service object within the (SimCRS) service context
     lSIMCRS_ServiceContext.setAIRINV_Service (lAIRINV_Service);
@@ -105,9 +125,11 @@ namespace SIMCRS {
     const stdair::Date_T lStartAnalysisDate (2000, boost::gregorian::Jan, 1);
 
     // Initialise the AIRSCHED service handler
+    // Note that the track on the object memory is kept thanks to the Boost
+    // Smart Pointers component.
     AIRSCHED_ServicePtr_T lAIRSCHED_Service = 
       AIRSCHED_ServicePtr_T (new AIRSCHED::
-                             AIRSCHED_Service (ioLogStream, lAirlineFeatureSet,
+                             AIRSCHED_Service (lAirlineFeatureSet,
                                                lStartAnalysisDate,
                                                iScheduleInputFilename));
 
@@ -148,11 +170,11 @@ namespace SIMCRS {
       const double lSellMeasure = lSellChronometer.elapsed();
       
       // DEBUG
-      SIMCRS_LOG_DEBUG ("Booking sell: " << lSellMeasure << " - "
+      STDAIR_LOG_DEBUG ("Booking sell: " << lSellMeasure << " - "
                         << lSIMCRS_ServiceContext.display());
 
     } catch (const std::exception& error) {
-      SIMCRS_LOG_ERROR ("Exception: "  << error.what());
+      STDAIR_LOG_ERROR ("Exception: "  << error.what());
       throw BookingException();
     }
   }
