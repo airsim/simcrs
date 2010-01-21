@@ -37,7 +37,8 @@ int main (int argc, char* argv[]) {
     logOutputFile.clear();
     
     // Initialise the list of classes/buckets
-    SIMCRS::SIMCRS_Service simcrsService (logOutputFile, lCRSCode,
+    const stdair::BasLogParams lLogParams (stdair::LOG::DEBUG, logOutputFile);
+    SIMCRS::SIMCRS_Service simcrsService (lLogParams, lCRSCode,
                                           lScheduleFilename);
 
     // Make a booking
