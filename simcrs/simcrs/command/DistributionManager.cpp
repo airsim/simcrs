@@ -15,16 +15,16 @@ namespace SIMCRS {
   // //////////////////////////////////////////////////////////////////////
   void DistributionManager::sell (AIRINV::AIRINV_Service& ioAIRINV_Service,
                                   const CRSCode_T& iCRSCode,
-                                  const stdair::AirlineCode_T& iAirlineCode,
-                                  const stdair::PartySize_T& iPartySize) {
+                                  const stdair::OutboundPath& iOutboundPath,
+                                  const stdair::NbOfSeats_T& iPartySize) {
 
     try {
 
       // DEBUG
-      STDAIR_LOG_DEBUG ("A booking will be made, reported by the "
+      /*STDAIR_LOG_DEBUG ("A booking will be made, reported by the "
                         << iCRSCode << " CRS, for the airline "
                         << iAirlineCode << ", and for " << iPartySize
-                        << " passengers.");
+                        << " passengers.");*/
 
       // Make a booking
       ioAIRINV_Service.sell (iPartySize);

@@ -7,8 +7,15 @@
 // StdAir
 #include <stdair/STDAIR_Types.hpp>
 #include <stdair/basic/BasLogParams.hpp>
+#include <stdair/bom/OutboundPathTypes.hpp>
 // SimCRS
 #include <simcrs/SIMCRS_Types.hpp>
+
+// Forward declarations
+namespace stdair {
+  class OutboundPath;
+  struct BookingRequestStruct;
+}
 
 namespace SIMCRS {
 
@@ -20,8 +27,11 @@ namespace SIMCRS {
   class SIMCRS_Service {  
   public:
     // /////////// Business Methods /////////////
+    /** Get a list of travel solutions corresponding to the booking request. */
+    stdair::OutboundPathLightList_T getTravelSolutions (const stdair::BookingRequestStruct&);
+    
     /** Register a booking (segment sell). */
-    void sell (const stdair::AirlineCode_T&, const stdair::PartySize_T&);
+    void sell (const stdair::OutboundPath&, const stdair::PartySize_T&);
 
 
   public:

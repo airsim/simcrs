@@ -142,9 +142,47 @@ namespace SIMCRS {
     assert (_simcrsServiceContext != NULL);
   }
 
-  // //////////////////////////////////////////////////////////////////////
-  void SIMCRS_Service::sell (const stdair::AirlineCode_T& iAirlineCode,
-                             const stdair::PartySize_T& iPartySize) {
+  // ////////////////////////////////////////////////////////////////////
+  stdair::OutboundPathLightList_T SIMCRS_Service::
+  getTravelSolutions (const stdair::BookingRequestStruct& iBookingRequest) {
+     
+    if (_simcrsServiceContext == NULL) {
+      throw NonInitialisedServiceException();
+    }
+    assert (_simcrsServiceContext != NULL);
+    SIMCRS_ServiceContext& lSIMCRS_ServiceContext= *_simcrsServiceContext;
+
+    stdair::OutboundPathLightList_T oOutboundPathList;
+    
+    try {
+      
+      // Get a reference on the AIRSCHED service handler
+      AIRSCHED::AIRSCHED_Service& lAIRSCHED_Service =
+        lSIMCRS_ServiceContext.getAIRSCHED_Service();
+            
+      // Delegate the booking to the dedicated service
+      stdair::BasChronometer lTravelSolutionRetrievingChronometer;
+      lTravelSolutionRetrievingChronometer.start();
+      oOutboundPathList = lAIRSCHED_Service.getTravelSolutions (iBookingRequest);
+      const double lTravelSolutionRetrievingMeasure =
+        lTravelSolutionRetrievingChronometer.elapsed();
+      
+      // DEBUG
+      STDAIR_LOG_DEBUG ("Travel solution retrieving: "
+                        << lTravelSolutionRetrievingMeasure << " - "
+                        << lSIMCRS_ServiceContext.display());
+
+    } catch (const std::exception& error) {
+      STDAIR_LOG_ERROR ("Exception: "  << error.what());
+      throw BookingException();
+    }
+
+    return oOutboundPathList;
+  }
+  
+  // ////////////////////////////////////////////////////////////////////
+  void SIMCRS_Service::sell (const stdair::OutboundPath& iOutboundPath,
+                             const stdair::NbOfSeats_T& iPartySize) {
     
     if (_simcrsServiceContext == NULL) {
       throw NonInitialisedServiceException();
@@ -166,7 +204,7 @@ namespace SIMCRS {
       stdair::BasChronometer lSellChronometer;
       lSellChronometer.start();
       DistributionManager::sell (lAIRINV_Service,
-                                 lCRSCode, iAirlineCode, iPartySize);
+                                 lCRSCode, iOutboundPath, iPartySize);
       const double lSellMeasure = lSellChronometer.elapsed();
       
       // DEBUG

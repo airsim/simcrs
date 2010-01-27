@@ -10,6 +10,10 @@
 #include <simcrs/SIMCRS_Types.hpp>
 
 // Forward declarations
+namespace stdair {
+  class OutboundPath;
+}
+
 namespace AIRINV {
   class AIRINV_Service;
 }
@@ -23,8 +27,8 @@ namespace SIMCRS {
 
     /** Register a booking (segment sell). */
     static void sell (AIRINV::AIRINV_Service&,
-                      const CRSCode_T&, const stdair::AirlineCode_T&,
-                      const stdair::PartySize_T&);
+                      const CRSCode_T&, const stdair::OutboundPath&,
+                      const stdair::NbOfSeats_T&);
 
   private:
     /** Constructors. */
