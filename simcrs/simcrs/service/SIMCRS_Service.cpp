@@ -14,6 +14,10 @@
 #include <stdair/bom/AirlineFeature.hpp>
 #include <stdair/bom/AirlineFeatureSet.hpp>
 #include <stdair/bom/BomManager.hpp> // for display()
+#include <stdair/bom/BomRoot.hpp>
+#include <stdair/bom/InventoryTypes.hpp>
+#include <stdair/bom/Inventory.hpp>
+#include <stdair/bom/BomList.hpp>
 #include <stdair/factory/FacBomContent.hpp>
 #include <stdair/service/Logger.hpp>
 // Airline Inventory
@@ -90,23 +94,15 @@ namespace SIMCRS {
       FacSimcrsServiceContext::instance().create (iCRSCode);
     _simcrsServiceContext = &lSIMCRS_ServiceContext;
 
+    // Initialise the children contexts.
+    initAIRSCHEDService (iScheduleInputFilename);
+    initAIRINVServices ();
+  }
+
+  // //////////////////////////////////////////////////////////////////////
+  void SIMCRS_Service::
+  initAIRSCHEDService (const stdair::Filename_T& iScheduleInputFilename) {
     
-    // /////////////// Airline Inventory Management (AirInv) /////////////
-    // TODO: do not hardcode the airline code (e.g., take it from a
-    // configuration file).
-    // Initialise the AIRINV service handler
-    const stdair::AirlineCode_T lAirlineCode = "BA";
-
-    // Note that the (Boost.)Smart Pointer keeps track of the references
-    // on the Service object, and deletes that object when it is no longer
-    // referenced (e.g., at the end of the process).
-    AIRINV_ServicePtr_T lAIRINV_Service =
-      AIRINV_ServicePtr_T (new AIRINV::AIRINV_Service (lAirlineCode));
-
-    // Store the AirInv service object within the (SimCRS) service context
-    lSIMCRS_ServiceContext.setAIRINV_Service (lAIRINV_Service);
-
-
     // ////////////// Airline Schedule Management (AirSched) /////////////
     // TODO: do not hardcode the initialisation phase of the schedule
     // Initialise the schedule
@@ -114,6 +110,7 @@ namespace SIMCRS {
       stdair::FacBomContent::instance().create<stdair::AirlineFeatureSet>();
 
     // TODO: do not harcode the airline code for the AirlineFeature object
+    const stdair::AirlineCode_T lAirlineCode = "BA";
     stdair::AirlineFeatureKey_T lAirlineFeatureKey (lAirlineCode);
     stdair::AirlineFeature& lAirlineFeature = stdair::FacBomContent::
       instance().create<stdair::AirlineFeature> (lAirlineFeatureKey);
@@ -125,8 +122,9 @@ namespace SIMCRS {
     const stdair::Date_T lStartAnalysisDate (2000, boost::gregorian::Jan, 1);
 
     // Initialise the AIRSCHED service handler
-    // Note that the track on the object memory is kept thanks to the Boost
-    // Smart Pointers component.
+    // Note that the (Boost.)Smart Pointer keeps track of the references
+    // on the Service object, and deletes that object when it is no longer
+    // referenced (e.g., at the end of the process).
     AIRSCHED_ServicePtr_T lAIRSCHED_Service = 
       AIRSCHED_ServicePtr_T (new AIRSCHED::
                              AIRSCHED_Service (lAirlineFeatureSet,
@@ -134,7 +132,36 @@ namespace SIMCRS {
                                                iScheduleInputFilename));
 
     // Store the AirSched service object within the (SimCRS) service context
-    lSIMCRS_ServiceContext.setAIRSCHED_Service (lAIRSCHED_Service);
+    assert (_simcrsServiceContext != NULL);
+    _simcrsServiceContext->setAIRSCHED_Service (lAIRSCHED_Service);
+  }
+
+  // //////////////////////////////////////////////////////////////////////
+  void SIMCRS_Service::initAIRINVServices () {
+    assert (_simcrsServiceContext != NULL);
+
+    // Retrieve the AIRSCHED Service and its BomRoot in order to
+    // browse the list of inventories.
+    const AIRSCHED::AIRSCHED_Service& lAIRSCHED_Service =
+      _simcrsServiceContext->getAIRSCHED_Service();
+    const stdair::BomRoot& lBomRoot = lAIRSCHED_Service.getBomRoot();
+
+    const stdair::InventoryList_T& lInventoryList = lBomRoot.getInventoryList();
+
+    // Browse the inventory list and initialise the corresponding
+    // AIRINV services.
+    for (stdair::InventoryList_T::iterator itInv = lInventoryList.begin();
+         itInv != lInventoryList.end(); ++itInv) {
+      stdair::Inventory& lCurrentInv = *itInv;
+      const stdair::AirlineCode_T& lAirlineCode = lCurrentInv.getAirlineCode();
+      
+      AIRINV_ServicePtr_T lAIRINV_Service =
+        AIRINV_ServicePtr_T (new AIRINV::AIRINV_Service (lAirlineCode,
+                                                         lCurrentInv));
+
+      // Store the AirInv service object within the (SimCRS) service context
+      _simcrsServiceContext->addAIRINV_Service (lAirlineCode, lAIRINV_Service);
+    }
   }
   
   // //////////////////////////////////////////////////////////////////////
@@ -191,7 +218,7 @@ namespace SIMCRS {
     SIMCRS_ServiceContext& lSIMCRS_ServiceContext= *_simcrsServiceContext;
 
     try {
-      
+      /*
       // Get a reference on the AIRINV service handler
       AIRINV::AIRINV_Service& lAIRINV_Service =
         lSIMCRS_ServiceContext.getAIRINV_Service();
@@ -210,7 +237,7 @@ namespace SIMCRS {
       // DEBUG
       STDAIR_LOG_DEBUG ("Booking sell: " << lSellMeasure << " - "
                         << lSIMCRS_ServiceContext.display());
-
+      */
     } catch (const std::exception& error) {
       STDAIR_LOG_ERROR ("Exception: "  << error.what());
       throw BookingException();

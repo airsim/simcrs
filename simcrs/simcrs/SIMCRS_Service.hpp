@@ -81,6 +81,14 @@ namespace SIMCRS {
         @param const stdair::Filename_T& Filename of the input schedule file. */
     void init (const CRSCode_T& iCRSCode, const stdair::Filename_T&);
 
+    /** Initialise the AIRSCHED service with the given schedule file. */
+    void initAIRSCHEDService (const stdair::Filename_T&);
+
+    /** Initialise the list of AIRINV services.
+        <br>After having initialised the AIRSCHED service, parse the list of
+        airline inventories and build a AIRINV service for each airline. */
+    void initAIRINVServices ();
+
     /** Finalise. */
     void finalise ();
 
