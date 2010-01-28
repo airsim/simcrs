@@ -5,8 +5,7 @@
 // Import section
 // //////////////////////////////////////////////////////////////////////
 // StdAir
-#include <stdair/STDAIR_Types.hpp>
-#include <stdair/basic/BasLogParams.hpp>
+#include <stdair/STDAIR_Service.hpp>
 #include <stdair/bom/OutboundPathTypes.hpp>
 // SimCRS
 #include <simcrs/SIMCRS_Types.hpp>

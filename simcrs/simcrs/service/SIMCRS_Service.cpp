@@ -99,8 +99,8 @@ namespace SIMCRS {
     // Initialise the STDAIR service handler
     // Note that the track on the object memory is kept thanks to the Boost
     // Smart Pointers component.
-    STDAIR_ServicePtr_T lSTDAIR_Service_ptr = 
-      STDAIR_ServicePtr_T (new stdair::STDAIR_Service (iLogParams));
+    stdair::STDAIR_ServicePtr_T lSTDAIR_Service_ptr = 
+      stdair::STDAIR_ServicePtr_T (new stdair::STDAIR_Service (iLogParams));
 
     // Retrieve the root of the BOM tree, on which all of the other BOM objects
     // will be attached
@@ -119,7 +119,7 @@ namespace SIMCRS {
     // lSIMCRS_ServiceContext.setAirlineFeatureSet (lAirlineFeatureSet);
     
     // Store the STDAIR service object within the (AIRSCHED) service context
-    lSIMCRS_ServiceContext.setSTDAIR_Service (lSTDAIR_Service_ptr);
+    lSIMCRS_ServiceContext.setSTDAIR_Service (*lSTDAIR_Service_ptr);
   }
   
   // //////////////////////////////////////////////////////////////////////
@@ -153,6 +153,10 @@ namespace SIMCRS {
     SIMCRS_ServiceContext& lSIMCRS_ServiceContext = *_simcrsServiceContext;
 
     
+    // Retrieve the StdAir service context
+    stdair::STDAIR_Service& lSTDAIR_Service = lSIMCRS_ServiceContext.getSTDAIR_Service();
+    
+    
     // ////////////// Airline Schedule Management (AirSched) /////////////
     // TODO: do not hardcode the start analysis date
     const stdair::Date_T lStartAnalysisDate (2000, boost::gregorian::Jan, 1);
@@ -167,7 +171,8 @@ namespace SIMCRS {
     // on the Service object, and deletes that object when it is no longer
     // referenced (e.g., at the end of the process).
     AIRSCHED_ServicePtr_T lAIRSCHED_Service = 
-      AIRSCHED_ServicePtr_T (new AIRSCHED::AIRSCHED_Service (lAirlineFeatureSet,
+      AIRSCHED_ServicePtr_T (new AIRSCHED::AIRSCHED_Service (lSTDAIR_Service,
+                                                             lAirlineFeatureSet,
                                                              lStartAnalysisDate,
                                                              iScheduleInputFilename));
 

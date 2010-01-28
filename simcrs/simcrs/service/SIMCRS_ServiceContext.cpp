@@ -38,6 +38,12 @@ namespace SIMCRS {
   }
   
   // //////////////////////////////////////////////////////////////////////
+  void SIMCRS_ServiceContext::
+  setSTDAIR_Service (stdair::STDAIR_Service& ioSTDAIR_Service) {
+    _stdairService = stdair::STDAIR_ServicePtr_T (&ioSTDAIR_Service);
+  }
+  
+  // //////////////////////////////////////////////////////////////////////
   const std::string SIMCRS_ServiceContext::shortDisplay() const {
     std::ostringstream oStr;
     oStr << "SIMCRS_ServiceContext: " << std::endl

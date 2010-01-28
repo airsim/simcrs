@@ -9,16 +9,12 @@
 #include <map>
 // Boost
 #include <boost/shared_ptr.hpp>
-// STDAIR
+// StdAir
 #include <stdair/STDAIR_Types.hpp>
-// Simcrs
+#include <stdair/STDAIR_ServicePtr.hpp>
+// SimCRS
 #include <simcrs/SIMCRS_Types.hpp>
 #include <simcrs/service/ServiceAbstract.hpp>
-
-// Forward declarations
-namespace stdair {
-  class STDAIR_Service;
-}
 
 namespace AIRINV {
   class AIRINV_Service;
@@ -42,10 +38,6 @@ typedef std::map<const stdair::AirlineCode_T,
 
 namespace SIMCRS {
 
-  /** Pointer on the STDAIR Service handler. */
-  typedef boost::shared_ptr<stdair::STDAIR_Service> STDAIR_ServicePtr_T;
-
-  
   /** Class holding the context of the Simcrs services. */
   class SIMCRS_ServiceContext : public ServiceAbstract {
     /** The SIMCRS_Service class should be the sole class to get access to
@@ -87,9 +79,7 @@ namespace SIMCRS {
 
     // ///////////////// Setters ///////////////////
     /** Set the pointer on the STDAIR service handler. */
-    void setSTDAIR_Service (STDAIR_ServicePtr_T ioSTDAIR_ServicePtr) {
-      _stdairService = ioSTDAIR_ServicePtr;
-    }
+    void setSTDAIR_Service (stdair::STDAIR_Service&);
     
     /** Set the CRS code. */
     void setCRSCode (const CRSCode_T& iCRSCode) {
@@ -126,7 +116,7 @@ namespace SIMCRS {
   private:
     // ///////////// Children ////////////
     /** Standard Airline (StdAir) Service Handler. */
-    STDAIR_ServicePtr_T _stdairService;
+    stdair::STDAIR_ServicePtr_T _stdairService;
 
     
   private:
