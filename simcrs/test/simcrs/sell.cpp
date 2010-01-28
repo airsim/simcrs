@@ -42,7 +42,7 @@ int main (int argc, char* argv[]) {
                                           lScheduleFilename);
 
     // Make a booking
-    simcrsService.sell (lAirlineCode, lPartySize);
+    //simcrsService.sell (lAirlineCode, lPartySize);
     
   } catch (const std::exception& stde) {
     std::cerr << "Standard exception: " << stde.what() << std::endl;
