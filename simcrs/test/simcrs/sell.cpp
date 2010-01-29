@@ -19,7 +19,7 @@ int main (int argc, char* argv[]) {
     std::string lCRSCode ("1P");
     
     // Airline code
-    std::string lAirlineCode ("LH");
+    std::string lAirlineCode ("BA");
     
     // Number of passengers in the travelling group
     stdair::PartySize_T lPartySize = 5;
