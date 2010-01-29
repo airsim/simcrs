@@ -39,8 +39,8 @@ namespace SIMCRS {
   
   // //////////////////////////////////////////////////////////////////////
   void SIMCRS_ServiceContext::
-  setSTDAIR_Service (stdair::STDAIR_Service& ioSTDAIR_Service) {
-    _stdairService = stdair::STDAIR_ServicePtr_T (&ioSTDAIR_Service);
+  setSTDAIR_Service (stdair::STDAIR_ServicePtr_T ioSTDAIR_ServicePtr) {
+    _stdairService = ioSTDAIR_ServicePtr;
   }
   
   // //////////////////////////////////////////////////////////////////////

@@ -11,7 +11,6 @@
 #include <boost/shared_ptr.hpp>
 // StdAir
 #include <stdair/STDAIR_Types.hpp>
-#include <stdair/STDAIR_ServicePtr.hpp>
 // SimCRS
 #include <simcrs/SIMCRS_Types.hpp>
 #include <simcrs/service/ServiceAbstract.hpp>
@@ -61,8 +60,13 @@ namespace SIMCRS {
     
   private:
     // ///////////////// Getters ///////////////////
-    /** Get the pointer on the STDAIR service handler. */
+    /** Get the reference on the STDAIR service handler. */
     stdair::STDAIR_Service& getSTDAIR_Service () const;
+    
+    /** Get the pointer on the STDAIR service handler. */
+    stdair::STDAIR_ServicePtr_T getSTDAIR_ServicePtr () const {
+      return _stdairService;
+    }
     
     /** Get the CRS code. */
     const CRSCode_T& getCRSCode () const {
@@ -79,7 +83,7 @@ namespace SIMCRS {
 
     // ///////////////// Setters ///////////////////
     /** Set the pointer on the STDAIR service handler. */
-    void setSTDAIR_Service (stdair::STDAIR_Service&);
+    void setSTDAIR_Service (stdair::STDAIR_ServicePtr_T);
     
     /** Set the CRS code. */
     void setCRSCode (const CRSCode_T& iCRSCode) {

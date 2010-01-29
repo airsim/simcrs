@@ -48,7 +48,8 @@ namespace SIMCRS {
         DSIM_Service).
         @param const CRSCode_T& Code of the owner of the distribution system.
         @param const stdair::Filename_T& Filename of the input schedule file. */
-    SIMCRS_Service (const CRSCode_T&, const stdair::Filename_T&);
+    SIMCRS_Service (stdair::STDAIR_ServicePtr_T,
+                    const CRSCode_T&, const stdair::Filename_T&);
 
     /** Destructor. */
     ~SIMCRS_Service();

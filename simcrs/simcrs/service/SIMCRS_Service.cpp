@@ -46,12 +46,19 @@ namespace SIMCRS {
 
   // //////////////////////////////////////////////////////////////////////
   SIMCRS_Service::
-  SIMCRS_Service (const CRSCode_T& iCRSCode,
+  SIMCRS_Service (stdair::STDAIR_ServicePtr_T ioSTDAIR_ServicePtr,
+                  const CRSCode_T& iCRSCode,
                   const stdair::Filename_T& iScheduleInputFilename)
     : _simcrsServiceContext (NULL) {
 
     // Initialise the service context
     initServiceContext (iCRSCode);
+
+    // Retrieve the Simcrs service context
+    assert (_simcrsServiceContext != NULL);
+    SIMCRS_ServiceContext& lSIMCRS_ServiceContext = *_simcrsServiceContext;
+    // Store the STDAIR service object within the (SIMCRS) service context
+    lSIMCRS_ServiceContext.setSTDAIR_Service (ioSTDAIR_ServicePtr);
     
     // Initialise the context
     init (iCRSCode, iScheduleInputFilename);
@@ -112,14 +119,24 @@ namespace SIMCRS {
     stdair::AirlineFeatureSet& lAirlineFeatureSet =
       stdair::FacBomContent::instance().create<stdair::AirlineFeatureSet>();
     
+    // Airline code
+    stdair::AirlineCode_T lAirlineCode ("BA");
+    // Initialise an AirlineFeature object
+    stdair::AirlineFeatureKey_T lAirlineFeatureKey (lAirlineCode);
+    stdair::AirlineFeature& lAirlineFeature = stdair::FacBomContent::
+      instance().create<stdair::AirlineFeature> (lAirlineFeatureKey);
+    stdair::FacBomContent::
+      linkWithParent<stdair::AirlineFeature> (lAirlineFeature,
+                                              lAirlineFeatureSet);
+
     // Set the AirlineFeatureSet for the BomRoot.
     lBomRoot.setAirlineFeatureSet (&lAirlineFeatureSet);
 
     // Store the AirlineFeatureSet object within the service context
     // lSIMCRS_ServiceContext.setAirlineFeatureSet (lAirlineFeatureSet);
     
-    // Store the STDAIR service object within the (AIRSCHED) service context
-    lSIMCRS_ServiceContext.setSTDAIR_Service (*lSTDAIR_Service_ptr);
+    // Store the STDAIR service object within the (SIMCRS) service context
+    lSIMCRS_ServiceContext.setSTDAIR_Service (lSTDAIR_Service_ptr);
   }
   
   // //////////////////////////////////////////////////////////////////////
@@ -138,10 +155,10 @@ namespace SIMCRS {
     // Retrieve the service context
     assert (_simcrsServiceContext != NULL);
     SIMCRS_ServiceContext& lSIMCRS_ServiceContext = *_simcrsServiceContext;
-
+    
     // Initialise the children contexts.
     initAIRSCHEDService (iScheduleInputFilename);
-    initAIRINVServices ();
+    //initAIRINVServices ();
   }
 
   // //////////////////////////////////////////////////////////////////////
@@ -154,25 +171,20 @@ namespace SIMCRS {
 
     
     // Retrieve the StdAir service context
-    stdair::STDAIR_Service& lSTDAIR_Service = lSIMCRS_ServiceContext.getSTDAIR_Service();
+    stdair::STDAIR_ServicePtr_T lSTDAIR_ServicePtr =
+      lSIMCRS_ServiceContext.getSTDAIR_ServicePtr();
     
     
     // ////////////// Airline Schedule Management (AirSched) /////////////
     // TODO: do not hardcode the start analysis date
     const stdair::Date_T lStartAnalysisDate (2000, boost::gregorian::Jan, 1);
 
-    // TODO: do not hardcode the initialisation of AirlineFeatureSet
-    // Initialise the set of required airline features
-    stdair::AirlineFeatureSet& lAirlineFeatureSet =
-      stdair::FacBomContent::instance().create<stdair::AirlineFeatureSet>();
-    
     // Initialise the AIRSCHED service handler
     // Note that the (Boost.)Smart Pointer keeps track of the references
     // on the Service object, and deletes that object when it is no longer
     // referenced (e.g., at the end of the process).
     AIRSCHED_ServicePtr_T lAIRSCHED_Service = 
-      AIRSCHED_ServicePtr_T (new AIRSCHED::AIRSCHED_Service (lSTDAIR_Service,
-                                                             lAirlineFeatureSet,
+      AIRSCHED_ServicePtr_T (new AIRSCHED::AIRSCHED_Service (lSTDAIR_ServicePtr,
                                                              lStartAnalysisDate,
                                                              iScheduleInputFilename));
 
