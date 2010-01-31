@@ -7,6 +7,7 @@
 // Boost
 #include <boost/date_time/gregorian/gregorian.hpp>
 #include <boost/date_time/posix_time/ptime.hpp>
+#include <boost/make_shared.hpp>
 // Standard Airline Object Model
 #include <stdair/STDAIR_Types.hpp>
 #include <stdair/basic/BasChronometer.hpp>
@@ -107,7 +108,7 @@ namespace SIMCRS {
     // Note that the track on the object memory is kept thanks to the Boost
     // Smart Pointers component.
     stdair::STDAIR_ServicePtr_T lSTDAIR_Service_ptr = 
-      stdair::STDAIR_ServicePtr_T (new stdair::STDAIR_Service (iLogParams));
+      boost::make_shared<stdair::STDAIR_Service> (iLogParams);
 
     // Retrieve the root of the BOM tree, on which all of the other BOM objects
     // will be attached
@@ -183,10 +184,10 @@ namespace SIMCRS {
     // Note that the (Boost.)Smart Pointer keeps track of the references
     // on the Service object, and deletes that object when it is no longer
     // referenced (e.g., at the end of the process).
-    AIRSCHED_ServicePtr_T lAIRSCHED_Service = 
-      AIRSCHED_ServicePtr_T (new AIRSCHED::AIRSCHED_Service (lSTDAIR_ServicePtr,
-                                                             lStartAnalysisDate,
-                                                             iScheduleInputFilename));
+    AIRSCHED_ServicePtr_T lAIRSCHED_Service =
+      boost::make_shared<AIRSCHED::AIRSCHED_Service> (lSTDAIR_ServicePtr,
+                                                      lStartAnalysisDate,
+                                                      iScheduleInputFilename);
 
 
     // Store the AirSched service object within the (SimCRS) service context
@@ -218,6 +219,7 @@ namespace SIMCRS {
       // Build an AirInv service instance, tracked by a Boost SmartPointer
       AIRINV_ServicePtr_T lAIRINV_Service =
         AIRINV_ServicePtr_T (new AIRINV::AIRINV_Service (lAirlineCode, lCurrentInv));
+      // boost::make_shared<AIRINV::AIRINV_Service> (lAirlineCode, lCurrentInv);
 
       // Store the AirInv service object within the (SimCRS) service context
       lSIMCRS_ServiceContext.addAIRINV_Service (lAirlineCode, lAIRINV_Service);
