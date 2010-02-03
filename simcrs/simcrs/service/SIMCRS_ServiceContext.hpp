@@ -81,6 +81,11 @@ namespace SIMCRS {
     AIRSCHED::AIRSCHED_Service& getAIRSCHED_Service () const;
     
 
+    /** Get a reference on the list of AIRINV_Services. */
+    const AIRINV_ServicePtr_Map_T& getAIRINV_ServiceMap () const {
+      return _airinvServiceMap;
+    }
+    
     // ///////////////// Setters ///////////////////
     /** Set the pointer on the STDAIR service handler. */
     void setSTDAIR_Service (stdair::STDAIR_ServicePtr_T);

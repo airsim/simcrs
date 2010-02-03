@@ -18,6 +18,7 @@
 #include <stdair/bom/AirlineFeatureSet.hpp>
 #include <stdair/bom/InventoryTypes.hpp>
 #include <stdair/bom/Inventory.hpp>
+#include <stdair/bom/TravelSolutionStruct.hpp>
 #include <stdair/bom/BomList.hpp>
 #include <stdair/factory/FacBomContent.hpp>
 #include <stdair/service/Logger.hpp>
@@ -159,7 +160,7 @@ namespace SIMCRS {
     
     // Initialise the children contexts.
     initAIRSCHEDService (iScheduleInputFilename);
-    //initAIRINVServices ();
+    initAIRINVServices ();
   }
 
   // //////////////////////////////////////////////////////////////////////
@@ -232,7 +233,7 @@ namespace SIMCRS {
   }
 
   // ////////////////////////////////////////////////////////////////////
-  stdair::OutboundPathLightList_T SIMCRS_Service::
+  stdair::TravelSolutionList_T SIMCRS_Service::
   getTravelSolutions (const stdair::BookingRequestStruct& iBookingRequest) {
      
     if (_simcrsServiceContext == NULL) {
@@ -241,7 +242,7 @@ namespace SIMCRS {
     assert (_simcrsServiceContext != NULL);
     SIMCRS_ServiceContext& lSIMCRS_ServiceContext= *_simcrsServiceContext;
 
-    stdair::OutboundPathLightList_T oOutboundPathList;
+    stdair::TravelSolutionList_T oTravelSolutionList;
     
     try {
       
@@ -252,7 +253,7 @@ namespace SIMCRS {
       // Delegate the booking to the dedicated service
       stdair::BasChronometer lTravelSolutionRetrievingChronometer;
       lTravelSolutionRetrievingChronometer.start();
-      oOutboundPathList = lAIRSCHED_Service.getTravelSolutions (iBookingRequest);
+      lAIRSCHED_Service.getTravelSolutions (oTravelSolutionList,iBookingRequest);
       const double lTravelSolutionRetrievingMeasure =
         lTravelSolutionRetrievingChronometer.elapsed();
       
@@ -266,11 +267,11 @@ namespace SIMCRS {
       throw BookingException();
     }
 
-    return oOutboundPathList;
+    return oTravelSolutionList;
   }
   
   // ////////////////////////////////////////////////////////////////////
-  void SIMCRS_Service::sell (const stdair::OutboundPath& iOutboundPath,
+  void SIMCRS_Service::sell (const stdair::TravelSolutionStruct& iTravelSolution,
                              const stdair::NbOfSeats_T& iPartySize) {
     
     if (_simcrsServiceContext == NULL) {
@@ -280,26 +281,26 @@ namespace SIMCRS {
     SIMCRS_ServiceContext& lSIMCRS_ServiceContext= *_simcrsServiceContext;
 
     try {
-      /*
-      // Get a reference on the AIRINV service handler
-      AIRINV::AIRINV_Service& lAIRINV_Service =
-        lSIMCRS_ServiceContext.getAIRINV_Service();
-      
-      // Retrieve the airline code
+      // Retrieve the CRS code
       const CRSCode_T& lCRSCode =
         lSIMCRS_ServiceContext.getCRSCode();
+
+      // TODO: optimise this part.
+      // Retrieve the map/list of AIRINV_Services
+      const AIRINV_ServicePtr_Map_T& lAIRINV_ServiceMap =
+        lSIMCRS_ServiceContext.getAIRINV_ServiceMap ();
       
       // Delegate the booking to the dedicated command
       stdair::BasChronometer lSellChronometer;
       lSellChronometer.start();
-      DistributionManager::sell (lAIRINV_Service,
-                                 lCRSCode, iOutboundPath, iPartySize);
+      DistributionManager::sell (lAIRINV_ServiceMap,
+                                 lCRSCode, iTravelSolution, iPartySize);
       const double lSellMeasure = lSellChronometer.elapsed();
       
       // DEBUG
       STDAIR_LOG_DEBUG ("Booking sell: " << lSellMeasure << " - "
                         << lSIMCRS_ServiceContext.display());
-      */
+      
     } catch (const std::exception& error) {
       STDAIR_LOG_ERROR ("Exception: "  << error.what());
       throw BookingException();

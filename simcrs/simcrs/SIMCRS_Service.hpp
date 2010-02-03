@@ -6,13 +6,13 @@
 // //////////////////////////////////////////////////////////////////////
 // StdAir
 #include <stdair/STDAIR_Service.hpp>
-#include <stdair/bom/OutboundPathTypes.hpp>
+#include <stdair/bom/TravelSolutionTypes.hpp>
 // SimCRS
 #include <simcrs/SIMCRS_Types.hpp>
 
 // Forward declarations
 namespace stdair {
-  class OutboundPath;
+  struct TravelSolutionStruct;
   struct BookingRequestStruct;
 }
 
@@ -58,10 +58,10 @@ namespace SIMCRS {
   public:
     // /////////// Business Methods /////////////
     /** Get a list of travel solutions corresponding to the booking request. */
-    stdair::OutboundPathLightList_T getTravelSolutions (const stdair::BookingRequestStruct&);
+    stdair::TravelSolutionList_T getTravelSolutions (const stdair::BookingRequestStruct&);
     
-    /** Register a booking (segment sell). */
-    void sell (const stdair::OutboundPath&, const stdair::PartySize_T&);
+    /** Register a booking. */
+    void sell (const stdair::TravelSolutionStruct&, const stdair::PartySize_T&);
 
 
   private:
