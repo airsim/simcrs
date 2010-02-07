@@ -7,6 +7,7 @@
 // Boost
 #include <boost/date_time/gregorian/gregorian.hpp>
 #include <boost/date_time/posix_time/ptime.hpp>
+#include <boost/bind.hpp>
 #include <boost/make_shared.hpp>
 // Standard Airline Object Model
 #include <stdair/STDAIR_Types.hpp>
@@ -59,11 +60,30 @@ namespace SIMCRS {
     // Retrieve the Simcrs service context
     assert (_simcrsServiceContext != NULL);
     SIMCRS_ServiceContext& lSIMCRS_ServiceContext = *_simcrsServiceContext;
+
     // Store the STDAIR service object within the (SIMCRS) service context
     lSIMCRS_ServiceContext.setSTDAIR_Service (ioSTDAIR_ServicePtr);
     
     // Initialise the context
-    init (iCRSCode, iScheduleInputFilename);
+    init (iScheduleInputFilename);
+  }
+
+  // //////////////////////////////////////////////////////////////////////
+  SIMCRS_Service::
+  SIMCRS_Service (const stdair::BasLogParams& iLogParams,
+                  const stdair::BasDBParams& iDBParams,
+                  const CRSCode_T& iCRSCode,
+                  const stdair::Filename_T& iScheduleInputFilename)
+    : _simcrsServiceContext (NULL) {
+    
+    // Initialise the service context
+    initServiceContext (iCRSCode);
+    
+    // Initialise the STDAIR service handler
+    initStdAirService (iLogParams, iDBParams);
+    
+    // Initialise the (remaining of the) context
+    init (iScheduleInputFilename);
   }
 
   // //////////////////////////////////////////////////////////////////////
@@ -80,7 +100,7 @@ namespace SIMCRS {
     initStdAirService (iLogParams);
     
     // Initialise the (remaining of the) context
-    init (iCRSCode, iScheduleInputFilename);
+    init (iScheduleInputFilename);
   }
 
   // //////////////////////////////////////////////////////////////////////
@@ -97,6 +117,48 @@ namespace SIMCRS {
     _simcrsServiceContext = &lSIMCRS_ServiceContext;
   }
 
+  // //////////////////////////////////////////////////////////////////////
+  void SIMCRS_Service::
+  initStdAirService (const stdair::BasLogParams& iLogParams,
+                     const stdair::BasDBParams& iDBParams) {
+
+    // Retrieve the SimCRS service context
+    assert (_simcrsServiceContext != NULL);
+    SIMCRS_ServiceContext& lSIMCRS_ServiceContext = *_simcrsServiceContext;
+    
+    // Initialise the STDAIR service handler
+    // Note that the track on the object memory is kept thanks to the Boost
+    // Smart Pointers component.
+    stdair::STDAIR_ServicePtr_T lSTDAIR_Service_ptr = 
+      boost::make_shared<stdair::STDAIR_Service> (iLogParams, iDBParams);
+
+    // Retrieve the root of the BOM tree, on which all of the other BOM objects
+    // will be attached
+    assert (lSTDAIR_Service_ptr != NULL);
+    stdair::BomRoot& lBomRoot = lSTDAIR_Service_ptr->getBomRoot();
+
+    // TODO: do not hardcode the initialisation of AirlineFeatureSet
+    // Initialise the set of required airline features
+    stdair::AirlineFeatureSet& lAirlineFeatureSet =
+      stdair::FacBomContent::instance().create<stdair::AirlineFeatureSet>();
+    
+    // Airline code
+    stdair::AirlineCode_T lAirlineCode ("BA");
+    // Initialise an AirlineFeature object
+    stdair::AirlineFeatureKey_T lAirlineFeatureKey (lAirlineCode);
+    stdair::AirlineFeature& lAirlineFeature = stdair::FacBomContent::
+      instance().create<stdair::AirlineFeature> (lAirlineFeatureKey);
+    stdair::FacBomContent::
+      linkWithParent<stdair::AirlineFeature> (lAirlineFeature,
+                                              lAirlineFeatureSet);
+
+    // Set the AirlineFeatureSet for the BomRoot.
+    lBomRoot.setAirlineFeatureSet (&lAirlineFeatureSet);
+
+    // Store the STDAIR service object within the (SIMCRS) service context
+    lSIMCRS_ServiceContext.setSTDAIR_Service (lSTDAIR_Service_ptr);
+  }
+  
   // //////////////////////////////////////////////////////////////////////
   void SIMCRS_Service::
   initStdAirService (const stdair::BasLogParams& iLogParams) {
@@ -134,16 +196,12 @@ namespace SIMCRS {
     // Set the AirlineFeatureSet for the BomRoot.
     lBomRoot.setAirlineFeatureSet (&lAirlineFeatureSet);
 
-    // Store the AirlineFeatureSet object within the service context
-    // lSIMCRS_ServiceContext.setAirlineFeatureSet (lAirlineFeatureSet);
-    
     // Store the STDAIR service object within the (SIMCRS) service context
     lSIMCRS_ServiceContext.setSTDAIR_Service (lSTDAIR_Service_ptr);
   }
   
   // //////////////////////////////////////////////////////////////////////
-  void SIMCRS_Service::init (const CRSCode_T& iCRSCode,
-                             const stdair::Filename_T& iScheduleInputFilename) {
+  void SIMCRS_Service::init (const stdair::Filename_T& iScheduleInputFilename) {
 
     // Check that the file path given as input corresponds to an actual file
     const bool doesExistAndIsReadable =
@@ -158,8 +216,10 @@ namespace SIMCRS {
     assert (_simcrsServiceContext != NULL);
     SIMCRS_ServiceContext& lSIMCRS_ServiceContext = *_simcrsServiceContext;
     
-    // Initialise the children contexts.
+    // Initialise the children AirSched service context
     initAIRSCHEDService (iScheduleInputFilename);
+
+    // Initialise the children AirInv service context
     initAIRINVServices ();
   }
 
@@ -173,9 +233,10 @@ namespace SIMCRS {
 
     
     // Retrieve the StdAir service context
-    stdair::STDAIR_ServicePtr_T lSTDAIR_ServicePtr =
-      lSIMCRS_ServiceContext.getSTDAIR_ServicePtr();
-    
+    stdair::STDAIR_ServicePtr_T lSTDAIR_Service_ptr =
+      lSIMCRS_ServiceContext.getSTDAIR_Service();
+    assert (lSTDAIR_Service_ptr != NULL);
+
     
     // ////////////// Airline Schedule Management (AirSched) /////////////
     // TODO: do not hardcode the start analysis date
@@ -185,27 +246,29 @@ namespace SIMCRS {
     // Note that the (Boost.)Smart Pointer keeps track of the references
     // on the Service object, and deletes that object when it is no longer
     // referenced (e.g., at the end of the process).
-    AIRSCHED_ServicePtr_T lAIRSCHED_Service =
-      boost::make_shared<AIRSCHED::AIRSCHED_Service> (lSTDAIR_ServicePtr,
+    AIRSCHED_ServicePtr_T lAIRSCHED_Service_ptr =
+      boost::make_shared<AIRSCHED::AIRSCHED_Service> (lSTDAIR_Service_ptr,
                                                       lStartAnalysisDate,
                                                       iScheduleInputFilename);
 
-
     // Store the AirSched service object within the (SimCRS) service context
-    lSIMCRS_ServiceContext.setAIRSCHED_Service (lAIRSCHED_Service);
+    lSIMCRS_ServiceContext.setAIRSCHED_Service (lAIRSCHED_Service_ptr);
   }
 
   // //////////////////////////////////////////////////////////////////////
   void SIMCRS_Service::initAIRINVServices () {
 
+    // Retrieve the SimCRS service context
     assert (_simcrsServiceContext != NULL);
     SIMCRS_ServiceContext& lSIMCRS_ServiceContext = *_simcrsServiceContext;
     
     // Retrieve the StdAir service context
-    stdair::STDAIR_Service& lSTDAIR_Service = lSIMCRS_ServiceContext.getSTDAIR_Service();
+    stdair::STDAIR_ServicePtr_T lSTDAIR_Service_ptr =
+      lSIMCRS_ServiceContext.getSTDAIR_Service();
+    assert (lSTDAIR_Service_ptr != NULL);
     
     // Retrieve, from the StdAir service context, the root of the BOM tree
-    stdair::BomRoot& lBomRoot = lSTDAIR_Service.getBomRoot();
+    stdair::BomRoot& lBomRoot = lSTDAIR_Service_ptr->getBomRoot();
     
     // Retrieve the list of Inventory objects: one per airline
     const stdair::InventoryList_T& lInventoryList = lBomRoot.getInventoryList();
@@ -218,12 +281,17 @@ namespace SIMCRS {
       const stdair::AirlineCode_T& lAirlineCode = lCurrentInv.getAirlineCode();
 
       // Build an AirInv service instance, tracked by a Boost SmartPointer
-      AIRINV_ServicePtr_T lAIRINV_Service =
-        AIRINV_ServicePtr_T (new AIRINV::AIRINV_Service (lAirlineCode, lCurrentInv));
-      // boost::make_shared<AIRINV::AIRINV_Service> (lAirlineCode, lCurrentInv);
+      AIRINV_ServicePtr_T lAIRINV_Service_ptr =
+        AIRINV_ServicePtr_T (new AIRINV::AIRINV_Service (lSTDAIR_Service_ptr,
+                                                         lAirlineCode));
+
+      // TODO: Understand why the following does not compile
+      // boost::make_shared<AIRINV::AIRINV_Service> (lSTDAIR_Service_ptr,
+      //                                             lAirlineCode, lCurrentInv);
 
       // Store the AirInv service object within the (SimCRS) service context
-      lSIMCRS_ServiceContext.addAIRINV_Service (lAirlineCode, lAIRINV_Service);
+      lSIMCRS_ServiceContext.addAIRINV_Service (lAirlineCode,
+                                                lAIRINV_Service_ptr);
     }
   }
   
@@ -247,13 +315,16 @@ namespace SIMCRS {
     try {
       
       // Get a reference on the AIRSCHED service handler
-      AIRSCHED::AIRSCHED_Service& lAIRSCHED_Service =
+      AIRSCHED_ServicePtr_T lAIRSCHED_Service_ptr =
         lSIMCRS_ServiceContext.getAIRSCHED_Service();
+      assert (lAIRSCHED_Service_ptr != NULL);
             
       // Delegate the booking to the dedicated service
       stdair::BasChronometer lTravelSolutionRetrievingChronometer;
       lTravelSolutionRetrievingChronometer.start();
-      lAIRSCHED_Service.getTravelSolutions (oTravelSolutionList,iBookingRequest);
+      lAIRSCHED_Service_ptr->getTravelSolutions (oTravelSolutionList,
+                                                 iBookingRequest);
+      
       const double lTravelSolutionRetrievingMeasure =
         lTravelSolutionRetrievingChronometer.elapsed();
       

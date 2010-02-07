@@ -32,18 +32,6 @@ namespace SIMCRS {
   }
   
   // //////////////////////////////////////////////////////////////////////
-  stdair::STDAIR_Service& SIMCRS_ServiceContext::getSTDAIR_Service() const {
-    assert (_stdairService != NULL);
-    return *_stdairService;
-  }
-  
-  // //////////////////////////////////////////////////////////////////////
-  void SIMCRS_ServiceContext::
-  setSTDAIR_Service (stdair::STDAIR_ServicePtr_T ioSTDAIR_ServicePtr) {
-    _stdairService = ioSTDAIR_ServicePtr;
-  }
-  
-  // //////////////////////////////////////////////////////////////////////
   const std::string SIMCRS_ServiceContext::shortDisplay() const {
     std::ostringstream oStr;
     oStr << "SIMCRS_ServiceContext: " << std::endl
@@ -60,28 +48,20 @@ namespace SIMCRS {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  AIRSCHED::AIRSCHED_Service& SIMCRS_ServiceContext::getAIRSCHED_Service () const {
-    assert (_airschedService != NULL);
-    return *_airschedService;
-  }
-
-  // //////////////////////////////////////////////////////////////////////
-  AIRINV::AIRINV_Service& SIMCRS_ServiceContext::
+  AIRINV_ServicePtr_T SIMCRS_ServiceContext::
   getAIRINV_Service (const stdair::AirlineCode_T& iAirlineCode) const {   
     AIRINV_ServicePtr_Map_T::const_iterator itValueType =
       _airinvServiceMap.find (iAirlineCode);
 
     if (itValueType == _airinvServiceMap.end()) {
-      STDAIR_LOG_ERROR ("Cannot find the Inventory service (AIRINV_Service) for the "
-                        "given airline: " << iAirlineCode
+      STDAIR_LOG_ERROR ("Cannot find the Inventory service (AIRINV_Service) for"
+                        << "the given airline: " << iAirlineCode
                         << ". By design, it should not happen.");
       assert (false);
     }
 
     AIRINV_ServicePtr_T oAIRINV_Service_ptr = itValueType->second;
-    assert (oAIRINV_Service_ptr != NULL);
-    
-    return *oAIRINV_Service_ptr;
+    return oAIRINV_Service_ptr;
   }
 
   // //////////////////////////////////////////////////////////////////////

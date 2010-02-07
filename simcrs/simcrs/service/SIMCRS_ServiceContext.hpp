@@ -23,20 +23,20 @@ namespace AIRSCHED {
   class AIRSCHED_Service;
 }
 
-/** Pointer on the AIRINV Service handler. */
-typedef boost::shared_ptr<AIRINV::AIRINV_Service> AIRINV_ServicePtr_T;
-
-/** Pointer on the AIRSCHED Service handler. */
-typedef boost::shared_ptr<AIRSCHED::AIRSCHED_Service> AIRSCHED_ServicePtr_T;
-
-/** Typedef which defines a map of airline codes and the corresponding
-    airline inventories. */
-typedef std::map<const stdair::AirlineCode_T,
-                 AIRINV_ServicePtr_T> AIRINV_ServicePtr_Map_T;
-
-
 namespace SIMCRS {
 
+  /** Pointer on the AIRINV Service handler. */
+  typedef boost::shared_ptr<AIRINV::AIRINV_Service> AIRINV_ServicePtr_T;
+
+  /** Pointer on the AIRSCHED Service handler. */
+  typedef boost::shared_ptr<AIRSCHED::AIRSCHED_Service> AIRSCHED_ServicePtr_T;
+
+  /** Typedef which defines a map of airline codes and the corresponding
+      airline inventories. */
+  typedef std::map<const stdair::AirlineCode_T,
+                   AIRINV_ServicePtr_T> AIRINV_ServicePtr_Map_T;
+
+  
   /** Class holding the context of the Simcrs services. */
   class SIMCRS_ServiceContext : public ServiceAbstract {
     /** The SIMCRS_Service class should be the sole class to get access to
@@ -60,11 +60,8 @@ namespace SIMCRS {
     
   private:
     // ///////////////// Getters ///////////////////
-    /** Get the reference on the STDAIR service handler. */
-    stdair::STDAIR_Service& getSTDAIR_Service () const;
-    
     /** Get the pointer on the STDAIR service handler. */
-    stdair::STDAIR_ServicePtr_T getSTDAIR_ServicePtr () const {
+    stdair::STDAIR_ServicePtr_T getSTDAIR_Service () const {
       return _stdairService;
     }
     
@@ -75,20 +72,24 @@ namespace SIMCRS {
 
     /** Get a reference on the AIRINV service handler which corresponds to
         the given airline code. */
-    AIRINV::AIRINV_Service& getAIRINV_Service (const stdair::AirlineCode_T&) const;
-
-    /** Get a reference on the AIRSCHED service handler. */
-    AIRSCHED::AIRSCHED_Service& getAIRSCHED_Service () const;
-    
+    AIRINV_ServicePtr_T getAIRINV_Service (const stdair::AirlineCode_T&) const;
 
     /** Get a reference on the list of AIRINV_Services. */
     const AIRINV_ServicePtr_Map_T& getAIRINV_ServiceMap () const {
       return _airinvServiceMap;
     }
+
+    /** Get a reference on the AIRSCHED service handler. */
+    AIRSCHED_ServicePtr_T getAIRSCHED_Service () const {
+      return _airschedService;
+    }
+  
     
     // ///////////////// Setters ///////////////////
     /** Set the pointer on the STDAIR service handler. */
-    void setSTDAIR_Service (stdair::STDAIR_ServicePtr_T);
+    void setSTDAIR_Service (stdair::STDAIR_ServicePtr_T ioSTDAIR_ServicePtr) {
+      _stdairService = ioSTDAIR_ServicePtr;
+    }
     
     /** Set the CRS code. */
     void setCRSCode (const CRSCode_T& iCRSCode) {
@@ -104,8 +105,9 @@ namespace SIMCRS {
       _airschedService = ioAIRSCHED_ServicePtr;
     }
 
-    
-    // ///////// Display Methods //////////
+
+  private:
+    // //////////////////// Display Methods /////////////////////
     /** Display the short SIMCRS_ServiceContext content. */
     const std::string shortDisplay() const;
     
@@ -114,18 +116,15 @@ namespace SIMCRS {
 
     
   private:
-    // ///////////// Children ////////////
+    // /////////////// Children ///////////////
+    /** Standard Airline (StdAir) Service Handler. */
+    stdair::STDAIR_ServicePtr_T _stdairService;
+
     /** Airline Schedule Service Handler. */
     AIRSCHED_ServicePtr_T _airschedService;
 
     /** Airline Inventory Service Handler map. */
     AIRINV_ServicePtr_Map_T _airinvServiceMap;
-
-
-  private:
-    // ///////////// Children ////////////
-    /** Standard Airline (StdAir) Service Handler. */
-    stdair::STDAIR_ServicePtr_T _stdairService;
 
     
   private:
