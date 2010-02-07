@@ -15,13 +15,10 @@
 #include <stdair/basic/BasFileMgr.hpp>
 #include <stdair/bom/BomManager.hpp> // for display()
 #include <stdair/bom/BomRoot.hpp>
-#include <stdair/bom/AirlineFeature.hpp>
-#include <stdair/bom/AirlineFeatureSet.hpp>
+#include <stdair/bom/BomList.hpp>
+#include <stdair/bom/TravelSolutionStruct.hpp>
 #include <stdair/bom/InventoryTypes.hpp>
 #include <stdair/bom/Inventory.hpp>
-#include <stdair/bom/TravelSolutionStruct.hpp>
-#include <stdair/bom/BomList.hpp>
-#include <stdair/factory/FacBomContent.hpp>
 #include <stdair/service/Logger.hpp>
 #include <stdair/STDAIR_Service.hpp>
 // Airline Inventory
@@ -131,29 +128,7 @@ namespace SIMCRS {
     // Smart Pointers component.
     stdair::STDAIR_ServicePtr_T lSTDAIR_Service_ptr = 
       boost::make_shared<stdair::STDAIR_Service> (iLogParams, iDBParams);
-
-    // Retrieve the root of the BOM tree, on which all of the other BOM objects
-    // will be attached
     assert (lSTDAIR_Service_ptr != NULL);
-    stdair::BomRoot& lBomRoot = lSTDAIR_Service_ptr->getBomRoot();
-
-    // TODO: do not hardcode the initialisation of AirlineFeatureSet
-    // Initialise the set of required airline features
-    stdair::AirlineFeatureSet& lAirlineFeatureSet =
-      stdair::FacBomContent::instance().create<stdair::AirlineFeatureSet>();
-    
-    // Airline code
-    stdair::AirlineCode_T lAirlineCode ("BA");
-    // Initialise an AirlineFeature object
-    stdair::AirlineFeatureKey_T lAirlineFeatureKey (lAirlineCode);
-    stdair::AirlineFeature& lAirlineFeature = stdair::FacBomContent::
-      instance().create<stdair::AirlineFeature> (lAirlineFeatureKey);
-    stdair::FacBomContent::
-      linkWithParent<stdair::AirlineFeature> (lAirlineFeature,
-                                              lAirlineFeatureSet);
-
-    // Set the AirlineFeatureSet for the BomRoot.
-    lBomRoot.setAirlineFeatureSet (&lAirlineFeatureSet);
 
     // Store the STDAIR service object within the (SIMCRS) service context
     lSIMCRS_ServiceContext.setSTDAIR_Service (lSTDAIR_Service_ptr);
@@ -172,29 +147,7 @@ namespace SIMCRS {
     // Smart Pointers component.
     stdair::STDAIR_ServicePtr_T lSTDAIR_Service_ptr = 
       boost::make_shared<stdair::STDAIR_Service> (iLogParams);
-
-    // Retrieve the root of the BOM tree, on which all of the other BOM objects
-    // will be attached
     assert (lSTDAIR_Service_ptr != NULL);
-    stdair::BomRoot& lBomRoot = lSTDAIR_Service_ptr->getBomRoot();
-
-    // TODO: do not hardcode the initialisation of AirlineFeatureSet
-    // Initialise the set of required airline features
-    stdair::AirlineFeatureSet& lAirlineFeatureSet =
-      stdair::FacBomContent::instance().create<stdair::AirlineFeatureSet>();
-    
-    // Airline code
-    stdair::AirlineCode_T lAirlineCode ("BA");
-    // Initialise an AirlineFeature object
-    stdair::AirlineFeatureKey_T lAirlineFeatureKey (lAirlineCode);
-    stdair::AirlineFeature& lAirlineFeature = stdair::FacBomContent::
-      instance().create<stdair::AirlineFeature> (lAirlineFeatureKey);
-    stdair::FacBomContent::
-      linkWithParent<stdair::AirlineFeature> (lAirlineFeature,
-                                              lAirlineFeatureSet);
-
-    // Set the AirlineFeatureSet for the BomRoot.
-    lBomRoot.setAirlineFeatureSet (&lAirlineFeatureSet);
 
     // Store the STDAIR service object within the (SIMCRS) service context
     lSIMCRS_ServiceContext.setSTDAIR_Service (lSTDAIR_Service_ptr);
