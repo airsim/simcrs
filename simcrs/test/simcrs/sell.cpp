@@ -6,6 +6,9 @@
 #include <string>
 // STDAIR
 #include <stdair/STDAIR_Types.hpp>
+#include <stdair/basic/BasLogParams.hpp>
+#include <stdair/basic/BasDBParams.hpp>
+#include <stdair/bom/TravelSolutionStruct.hpp>
 // SIMCRS
 #include <simcrs/SIMCRS_Service.hpp>
 #include <simcrs/config/simcrs-paths.hpp>
