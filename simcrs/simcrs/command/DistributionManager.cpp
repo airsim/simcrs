@@ -37,10 +37,10 @@ namespace SIMCRS {
           lOutboundPath.isAirlineFlown (lCurrentAirlineCode);
         if (isAirlineFlown == true) {
           // DEBUG
-          STDAIR_LOG_DEBUG ("A booking will be made, reported by the "
-                            << iCRSCode << " CRS, for the airline "
-                            << lCurrentAirlineCode << ", and for "
-                            << iPartySize << " passengers.");
+          // STDAIR_LOG_DEBUG ("A booking will be made, reported by the "
+          //                   << iCRSCode << " CRS, for the airline "
+          //                   << lCurrentAirlineCode << ", and for "
+          //                   << iPartySize << " passengers.");
           
           AIRINV::AIRINV_ServicePtr_T lAIRINV_Service_ptr = itINV->second;
 
@@ -50,7 +50,7 @@ namespace SIMCRS {
       }
     
       // DEBUG
-      STDAIR_LOG_DEBUG ("The booking has been made");
+      // STDAIR_LOG_DEBUG ("The booking has been made");
       
     } catch (const std::exception& lStdError) {
       STDAIR_LOG_ERROR ("Error: " << lStdError.what());

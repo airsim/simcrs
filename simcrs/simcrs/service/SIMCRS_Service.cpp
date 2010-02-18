@@ -282,9 +282,9 @@ namespace SIMCRS {
         lTravelSolutionRetrievingChronometer.elapsed();
       
       // DEBUG
-      STDAIR_LOG_DEBUG ("Travel solution retrieving: "
-                        << lTravelSolutionRetrievingMeasure << " - "
-                        << lSIMCRS_ServiceContext.display());
+      // STDAIR_LOG_DEBUG ("Travel solution retrieving: "
+      //                   << lTravelSolutionRetrievingMeasure << " - "
+      //                   << lSIMCRS_ServiceContext.display());
 
     } catch (const std::exception& error) {
       STDAIR_LOG_ERROR ("Exception: "  << error.what());
@@ -322,8 +322,8 @@ namespace SIMCRS {
       const double lSellMeasure = lSellChronometer.elapsed();
       
       // DEBUG
-      STDAIR_LOG_DEBUG ("Booking sell: " << lSellMeasure << " - "
-                        << lSIMCRS_ServiceContext.display());
+      // STDAIR_LOG_DEBUG ("Booking sell: " << lSellMeasure << " - "
+      //                   << lSIMCRS_ServiceContext.display());
       
     } catch (const std::exception& error) {
       STDAIR_LOG_ERROR ("Exception: "  << error.what());
