@@ -295,8 +295,8 @@ namespace SIMCRS {
   }
   
   // ////////////////////////////////////////////////////////////////////
-  void SIMCRS_Service::sell (const stdair::TravelSolutionStruct& iTravelSolution,
-                             const stdair::NbOfSeats_T& iPartySize) {
+  void SIMCRS_Service::sell(const stdair::TravelSolutionStruct& iTravelSolution,
+                            const stdair::PartySize_T& iPartySize) {
     
     if (_simcrsServiceContext == NULL) {
       throw NonInitialisedServiceException();
