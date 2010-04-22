@@ -14,11 +14,9 @@
 #include <stdair/basic/BasChronometer.hpp>
 #include <stdair/basic/BasFileMgr.hpp>
 #include <stdair/bom/BomManager.hpp> // for display()
-#include <stdair/bom/BomRoot.hpp>
-#include <stdair/bom/BomList.hpp>
 #include <stdair/bom/TravelSolutionStruct.hpp>
 #include <stdair/bom/InventoryTypes.hpp>
-#include <stdair/bom/Inventory.hpp>
+#include <stdair/bom/BomSource.hpp>
 #include <stdair/service/Logger.hpp>
 #include <stdair/STDAIR_Service.hpp>
 // Airline Inventory
