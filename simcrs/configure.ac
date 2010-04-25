@@ -272,6 +272,7 @@ AC_CONFIG_FILES(
 	airinv/config/Makefile
 	airinv/core/Makefile
 	airinv/batches/Makefile
+	airinv/server/Makefile
 	simcrs/Makefile
 	simcrs/basic/Makefile
 	simcrs/bom/Makefile
