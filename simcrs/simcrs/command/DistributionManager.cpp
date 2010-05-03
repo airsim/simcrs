@@ -13,8 +13,19 @@
 #include <simcrs/command/DistributionManager.hpp>
 
 namespace SIMCRS {
-
-  // //////////////////////////////////////////////////////////////////////
+  // ////////////////////////////////////////////////////////////////////
+  void DistributionManager::
+  getAvailability (const AIRINV::AIRINV_ServicePtr_Map_T& iAIRINV_ServiceMap,
+                   const CRSCode_T& iCRSCode,
+                   stdair::TravelSolutionList_T& ioTravelSolutionList) {
+    for (stdair::TravelSolutionList_T::iterator itTS =
+           ioTravelSolutionList.begin();
+         itTS != ioTravelSolutionList.end(); ++itTS) {
+      stdair::TravelSolutionStruct& lCurrentTravelSolution = *itTS;
+    }
+  }
+  
+  // ////////////////////////////////////////////////////////////////////
   void DistributionManager::
   sell (const AIRINV::AIRINV_ServicePtr_Map_T& iAIRINV_ServiceMap,
         const CRSCode_T& iCRSCode,

@@ -35,6 +35,9 @@ namespace SIMCRS {
   class BookingException : public RootException {
   };
 
+  class AvailabilityRetrievalException : public RootException {
+  };
+
 
   // /////////////// Log /////////////
   /** Level of logs. */

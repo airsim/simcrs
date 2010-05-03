@@ -78,6 +78,9 @@ namespace SIMCRS {
     // /////////// Business Methods /////////////
     /** Get a list of travel solutions corresponding to the booking request. */
     stdair::TravelSolutionList_T getTravelSolutions (const stdair::BookingRequestStruct&);
+
+    /** Get the availability for each travel solution in the list.. */
+    void getAvailability (stdair::TravelSolutionList_T&);
     
     /** Register a booking. */
     void sell (const stdair::TravelSolutionStruct&, const stdair::PartySize_T&);
