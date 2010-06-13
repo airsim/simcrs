@@ -18,7 +18,8 @@ CRSTestSuite_CXXFLAGS= $(CPPUNIT_CFLAGS) $(BOOST_CFLAGS)
 CRSTestSuite_LDADD =
 CRSTestSuite_LDFLAGS = \
 		$(BOOST_LIBS) $(CPPUNIT_LIBS) \
-		$(top_builddir)/extracppunit/libextracc-extracppunit.la \
+		$(top_builddir)/extracppunit/libextracppunit.la \
 		$(top_builddir)/stdair/core/libstdair.la \
 		$(top_builddir)/simcrs/core/libsimcrs.la
 #		$(top_builddir)/airinv/core/libairinv.la
+
