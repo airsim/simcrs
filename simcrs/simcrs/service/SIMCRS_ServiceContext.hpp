@@ -56,7 +56,6 @@ namespace SIMCRS {
 
     /** Destructor. */
     ~SIMCRS_ServiceContext();
-
     
   private:
     // ///////////////// Getters ///////////////////
