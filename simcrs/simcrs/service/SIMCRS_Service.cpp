@@ -163,10 +163,6 @@ namespace SIMCRS {
       throw FileNotFoundException();
     }
 
-    // Retrieve the service context
-    assert (_simcrsServiceContext != NULL);
-    SIMCRS_ServiceContext& lSIMCRS_ServiceContext = *_simcrsServiceContext;
-    
     // Initialise the children AirSched service context
     initAIRSCHEDService (iScheduleInputFilename);
 
@@ -269,10 +265,9 @@ namespace SIMCRS {
       lAIRSCHED_Service_ptr->getTravelSolutions (oTravelSolutionList,
                                                  iBookingRequest);
       
-      const double lTravelSolutionRetrievingMeasure =
-        lTravelSolutionRetrievingChronometer.elapsed();
-      
-      // DEBUG
+      // DEBUG 
+      // const double lTravelSolutionRetrievingMeasure =
+      //  lTravelSolutionRetrievingChronometer.elapsed();
       // STDAIR_LOG_DEBUG ("Travel solution retrieving: "
       //                   << lTravelSolutionRetrievingMeasure << " - "
       //                   << lSIMCRS_ServiceContext.display());
@@ -309,8 +304,8 @@ namespace SIMCRS {
       lAvailabilityRetrievalChronometer.start();
       DistributionManager::getAvailability (lAIRINV_ServiceMap,
                                             lCRSCode, ioTravelSolutionList);
-      const double lAvailabilityRetrievalMeasure =
-        lAvailabilityRetrievalChronometer.elapsed();
+      // const double lAvailabilityRetrievalMeasure =
+      //   lAvailabilityRetrievalChronometer.elapsed();
             
     } catch (const std::exception& error) {
       STDAIR_LOG_ERROR ("Exception: "  << error.what());
@@ -343,9 +338,9 @@ namespace SIMCRS {
       lSellChronometer.start();
       DistributionManager::sell (lAIRINV_ServiceMap,
                                  lCRSCode, iTravelSolution, iPartySize);
-      const double lSellMeasure = lSellChronometer.elapsed();
       
       // DEBUG
+      // const double lSellMeasure = lSellChronometer.elapsed();
       // STDAIR_LOG_DEBUG ("Booking sell: " << lSellMeasure << " - "
       //                   << lSIMCRS_ServiceContext.display());
       
