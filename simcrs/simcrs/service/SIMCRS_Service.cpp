@@ -13,10 +13,10 @@
 #include <stdair/STDAIR_Types.hpp>
 #include <stdair/basic/BasChronometer.hpp>
 #include <stdair/basic/BasFileMgr.hpp>
-#include <stdair/bom/BomManager.hpp> // for display()
+#include <stdair/bom/BomManager.hpp> 
 #include <stdair/bom/TravelSolutionStruct.hpp>
-#include <stdair/bom/InventoryTypes.hpp>
-#include <stdair/bom/BomSource.hpp>
+#include <stdair/bom/BomRoot.hpp>
+#include <stdair/bom/Inventory.hpp>
 #include <stdair/service/Logger.hpp>
 #include <stdair/STDAIR_Service.hpp>
 // Airline Inventory
@@ -211,14 +211,14 @@ namespace SIMCRS {
     stdair::BomRoot& lBomRoot = lSTDAIR_Service_ptr->getBomRoot();
     
     // Retrieve the list of Inventory objects: one per airline
-    const stdair::InventoryList_T& lInventoryList = lBomRoot.getInventoryList();
-
-    // Browse the inventory list and initialise the corresponding
+    stdair::InventoryMap_T& lInventoryMap =
+      stdair::BomManager::getMap<stdair::Inventory> (lBomRoot);
+      
+    // Browse the inventory map and initialise the corresponding
     // AirInv services.
-    for (stdair::InventoryList_T::iterator itInv = lInventoryList.begin();
-         itInv != lInventoryList.end(); ++itInv) {
-      stdair::Inventory& lCurrentInv = *itInv;
-      const stdair::AirlineCode_T& lAirlineCode = lCurrentInv.getAirlineCode();
+    for (stdair::InventoryMap_T::iterator itInv = lInventoryMap.begin();
+         itInv != lInventoryMap.end(); ++itInv) {
+      const stdair::AirlineCode_T& lAirlineCode = itInv->first;
 
       // Build an AirInv service instance, tracked by a Boost SmartPointer
       AIRINV_ServicePtr_T lAIRINV_Service_ptr =
