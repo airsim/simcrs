@@ -1,4 +1,4 @@
-# batches
+# simcrs/batches
 include $(top_srcdir)/Makefile.common
 include $(srcdir)/sources.mk
 
@@ -13,3 +13,4 @@ bin_PROGRAMS =
 #airinv_CXXFLAGS = $(BOOST_CFLAGS)
 #airinv_LDADD =
 #airinv_LDFLAGS = $(BOOST_PROGRAM_OPTIONS_LIB) $(top_builddir)/airinv/core/libairinv.la
+

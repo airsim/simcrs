@@ -1,11 +1,15 @@
-## factory sub-directory
+## simcrs/factory sub-directory
 include $(top_srcdir)/Makefile.common
 include $(srcdir)/sources.mk
 
-noinst_LTLIBRARIES= libfac.la
+#
+noinst_LTLIBRARIES = libsimcrsfac.la
 
-libfac_la_SOURCES= $(fac_h_sources) $(fac_cc_sources) 
-libfac_la_CXXFLAGS =
+libsimcrsfac_la_SOURCES = $(simcrs_fac_h_sources) $(simcrs_fac_cc_sources)
+libsimcrsfac_la_CXXFLAGS = $(STDAIR_CFLAGS)
+libsimcrsfac_la_LDFLAGS =
 
+#
 #pkgincludedir = $(includedir)/@PACKAGE@/factory
-#pkginclude_HEADERS = $(fac_h_sources)
+#pkginclude_HEADERS = $(simcrs_fac_h_sources)
+

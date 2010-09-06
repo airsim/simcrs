@@ -24,3 +24,4 @@ simcrs-paths.hpp: Makefile
 	@echo '#define DATADIR "$(datadir)"' >> $@
 	@echo '#define DOCDIR "$(docdir)"' >> $@
 	@echo '#endif // __SIMCRS_PATHS_HPP' >> $@
+
