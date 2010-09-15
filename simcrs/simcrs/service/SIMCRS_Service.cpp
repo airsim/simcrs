@@ -211,12 +211,12 @@ namespace SIMCRS {
     stdair::BomRoot& lBomRoot = lSTDAIR_Service_ptr->getBomRoot();
     
     // Retrieve the list of Inventory objects: one per airline
-    stdair::InventoryMap_T& lInventoryMap =
+    const stdair::InventoryMap_T& lInventoryMap =
       stdair::BomManager::getMap<stdair::Inventory> (lBomRoot);
       
     // Browse the inventory map and initialise the corresponding
     // AirInv services.
-    for (stdair::InventoryMap_T::iterator itInv = lInventoryMap.begin();
+    for (stdair::InventoryMap_T::const_iterator itInv = lInventoryMap.begin();
          itInv != lInventoryMap.end(); ++itInv) {
       const stdair::AirlineCode_T& lAirlineCode = itInv->first;
 

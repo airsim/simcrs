@@ -41,8 +41,10 @@ namespace SIMCRS {
       for (stdair::KeyList_T::const_iterator itKey = lSegmentDateKeyList.begin();
            itKey != lSegmentDateKeyList.end(); ++itKey, ++itBookingClassKey) {
         const std::string& lSegmentDateKey = *itKey;
-        stdair::AirlineCode_T lAirlineCode = "";
-        lAirlineCode = lSegmentDateKey.at(0) + lSegmentDateKey.at(1);
+
+        std::ostringstream ostrCode;
+        ostrCode << lSegmentDateKey.at(0) << lSegmentDateKey.at(1);
+        stdair::AirlineCode_T lAirlineCode = ostrCode.str(); 
 
         // Do the sale within the corresponding inventory.
         AIRINV::AIRINV_ServicePtr_Map_T::const_iterator itAirinvService =
