@@ -46,36 +46,4 @@ namespace SIMCRS {
     oStr << shortDisplay();
     return oStr.str();
   }
-
-  // //////////////////////////////////////////////////////////////////////
-  AIRINV_ServicePtr_T SIMCRS_ServiceContext::
-  getAIRINV_Service (const stdair::AirlineCode_T& iAirlineCode) const {   
-    AIRINV_ServicePtr_Map_T::const_iterator itValueType =
-      _airinvServiceMap.find (iAirlineCode);
-
-    if (itValueType == _airinvServiceMap.end()) {
-      STDAIR_LOG_ERROR ("Cannot find the Inventory service (AIRINV_Service) for"
-                        << "the given airline: " << iAirlineCode
-                        << ". By design, it should not happen.");
-      assert (false);
-    }
-
-    AIRINV_ServicePtr_T oAIRINV_Service_ptr = itValueType->second;
-    return oAIRINV_Service_ptr;
-  }
-
-  // //////////////////////////////////////////////////////////////////////
-  void SIMCRS_ServiceContext::
-  addAIRINV_Service (const stdair::AirlineCode_T& iAirlineCode,
-                     AIRINV_ServicePtr_T ioAIRINV_ServicePtr) {
-    const bool hasInsertBeenSuccessful = _airinvServiceMap.
-      insert (AIRINV_ServicePtr_Map_T::value_type (iAirlineCode,
-                                                   ioAIRINV_ServicePtr)).second;
-
-    if (hasInsertBeenSuccessful == false) {
-      STDAIR_LOG_ERROR ("Cannot add the inventory service handler for this airline: "
-                        << iAirlineCode);
-      assert (false);
-    }
-  }
 }

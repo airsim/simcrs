@@ -58,8 +58,7 @@ namespace SIMCRS {
         const stdair::ClassCode_T lClassCode (ostr.str());
         lAirinvService_ptr->sell (lSegmentDateKey, lClassCode, iPartySize);
       }
-      
-      
+            
       // DEBUG
       // STDAIR_LOG_DEBUG ("The booking has been made");
       

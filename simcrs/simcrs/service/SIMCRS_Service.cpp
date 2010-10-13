@@ -20,9 +20,11 @@
 #include <stdair/service/Logger.hpp>
 #include <stdair/STDAIR_Service.hpp>
 // Airline Inventory
-#include <airinv/AIRINV_Service.hpp>
+#include <airinv/AIRINV_Master_Service.hpp>
 // Airline Schedule
 #include <airsched/AIRSCHED_Service.hpp>
+// Fare Quote
+#include <simfqt/SIMFQT_Service.hpp>
 // Simcrs
 #include <simcrs/basic/BasConst_SIMCRS_Service.hpp>
 #include <simcrs/command/DistributionManager.hpp>
@@ -46,7 +48,9 @@ namespace SIMCRS {
   SIMCRS_Service::
   SIMCRS_Service (stdair::STDAIR_ServicePtr_T ioSTDAIR_ServicePtr,
                   const CRSCode_T& iCRSCode,
-                  const stdair::Filename_T& iScheduleInputFilename)
+                  const stdair::Filename_T& iScheduleInputFilename,
+                  const stdair::Filename_T& iODInputFilename,
+                  const stdair::Filename_T& iFareInputFilename)
     : _simcrsServiceContext (NULL) {
 
     // Initialise the service context
@@ -60,7 +64,7 @@ namespace SIMCRS {
     lSIMCRS_ServiceContext.setSTDAIR_Service (ioSTDAIR_ServicePtr);
     
     // Initialise the context
-    init (iScheduleInputFilename);
+    init (iScheduleInputFilename, iODInputFilename, iFareInputFilename);
   }
 
   // ////////////////////////////////////////////////////////////////////
@@ -68,7 +72,9 @@ namespace SIMCRS {
   SIMCRS_Service (const stdair::BasLogParams& iLogParams,
                   const stdair::BasDBParams& iDBParams,
                   const CRSCode_T& iCRSCode,
-                  const stdair::Filename_T& iScheduleInputFilename)
+                  const stdair::Filename_T& iScheduleInputFilename,
+                  const stdair::Filename_T& iODInputFilename,
+                  const stdair::Filename_T& iFareInputFilename)
     : _simcrsServiceContext (NULL) {
     
     // Initialise the service context
@@ -78,14 +84,16 @@ namespace SIMCRS {
     initStdAirService (iLogParams, iDBParams);
     
     // Initialise the (remaining of the) context
-    init (iScheduleInputFilename);
+    init (iScheduleInputFilename, iODInputFilename, iFareInputFilename);
   }
 
   // ////////////////////////////////////////////////////////////////////
   SIMCRS_Service::
   SIMCRS_Service (const stdair::BasLogParams& iLogParams,
                   const CRSCode_T& iCRSCode,
-                  const stdair::Filename_T& iScheduleInputFilename)
+                  const stdair::Filename_T& iScheduleInputFilename,
+                  const stdair::Filename_T& iODInputFilename,
+                  const stdair::Filename_T& iFareInputFilename)
     : _simcrsServiceContext (NULL) {
     
     // Initialise the service context
@@ -95,7 +103,7 @@ namespace SIMCRS {
     initStdAirService (iLogParams);
     
     // Initialise the (remaining of the) context
-    init (iScheduleInputFilename);
+    init (iScheduleInputFilename, iODInputFilename, iFareInputFilename);
   }
 
   // ////////////////////////////////////////////////////////////////////
@@ -152,7 +160,9 @@ namespace SIMCRS {
   }
   
   // ////////////////////////////////////////////////////////////////////
-  void SIMCRS_Service::init (const stdair::Filename_T& iScheduleInputFilename) {
+  void SIMCRS_Service::init (const stdair::Filename_T& iScheduleInputFilename,
+                             const stdair::Filename_T& iODInputFilename,
+                             const stdair::Filename_T& iFareInputFilename) {
 
     // Check that the file path given as input corresponds to an actual file
     const bool doesExistAndIsReadable =
@@ -166,8 +176,12 @@ namespace SIMCRS {
     // Initialise the children AirSched service context
     initAIRSCHEDService (iScheduleInputFilename);
 
-    // Initialise the children AirInv service context
-    initAIRINVServices ();
+    // Initialise the children AirSched service context
+    initAIRINV_Master_Service (iScheduleInputFilename, iODInputFilename);
+
+
+    // Initialise the children SimFQT service context
+    initSIMFQTService (iFareInputFilename);
   }
 
   // ////////////////////////////////////////////////////////////////////
@@ -196,8 +210,9 @@ namespace SIMCRS {
   }
 
   // ////////////////////////////////////////////////////////////////////
-  void SIMCRS_Service::initAIRINVServices () {
-
+  void SIMCRS_Service::
+  initSIMFQTService (const stdair::Filename_T& iFareInputFilename) {
+    
     // Retrieve the SimCRS service context
     assert (_simcrsServiceContext != NULL);
     SIMCRS_ServiceContext& lSIMCRS_ServiceContext = *_simcrsServiceContext;
@@ -206,33 +221,44 @@ namespace SIMCRS {
     stdair::STDAIR_ServicePtr_T lSTDAIR_Service_ptr =
       lSIMCRS_ServiceContext.getSTDAIR_Service();
     assert (lSTDAIR_Service_ptr != NULL);
+
+    // Initialise the SIMFQT service handler
+    // Note that the (Boost.)Smart Pointer keeps track of the references
+    // on the Service object, and deletes that object when it is no longer
+    // referenced (e.g., at the end of the process).
+    SIMFQT_ServicePtr_T lSIMFQT_Service_ptr =
+      boost::make_shared<SIMFQT::SIMFQT_Service> (lSTDAIR_Service_ptr,
+                                                  iFareInputFilename);
+
+    // Store the Simfqt service object within the (SimCRS) service context
+    lSIMCRS_ServiceContext.setSIMFQT_Service (lSIMFQT_Service_ptr); 
+  }
+
+  // ////////////////////////////////////////////////////////////////////
+  void SIMCRS_Service::
+  initAIRINV_Master_Service (const stdair::Filename_T& iScheduleInputFilename,
+                             const stdair::Filename_T& iODInputFilename) {
     
-    // Retrieve, from the StdAir service context, the root of the BOM tree
-    stdair::BomRoot& lBomRoot = lSTDAIR_Service_ptr->getBomRoot();
+    // Retrieve the SimCRS service context
+    assert (_simcrsServiceContext != NULL);
+    SIMCRS_ServiceContext& lSIMCRS_ServiceContext = *_simcrsServiceContext;
     
-    // Retrieve the list of Inventory objects: one per airline
-    const stdair::InventoryMap_T& lInventoryMap =
-      stdair::BomManager::getMap<stdair::Inventory> (lBomRoot);
-      
-    // Browse the inventory map and initialise the corresponding
-    // AirInv services.
-    for (stdair::InventoryMap_T::const_iterator itInv = lInventoryMap.begin();
-         itInv != lInventoryMap.end(); ++itInv) {
-      const stdair::AirlineCode_T& lAirlineCode = itInv->first;
+    // Retrieve the StdAir service context
+    stdair::STDAIR_ServicePtr_T lSTDAIR_Service_ptr =
+      lSIMCRS_ServiceContext.getSTDAIR_Service();
+    assert (lSTDAIR_Service_ptr != NULL);
 
-      // Build an AirInv service instance, tracked by a Boost SmartPointer
-      AIRINV_ServicePtr_T lAIRINV_Service_ptr =
-        AIRINV_ServicePtr_T (new AIRINV::AIRINV_Service (lSTDAIR_Service_ptr,
-                                                         lAirlineCode));
+    // Initialise the AIRINV service handler
+    // Note that the (Boost.)Smart Pointer keeps track of the references
+    // on the Service object, and deletes that object when it is no longer
+    // referenced (e.g., at the end of the process).
+    AIRINV_Master_ServicePtr_T lAIRINV_Master_Service_ptr =
+      boost::make_shared<AIRINV::AIRINV_Master_Service> (lSTDAIR_Service_ptr,
+                                                         iScheduleInputFilename,
+                                                         iODInputFilename);
 
-      // TODO: Understand why the following does not compile
-      // boost::make_shared<AIRINV::AIRINV_Service> (lSTDAIR_Service_ptr,
-      //                                             lAirlineCode, lCurrentInv);
-
-      // Store the AirInv service object within the (SimCRS) service context
-      lSIMCRS_ServiceContext.addAIRINV_Service (lAirlineCode,
-                                                lAIRINV_Service_ptr);
-    }
+    // Store the Airinv service object within the (SimCRS) service context
+    lSIMCRS_ServiceContext.setAIRINV_Master_Service (lAIRINV_Master_Service_ptr);
   }
   
   // ////////////////////////////////////////////////////////////////////
@@ -294,17 +320,17 @@ namespace SIMCRS {
       const CRSCode_T& lCRSCode =
         lSIMCRS_ServiceContext.getCRSCode();
 
-      // TODO: optimise this part.
-      // Retrieve the map/list of AIRINV_Services
-      const AIRINV_ServicePtr_Map_T& lAIRINV_ServiceMap =
-        lSIMCRS_ServiceContext.getAIRINV_ServiceMap ();
+      // // TODO: optimise this part.
+      // // Retrieve the map/list of AIRINV_Services
+      // const AIRINV_ServicePtr_Map_T& lAIRINV_ServiceMap =
+      //   lSIMCRS_ServiceContext.getAIRINV_ServiceMap ();
       
-      // Delegate the action to the dedicated command
-      stdair::BasChronometer lAvailabilityRetrievalChronometer;
-      lAvailabilityRetrievalChronometer.start();
-      DistributionManager::getAvailability (lAIRINV_ServiceMap,
-                                            lCRSCode, ioTravelSolutionList);
-      // const double lAvailabilityRetrievalMeasure =
+      // // Delegate the action to the dedicated command
+      // stdair::BasChronometer lAvailabilityRetrievalChronometer;
+      // lAvailabilityRetrievalChronometer.start();
+      // DistributionManager::getAvailability (lAIRINV_ServiceMap,
+      //                                       lCRSCode, ioTravelSolutionList);
+      // // const double lAvailabilityRetrievalMeasure =
       //   lAvailabilityRetrievalChronometer.elapsed();
             
     } catch (const std::exception& error) {
@@ -328,16 +354,16 @@ namespace SIMCRS {
       const CRSCode_T& lCRSCode =
         lSIMCRS_ServiceContext.getCRSCode();
 
-      // TODO: optimise this part.
-      // Retrieve the map/list of AIRINV_Services
-      const AIRINV_ServicePtr_Map_T& lAIRINV_ServiceMap =
-        lSIMCRS_ServiceContext.getAIRINV_ServiceMap ();
+      // // TODO: optimise this part.
+      // // Retrieve the map/list of AIRINV_Services
+      // const AIRINV_ServicePtr_Map_T& lAIRINV_ServiceMap =
+      //   lSIMCRS_ServiceContext.getAIRINV_ServiceMap ();
       
-      // Delegate the booking to the dedicated command
-      stdair::BasChronometer lSellChronometer;
-      lSellChronometer.start();
-      DistributionManager::sell (lAIRINV_ServiceMap,
-                                 lCRSCode, iTravelSolution, iPartySize);
+      // // Delegate the booking to the dedicated command
+      // stdair::BasChronometer lSellChronometer;
+      // lSellChronometer.start();
+      // DistributionManager::sell (lAIRINV_ServiceMap,
+      //                            lCRSCode, iTravelSolution, iPartySize);
       
       // DEBUG
       // const double lSellMeasure = lSellChronometer.elapsed();

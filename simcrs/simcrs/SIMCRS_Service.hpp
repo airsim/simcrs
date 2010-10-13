@@ -40,9 +40,12 @@ namespace SIMCRS {
         @param const stdair::BasLogParams& Parameters for the output log stream.
         @param const stdair::BasDBParams& Parameters for the database access.
         @param const CRSCode_T& Code of the owner of the distribution system.
-        @param const stdair::Filename_T& Filename of the input schedule file. */
+        @param const stdair::Filename_T& Filename of the input schedule file.
+        @param const stdair::Filename_T& Filename of the input O&D file.
+        @param const stdair::Filename_T& Filename of the input fare file. */
     SIMCRS_Service (const stdair::BasLogParams&, const stdair::BasDBParams&,
-                    const CRSCode_T&, const stdair::Filename_T&);
+                    const CRSCode_T&, const stdair::Filename_T&,
+                    const stdair::Filename_T&, const stdair::Filename_T&);
 
     /** Constructor.
         <br>The init() method is called; see the corresponding documentation
@@ -51,9 +54,12 @@ namespace SIMCRS {
         that log outputs can be directed onto that stream.       
         @param const stdair::BasLogParams& Parameters for the output log stream.
         @param const CRSCode_T& Code of the owner of the distribution system.
-        @param const stdair::Filename_T& Filename of the input schedule file. */
-    SIMCRS_Service (const stdair::BasLogParams&,
-                    const CRSCode_T&, const stdair::Filename_T&);
+        @param const stdair::Filename_T& Filename of the input schedule file.
+        @param const stdair::Filename_T& Filename of the input O&D file.
+        @param const stdair::Filename_T& Filename of the input fare file. */
+    SIMCRS_Service (const stdair::BasLogParams&, const CRSCode_T&,
+                    const stdair::Filename_T&, const stdair::Filename_T&,
+                    const stdair::Filename_T&);
 
     /** Constructor.
         <br>The init() method is called; see the corresponding documentation
@@ -66,9 +72,12 @@ namespace SIMCRS {
         DSIM_Service).
         @param stdair::STDAIR_ServicePtr_T Reference on the STDAIR service.
         @param const CRSCode_T& Code of the owner of the distribution system.
-        @param const stdair::Filename_T& Filename of the input schedule file. */
-    SIMCRS_Service (stdair::STDAIR_ServicePtr_T,
-                    const CRSCode_T&, const stdair::Filename_T&);
+        @param const stdair::Filename_T& Filename of the input schedule file.
+        @param const stdair::Filename_T& Filename of the input O&D file.
+        @param const stdair::Filename_T& Filename of the input fare file. */
+    SIMCRS_Service (stdair::STDAIR_ServicePtr_T, const CRSCode_T&, 
+                    const stdair::Filename_T&, const stdair::Filename_T&,
+                    const stdair::Filename_T&);
 
     /** Destructor. */
     ~SIMCRS_Service();
@@ -116,17 +125,26 @@ namespace SIMCRS {
     /** Initialise.
         <br>The CSV file, describing the airline schedules for the
         simulator, is parsed and the inventories are generated accordingly.
-        @param const stdair::Filename_T& Filename of the input schedule file. */
-    void init (const stdair::Filename_T& iScheduleInputFilename);
+        @param const stdair::Filename_T& Filename of the input schedule file.
+        @param const stdair::Filename_T& Filename of the input O&D file.
+        @param const stdair::Filename_T& Filename of the input fare file. */
+    void init (const stdair::Filename_T& iScheduleInputFilename,
+               const stdair::Filename_T& iODInputFilename,
+               const stdair::Filename_T& iFareInputFilename);
 
     /** Initialise the AIRSCHED service with the given schedule file.
         @param const stdair::Filename_T& Filename of the input schedule file. */
     void initAIRSCHEDService (const stdair::Filename_T& iScheduleInputFilename);
+    
+    /** Initialise the SIMFQT service with the given schedule file.
+        @param const stdair::Filename_T& Filename of the input schedule file. */
+    void initSIMFQTService (const stdair::Filename_T& iFareInputFilename);
 
-    /** Initialise the list of AIRINV services.
-        <br>After having initialised the AIRSCHED service, parse the list of
-        airline inventories and build a AIRINV service for each airline. */
-    void initAIRINVServices ();
+    /** Initialise the AIRINV Master service with the given schedule file.
+        @param const stdair::Filename_T& Filename of the input schedule file.
+        @param const stdair::Filename_T& Filename of the input O&D file. */
+    void initAIRINV_Master_Service (const stdair::Filename_T&,
+                                    const stdair::Filename_T&);
 
     /** Finalise. */
     void finalise ();
