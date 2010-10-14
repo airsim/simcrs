@@ -174,7 +174,7 @@ namespace SIMCRS {
     }
 
     // Initialise the children AirSched service context
-    initAIRSCHEDService (iScheduleInputFilename);
+    initAIRSCHEDService (iScheduleInputFilename, iODInputFilename);
 
     // Initialise the children AirSched service context
     initAIRINV_Master_Service (iScheduleInputFilename, iODInputFilename);
@@ -186,7 +186,8 @@ namespace SIMCRS {
 
   // ////////////////////////////////////////////////////////////////////
   void SIMCRS_Service::
-  initAIRSCHEDService (const stdair::Filename_T& iScheduleInputFilename) {
+  initAIRSCHEDService (const stdair::Filename_T& iScheduleInputFilename,
+                       const stdair::Filename_T& iODInputFilename) {
     
     // Retrieve the SimCRS service context
     assert (_simcrsServiceContext != NULL);
@@ -203,7 +204,8 @@ namespace SIMCRS {
     // referenced (e.g., at the end of the process).
     AIRSCHED_ServicePtr_T lAIRSCHED_Service_ptr =
       boost::make_shared<AIRSCHED::AIRSCHED_Service> (lSTDAIR_Service_ptr,
-                                                      iScheduleInputFilename);
+                                                      iScheduleInputFilename,
+                                                      iODInputFilename);
 
     // Store the AirSched service object within the (SimCRS) service context
     lSIMCRS_ServiceContext.setAIRSCHED_Service (lAIRSCHED_Service_ptr);

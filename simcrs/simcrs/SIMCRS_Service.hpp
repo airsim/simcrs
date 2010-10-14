@@ -137,8 +137,10 @@ namespace SIMCRS {
                const stdair::Filename_T& iFareInputFilename);
 
     /** Initialise the AIRSCHED service with the given schedule file.
-        @param const stdair::Filename_T& Filename of the input schedule file. */
-    void initAIRSCHEDService (const stdair::Filename_T& iScheduleInputFilename);
+        @param const stdair::Filename_T& Filename of the input schedule file.
+        @param const stdair::Filename_T& Filename of the input O&D file. */
+    void initAIRSCHEDService (const stdair::Filename_T&,
+                              const stdair::Filename_T&);
     
     /** Initialise the SIMFQT service with the given schedule file.
         @param const stdair::Filename_T& Filename of the input schedule file. */
