@@ -37,6 +37,12 @@ void CRSTestSuite::simpleCRSHelper() {
     // Schedule input filename
     std::string lScheduleFilename ("../samples/schedule01.csv");
     
+    // O&D input filename
+    std::string lOnDFilename ("../samples/ond01.csv");
+    
+    // Fare input filename
+    std::string lFareFilename ("../samples/fare01.csv");
+    
     // Set the log parameters
     std::ofstream logOutputFile;
     // Open and clean the log outputfile
@@ -46,7 +52,8 @@ void CRSTestSuite::simpleCRSHelper() {
     // Initialise the list of classes/buckets
     const stdair::BasLogParams lLogParams (stdair::LOG::DEBUG, logOutputFile);
     SIMCRS::SIMCRS_Service simcrsService (lLogParams, lCRSCode,
-                                          lScheduleFilename);
+                                          lScheduleFilename, lOnDFilename,
+                                          lFareFilename);
 
     // Make a booking
     //simcrsService.sell (lAirlineCode, lPartySize);

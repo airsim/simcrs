@@ -19,5 +19,6 @@ CRSTestSuite_CXXFLAGS = $(BOOST_CFLAGS) $(CPPUNIT_CFLAGS) \
 CRSTestSuite_LDADD =
 CRSTestSuite_LDFLAGS = \
 		$(BOOST_LIBS) $(CPPUNIT_LIBS) $(EXTRACC_LIBS) $(STDAIR_LIBS) \
+		$(top_builddir)/simfqt/core/libsimfqt.la \
 		$(top_builddir)/simcrs/core/libsimcrs.la
 #		$(top_builddir)/airinv/core/libairinv.la
