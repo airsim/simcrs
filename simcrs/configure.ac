@@ -272,6 +272,15 @@ AC_CONFIG_FILES(
 	airinv/core/Makefile
 	airinv/batches/Makefile
 	airinv/server/Makefile
+	simfqt/Makefile
+	simfqt/basic/Makefile
+	simfqt/bom/Makefile
+	simfqt/factory/Makefile
+	simfqt/command/Makefile
+	simfqt/service/Makefile
+	simfqt/config/Makefile
+	simfqt/core/Makefile
+	simfqt/batches/Makefile
 	simcrs/Makefile
 	simcrs/basic/Makefile
 	simcrs/bom/Makefile
@@ -285,6 +294,7 @@ AC_CONFIG_FILES(
 	test/samples/Makefile
 	test/airsched/Makefile
 	test/airinv/Makefile
+	test/simfqt/Makefile
 	test/simcrs/Makefile
 )
 AC_OUTPUT

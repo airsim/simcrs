@@ -44,8 +44,10 @@ namespace SIMCRS {
         @param const stdair::Filename_T& Filename of the input O&D file.
         @param const stdair::Filename_T& Filename of the input fare file. */
     SIMCRS_Service (const stdair::BasLogParams&, const stdair::BasDBParams&,
-                    const CRSCode_T&, const stdair::Filename_T&,
-                    const stdair::Filename_T&, const stdair::Filename_T&);
+                    const CRSCode_T&,
+                    const stdair::Filename_T& iScheduleInputFilename,
+                    const stdair::Filename_T& iODInputFilename,
+                    const stdair::Filename_T& iFareInputFilename);
 
     /** Constructor.
         <br>The init() method is called; see the corresponding documentation
@@ -58,8 +60,9 @@ namespace SIMCRS {
         @param const stdair::Filename_T& Filename of the input O&D file.
         @param const stdair::Filename_T& Filename of the input fare file. */
     SIMCRS_Service (const stdair::BasLogParams&, const CRSCode_T&,
-                    const stdair::Filename_T&, const stdair::Filename_T&,
-                    const stdair::Filename_T&);
+                    const stdair::Filename_T& iScheduleInputFilename,
+                    const stdair::Filename_T& iODInputFilename,
+                    const stdair::Filename_T& iFareInputFilename);
 
     /** Constructor.
         <br>The init() method is called; see the corresponding documentation
@@ -76,8 +79,9 @@ namespace SIMCRS {
         @param const stdair::Filename_T& Filename of the input O&D file.
         @param const stdair::Filename_T& Filename of the input fare file. */
     SIMCRS_Service (stdair::STDAIR_ServicePtr_T, const CRSCode_T&, 
-                    const stdair::Filename_T&, const stdair::Filename_T&,
-                    const stdair::Filename_T&);
+                    const stdair::Filename_T& iScheduleInputFilename,
+                    const stdair::Filename_T& iODInputFilename,
+                    const stdair::Filename_T& iFareInputFilename);
 
     /** Destructor. */
     ~SIMCRS_Service();
@@ -143,8 +147,8 @@ namespace SIMCRS {
     /** Initialise the AIRINV Master service with the given schedule file.
         @param const stdair::Filename_T& Filename of the input schedule file.
         @param const stdair::Filename_T& Filename of the input O&D file. */
-    void initAIRINV_Master_Service (const stdair::Filename_T&,
-                                    const stdair::Filename_T&);
+    void initAIRINV_Master_Service (const stdair::Filename_T& iScheduleInputFilename,
+                                    const stdair::Filename_T& iODInputFilename);
 
     /** Finalise. */
     void finalise ();
@@ -158,4 +162,3 @@ namespace SIMCRS {
   };
 }
 #endif // __SIMCRS_SVC_SIMCRS_SERVICE_HPP
-
