@@ -309,8 +309,8 @@ namespace SIMCRS {
   }
 
   // ////////////////////////////////////////////////////////////////////
-  void SIMCRS_Service::
-  getAvailability (stdair::TravelSolutionList_T& ioTravelSolutionList) {
+  void SIMCRS_Service::getFare (stdair::TravelSolutionList_T& ioTravelSolutionList) {
+     
     if (_simcrsServiceContext == NULL) {
       throw NonInitialisedServiceException();
     }
@@ -339,6 +339,17 @@ namespace SIMCRS {
       STDAIR_LOG_ERROR ("Exception: "  << error.what());
       throw AvailabilityRetrievalException();
     }
+    
+  }
+
+  // ////////////////////////////////////////////////////////////////////
+  void SIMCRS_Service::
+  getAvailability (stdair::TravelSolutionList_T& ioTravelSolutionList) {
+    if (_simcrsServiceContext == NULL) {
+      throw NonInitialisedServiceException();
+    }
+    assert (_simcrsServiceContext != NULL);
+    SIMCRS_ServiceContext& lSIMCRS_ServiceContext= *_simcrsServiceContext;
   }
   
   // ////////////////////////////////////////////////////////////////////
