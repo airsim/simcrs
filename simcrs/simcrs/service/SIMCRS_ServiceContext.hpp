@@ -10,7 +10,8 @@
 // Boost
 #include <boost/shared_ptr.hpp>
 // StdAir
-#include <stdair/STDAIR_Types.hpp>
+#include <stdair/stdair_basic_types.hpp>
+#include <stdair/stdair_service_types.hpp>
 // SimCRS
 #include <simcrs/SIMCRS_Types.hpp>
 #include <simcrs/service/ServiceAbstract.hpp>

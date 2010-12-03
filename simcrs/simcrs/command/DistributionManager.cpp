@@ -12,6 +12,7 @@
 #include <simcrs/command/DistributionManager.hpp>
 
 namespace SIMCRS {
+  
   // ////////////////////////////////////////////////////////////////////
   void DistributionManager::
   getAvailability (const AIRINV::AIRINV_ServicePtr_Map_T& iAIRINV_ServiceMap,
@@ -20,7 +21,7 @@ namespace SIMCRS {
     for (stdair::TravelSolutionList_T::iterator itTS =
            ioTravelSolutionList.begin();
          itTS != ioTravelSolutionList.end(); ++itTS) {
-      stdair::TravelSolutionStruct& lCurrentTravelSolution = *itTS;
+      //stdair::TravelSolutionStruct& lCurrentTravelSolution = *itTS;
     }
   }
   
@@ -38,7 +39,7 @@ namespace SIMCRS {
         iTravelSolution.getBookingClassKeyList();
       stdair::ClassList_String_T::const_iterator itBookingClassKey =
         lBookingClassKeyList.begin();
-      for (stdair::KeyList_T::const_iterator itKey = lSegmentDateKeyList.begin();
+      for (stdair::KeyList_T::const_iterator itKey= lSegmentDateKeyList.begin();
            itKey != lSegmentDateKeyList.end(); ++itKey, ++itBookingClassKey) {
         const std::string& lSegmentDateKey = *itKey;
 

@@ -10,7 +10,7 @@
 #include <boost/bind.hpp>
 #include <boost/make_shared.hpp>
 // Standard Airline Object Model
-#include <stdair/STDAIR_Types.hpp>
+#include <stdair/stdair_basic_types.hpp>
 #include <stdair/basic/BasChronometer.hpp>
 #include <stdair/basic/BasFileMgr.hpp>
 #include <stdair/bom/BomManager.hpp> 
@@ -309,7 +309,8 @@ namespace SIMCRS {
   }
 
   // ////////////////////////////////////////////////////////////////////
-  void SIMCRS_Service::getFare (stdair::TravelSolutionList_T& ioTravelSolutionList) {
+  void SIMCRS_Service::
+  getFare (stdair::TravelSolutionList_T& ioTravelSolutionList) {
      
     if (_simcrsServiceContext == NULL) {
       throw NonInitialisedServiceException();
@@ -318,9 +319,9 @@ namespace SIMCRS {
     SIMCRS_ServiceContext& lSIMCRS_ServiceContext= *_simcrsServiceContext;
 
     try {
+      
       // Retrieve the CRS code
-      const CRSCode_T& lCRSCode =
-        lSIMCRS_ServiceContext.getCRSCode();
+      const CRSCode_T& lCRSCode = lSIMCRS_ServiceContext.getCRSCode();
 
       // // TODO: optimise this part.
       // // Retrieve the map/list of AIRINV_Services
@@ -338,8 +339,7 @@ namespace SIMCRS {
     } catch (const std::exception& error) {
       STDAIR_LOG_ERROR ("Exception: "  << error.what());
       throw AvailabilityRetrievalException();
-    }
-    
+    }    
   }
 
   // ////////////////////////////////////////////////////////////////////
@@ -363,6 +363,7 @@ namespace SIMCRS {
     SIMCRS_ServiceContext& lSIMCRS_ServiceContext= *_simcrsServiceContext;
 
     try {
+      
       // Retrieve the CRS code
       const CRSCode_T& lCRSCode =
         lSIMCRS_ServiceContext.getCRSCode();

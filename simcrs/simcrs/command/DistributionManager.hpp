@@ -1,11 +1,11 @@
-#ifndef __SIMCRS_CMD_INDEXBUILDER_HPP
-#define __SIMCRS_CMD_INDEXBUILDER_HPP
+#ifndef __SIMCRS_CMD_DISTRIBUTIONMANAGER_HPP
+#define __SIMCRS_CMD_DISTRIBUTIONMANAGER_HPP
 
 // //////////////////////////////////////////////////////////////////////
 // Import section
 // //////////////////////////////////////////////////////////////////////
-// STDAIR
-#include <stdair/STDAIR_Types.hpp>
+// StdAir
+#include <stdair/stdair_basic_types.hpp>
 #include <stdair/bom/TravelSolutionTypes.hpp>
 // Airinv
 #include <airinv/AIRINV_Types.hpp>
@@ -19,13 +19,14 @@ namespace stdair {
 
 namespace SIMCRS {
 
-  /** Command wrapping the travel request process. */
+  /** Command wrapping the travel distribution (CRS/GDS) process. */
   class DistributionManager {
     friend class SIMCRS_Service;
   private:
     /** Get the availability for each travel solution in the list.. */
     static void getAvailability (const AIRINV::AIRINV_ServicePtr_Map_T&,
-                          const CRSCode_T&, stdair::TravelSolutionList_T&);
+                                 const CRSCode_T&,
+                                 stdair::TravelSolutionList_T&);
     
     /** Register a booking (segment sell). */
     static void sell (const AIRINV::AIRINV_ServicePtr_Map_T&,
@@ -41,4 +42,4 @@ namespace SIMCRS {
   };
 
 }
-#endif // __SIMCRS_CMD_INDEXBUILDER_HPP
+#endif // __SIMCRS_CMD_DISTRIBUTIONMANAGER_HPP
