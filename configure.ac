@@ -290,8 +290,8 @@ AC_CONFIG_FILES(
 	simcrs/config/Makefile
 	simcrs/core/Makefile
 	simcrs/batches/Makefile
-	samples/Makefile
 	test/Makefile
+	test/samples/Makefile
 	test/airsched/Makefile
 	test/airinv/Makefile
 	test/simfqt/Makefile
