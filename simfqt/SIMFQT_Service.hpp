@@ -66,7 +66,14 @@ namespace SIMFQT {
     SIMFQT_Service (stdair::STDAIR_ServicePtr_T ioSTDAIR_ServicePtr,
                     const stdair::Filename_T& iFareInputFilename);
 
-    /** Destructor. */
+    /** Destructor. */  
+
+    /** Calculate the fares corresponding to a given list of travel 
+	solutions.
+        <br>The stdair::Fare_T attribute of each travel solution of the list 
+	is calculated.
+        @param stdair::TravelSolutionList_T& List of travel solution. */
+    void getFares (stdair::TravelSolutionList_T&);
     ~SIMFQT_Service();
 
     
@@ -101,13 +108,6 @@ namespace SIMFQT {
         simulator, is parsed and the inventories are generated accordingly.
         @param const stdair::Filename_T& Filename of the input fare file. */
     void init (const stdair::Filename_T& iFareInputFilename); 
-    
-    /** Calculate the fares corresponding to a given list of travel 
-	solutions.
-        <br>The stdair::Fare_T attribute of each travel solution of the list 
-	is calculated.
-        @param stdair::TravelSolutionList_T& List of travel solution. */
-    void getFares (stdair::TravelSolutionList_T&);
 
     /** Finalise. */
     void finalise ();
