@@ -17,4 +17,5 @@ config/missing
 configure
 simfqt/config.h.in*
 test/simfqt/FQTTestSuite_results.xml
+simcrs
 
