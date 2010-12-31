@@ -12,6 +12,7 @@
 #include <stdair/basic/BasLogParams.hpp>
 #include <stdair/basic/BasDBParams.hpp>
 #include <stdair/bom/TravelSolutionStruct.hpp>
+#include <stdair/service/Logger.hpp>
 // SimCRS
 #include <simcrs/SIMCRS_Service.hpp>
 #include <simcrs/config/simcrs-paths.hpp>
