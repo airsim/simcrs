@@ -1,4 +1,4 @@
-## top directory
+## top directory of the SimCRS project
 include $(top_srcdir)/Makefile.common
 
 ACLOCAL_AMFLAGS = -I config
@@ -30,7 +30,8 @@ MAINTAINERCLEANFILES = Makefile.in aclocal.m4 configure \
 EXTRA_DIST =
 
 # Build in these directories:
-SUBDIRS = airsched airinv simfqt simcrs samples $(TEST_DIR)
+SUBDIRS = airsched avlcal airinv simfqt simlfs simcrs \
+	man samples $(HTML_DOC_DIR) $(TEST_DIR)
 
 
 # Configuration helpers
@@ -49,32 +50,32 @@ uninstall-local:
 dist-html:
 	$(MAKE) -C doc dist-html
 
-dist-gui:
-	$(MAKE) -C gui dist-gui
+dist-pdf:
+	$(MAKE) -C doc dist-pdf
 
-snapshot: snapshot-src snapshot-html snapshot-gui
+snapshot: snapshot-src snapshot-html snapshot-pdf
 
 
 snapshot-src:
 	$(MAKE) dist distdir=@PACKAGE_TARNAME@-`date +"%Y%m%d"`
 
 snapshot-html:
-	$(MAKE) -C doc dist-html html_tarname=@PACKAGE_TARNAME@-html-doc-`date +"%Y%m%d"`
+	$(MAKE) -C doc dist-html html_tarname=@PACKAGE_TARNAME@-doc-html-`date +"%Y%m%d"`
 
-snapshot-gui:
-	$(MAKE) -C gui dist-gui
+snapshot-pdf:
+	$(MAKE) -C pdf dist-pdf
 
-upload: upload-src upload-html upload-gui
+upload: upload-src upload-html upload-pdf
 
 upload-src: dist
 	@UPLOAD_COMMAND@ @PACKAGE_TARNAME@-@VERSION@.tar.gz \
 	@PACKAGE_TARNAME@-@VERSION@.tar.bz2
 
 upload-html: dist-html
-	@UPLOAD_COMMAND@ @PACKAGE_TARNAME@-html-doc-@VERSION@.tar.gz \
-	@PACKAGE_TARNAME@-html-doc-@VERSION@.tar.bz2
+	@UPLOAD_COMMAND@ @PACKAGE_TARNAME@-doc-html-@VERSION@.tar.gz \
+	@PACKAGE_TARNAME@-doc-html-@VERSION@.tar.bz2
 
-upload-gui: dist-gui
-	@UPLOAD_COMMAND@ @PACKAGE_TARNAME@-gui-@VERSION@.tar.gz \
-	@PACKAGE_TARNAME@-gui-@VERSION@.tar.bz2
+upload-pdf: dist-pdf
+	@UPLOAD_COMMAND@ @PACKAGE_TARNAME@-doc-pdf-@VERSION@.tar.gz \
+	@PACKAGE_TARNAME@-doc-pdf-@VERSION@.tar.bz2
 

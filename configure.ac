@@ -268,6 +268,15 @@ AC_CONFIG_FILES(
 	airsched/config/Makefile
 	airsched/core/Makefile
 	airsched/batches/Makefile
+	avlcal/Makefile
+	avlcal/basic/Makefile
+	avlcal/bom/Makefile
+	avlcal/factory/Makefile
+	avlcal/command/Makefile
+	avlcal/service/Makefile
+	avlcal/config/Makefile
+	avlcal/core/Makefile
+	avlcal/batches/Makefile
 	airinv/Makefile
 	airinv/basic/Makefile
 	airinv/bom/Makefile
@@ -287,6 +296,15 @@ AC_CONFIG_FILES(
 	simfqt/config/Makefile
 	simfqt/core/Makefile
 	simfqt/batches/Makefile
+	simlfs/Makefile
+	simlfs/basic/Makefile
+	simlfs/bom/Makefile
+	simlfs/factory/Makefile
+	simlfs/command/Makefile
+	simlfs/service/Makefile
+	simlfs/config/Makefile
+	simlfs/core/Makefile
+	simlfs/batches/Makefile
 	simcrs/Makefile
 	simcrs/basic/Makefile
 	simcrs/bom/Makefile
@@ -297,10 +315,20 @@ AC_CONFIG_FILES(
 	simcrs/core/Makefile
 	simcrs/batches/Makefile
 	samples/Makefile
+	man/Makefile
+	man/doxygen_man.cfg
+	doc/Makefile
+	doc/images/Makefile
+	doc/tutorial/Makefile
+	doc/tutorial/src/Makefile
+	doc/local/Makefile
+	doc/doxygen_html.cfg
 	test/Makefile
 	test/airsched/Makefile
+	test/avlcal/Makefile
 	test/airinv/Makefile
 	test/simfqt/Makefile
+	test/simlfs/Makefile
 	test/simcrs/Makefile
 )
 AC_OUTPUT

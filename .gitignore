@@ -16,6 +16,5 @@ config/lt~obsolete.m4
 config/missing
 configure
 config.h.in*
-AirlineScheduleTestSuite_results.xml
-CRSTestSuite_results.xml
+*_results.xml
 
