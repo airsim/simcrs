@@ -5,7 +5,7 @@ Name:           simcrs
 Version:        99.99.99
 Release:        1%{?dist}
 
-Summary:        C++ Travel-Oriented Distribution System Library
+Summary:        C++ Simulated Travel-Oriented Distribution System Library
 
 Group:          System Environment/Libraries 
 License:        LGPLv2

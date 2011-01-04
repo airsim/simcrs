@@ -11,6 +11,10 @@ AM_INIT_AUTOMAKE
 AM_PATH_CPPUNIT(1.10)
 AM_CONDITIONAL([HAVE_CPPUNIT], [test "x$CPPUNIT_LIBS" != x])
 
+# Package name
+PACKAGE_PRETTY_NAME="SimCRS"
+AC_SUBST(PACKAGE_PRETTY_NAME)
+
 # Shared library versioning
 GENERIC_LIBRARY_VERSION="99:99:99"
 #                        | | |
