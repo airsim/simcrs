@@ -27,6 +27,7 @@
 // AirSched
 #include <airsched/command/Simulator.hpp>
 #include <airsched/AIRSCHED_Service.hpp>
+#include <airsched/config/airsched-paths.hpp>
 // AirSched Test Suite
 #include <test/airsched/AirlineScheduleTestSuite.hpp>
 
@@ -46,7 +47,7 @@ void externalMemoryManagementHelper() {
   try {
     
     // Input file name
-    const std::string lInputFilename ("../samples/schedule02.csv");
+    const std::string lInputFilename (STDAIR_SAMPLE_DIR "/schedule02.csv");
     
     // Output log File
     const std::string lLogFilename ("AirlineScheduleTestSuite.log");
@@ -91,7 +92,7 @@ void scheduleParsingHelper() {
   try {
     
     // Input file name
-    stdair::Filename_T lInputFilename ("../samples/schedule02.csv");
+    stdair::Filename_T lInputFilename (STDAIR_SAMPLE_DIR "/schedule02.csv");
 
     // Output log File
     std::string lLogFilename ("AirlineScheduleTestSuite.log");
