@@ -8,9 +8,11 @@
 #include <stdair/basic/BasLogParams.hpp>
 #include <stdair/basic/BasDBParams.hpp>
 #include <stdair/bom/TravelSolutionStruct.hpp>
+#include <stdair/service/Logger.hpp>
 // Avlcal
 #include <avlcal/AVLCAL_Types.hpp>
 #include <avlcal/AVLCAL_Service.hpp>
+#include <avlcal/config/avlcal-paths.hpp>
 // Avlcal Test Suite
 #include <test/avlcal/AvlCalTestSuite.hpp>
 
@@ -21,42 +23,30 @@
 // //////////////////////////////////////////////////////////////////////
 void AvlCalTestSuite::simpleAvlCalHelper() {
 
-  try {
+  // Airline code
+  const stdair::AirlineCode_T lAirlineCode ("SV");
     
-    // Airline code
-    std::string lAirlineCode ("SV");
-    
-    // Number of passengers in the travelling group
-    AVLCAL::PartySize_T lPartySize = 5;
-    
-    // Output log File
-    std::string lLogFilename ("AvlCalTestSuite.log");
+  // Number of passengers in the travelling group
+  const stdair::PartySize_T lPartySize = 5;
 
-    // Set the log parameters
-    std::ofstream logOutputFile;
-    // Open and clean the log outputfile
-    logOutputFile.open (lLogFilename.c_str());
-    logOutputFile.clear();
+  // Input file
+  const std::string lInputFile (STDAIR_SAMPLE_DIR "/schedule01.csv");
     
-    // Initialise the list of classes/buckets
-    const stdair::BasLogParams lLogParams (stdair::LOG::DEBUG, logOutputFile);
-    AVLCAL::AVLCAL_Service avlcalService (lLogParams, lAirlineCode);
+  // Output log File
+  const std::string lLogFilename ("AvlCalTestSuite.log");
 
-    // Perform an availability calculation
-    avlcalService.avlCalculate (lPartySize);
-    
-  } catch (const AVLCAL::RootException& otexp) {
-    std::cerr << "Standard exception: " << otexp.what() << std::endl;
-    return;
-    
-  } catch (const std::exception& stde) {
-    std::cerr << "Standard exception: " << stde.what() << std::endl;
-    return;
-    
-  } catch (...) {
-    return;
-  }
+  // Set the log parameters
+  std::ofstream logOutputFile;
+  // Open and clean the log outputfile
+  logOutputFile.open (lLogFilename.c_str());
+  logOutputFile.clear();
   
+  // Initialise the list of classes/buckets
+  const stdair::BasLogParams lLogParams (stdair::LOG::DEBUG, logOutputFile);
+  AVLCAL::AVLCAL_Service avlcalService (lLogParams, lAirlineCode);
+  
+  // Perform an availability calculation
+  avlcalService.avlCalculate (lPartySize);
 }
 
 // //////////////////////////////////////////////////////////////////////
