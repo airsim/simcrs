@@ -114,10 +114,6 @@ fi
 # -----------------------------------------------------------------------------
 # Support for ExtraCC (Extra-CruiseControl): http://sf.net/projects/extracc
 # -----------------------------------------------------------------------------
-# Note: the ExtraCC is now imported as a Subversion external reference,
-#       thus directly accessible within the extracppunit directory.
-#       When that library will be widely avaible on Linux distributions,
-#       the external reference can be removed and the following line uncommented.
 AM_PATH_EXTRACC
 AC_SUBST(EXTRACC_VERSION)
 AC_SUBST(EXTRACC_CFLAGS)
