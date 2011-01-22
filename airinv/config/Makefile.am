@@ -24,7 +24,6 @@ airinv-paths.hpp: Makefile
 	@echo '#define LIBEXECDIR "$(libexecdir)"' >> $@
 	@echo '#define DATADIR "$(datadir)"' >> $@
 	@echo '#define DOCDIR "$(docdir)"' >> $@
-	@echo '#endif // __AIRINV_PATHS_HPP' >> $@
 	@echo '#define STDAIR_SAMPLE_DIR "$(STDAIR_SAMPLE_DIR)"' >> $@
 	@echo >> $@
 	@echo '#endif // __AIRINV_PATHS_HPP' >> $@
