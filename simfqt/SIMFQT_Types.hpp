@@ -13,6 +13,20 @@
 namespace SIMFQT {
 
   // ///////// Exceptions ///////////
+  class AirportPairNotFoundException : public stdair::ObjectNotFoundException {
+  public:
+    /** Constructor. */
+    AirportPairNotFoundException (const std::string& iWhat)
+      : stdair::ObjectNotFoundException (iWhat) {}
+  };
+
+  class PositionNotFoundException : public stdair::ObjectNotFoundException {
+  public:
+    /** Constructor. */
+    PositionNotFoundException (const std::string& iWhat)
+      : stdair::ObjectNotFoundException (iWhat) {}
+  };
+
   class FareInputFileNotFoundException : public stdair::FileNotFoundException {
   public:
     /** Constructor. */
@@ -26,7 +40,5 @@ namespace SIMFQT {
   // //////// Type definitions specific to SimFQT /////////
   /** ID for the Fare Quote system. */
   typedef unsigned int FareQuoteID_T;
-
 }
 #endif // __SIMFQT_SIMFQT_TYPES_HPP
-
