@@ -4,12 +4,8 @@ include $(top_srcdir)/Makefile.common
 MAINTAINERCLEANFILES = Makefile.in
 
 ##
-SUBDIRS = airsched avlcal airinv simfqt simlfs simcrs
+# TODO: Migrate the remaining projects to Boost UTF and uncomment them
+#SUBDIRS = airsched avlcal airinv simfqt simlfs simcrs
+SUBDIRS = simcrs
 
 EXTRA_DIST =
-
-##
-check_PROGRAMS =
-TESTS = $(check_PROGRAMS)
-XFAIL_TESTS = #
-
