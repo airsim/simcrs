@@ -326,8 +326,6 @@ namespace SIMCRS {
 
     stdair::TravelSolutionList_T oTravelSolutionList;
 
-    stdair::TravelSolutionList_T oTravelSolutionList;
-
     try {
       
       // Retrieve the CRS code
