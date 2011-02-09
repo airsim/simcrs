@@ -69,7 +69,7 @@ BOOST_AUTO_TEST_CASE (simcrs_simple_simulation_test) {
                                                    "/schedule01.csv");
     
   // O&D input filename
-  const stdair::Filename_T lODInputFilename (STDAIR_SAMPLE_DIR "/ond01.csv");
+  const stdair::Filename_T lOnDInputFilename (STDAIR_SAMPLE_DIR "/ond01.csv");
     
   // Fare input filename
   const stdair::Filename_T lFareInputFilename (STDAIR_SAMPLE_DIR "/fare01.csv");
@@ -83,9 +83,9 @@ BOOST_AUTO_TEST_CASE (simcrs_simple_simulation_test) {
 
   // Check that the file path given as input corresponds to an actual file
   doesExistAndIsReadable =
-    stdair::BasFileMgr::doesExistAndIsReadable (lODInputFilename);
+    stdair::BasFileMgr::doesExistAndIsReadable (lOnDInputFilename);
   BOOST_CHECK_MESSAGE (doesExistAndIsReadable == true,
-                       "The '" << lODInputFilename
+                       "The '" << lOnDInputFilename
                        << "' input file can not be open and read");
 
   // Check that the file path given as input corresponds to an actual file
@@ -108,7 +108,7 @@ BOOST_AUTO_TEST_CASE (simcrs_simple_simulation_test) {
   const stdair::BasLogParams lLogParams (stdair::LOG::DEBUG, logOutputFile);
   SIMCRS::SIMCRS_Service simcrsService (lLogParams, lCRSCode,
                                         lScheduleInputFilename,
-                                        lODInputFilename, lFareInputFilename);
+                                        lOnDInputFilename, lFareInputFilename);
 
   // Create an empty booking request structure
   // TODO: fill the booking request structure from the input parameters
@@ -120,7 +120,7 @@ BOOST_AUTO_TEST_CASE (simcrs_simple_simulation_test) {
   const stdair::Duration_T lRequestTime (boost::posix_time::hours(10));
   const stdair::DateTime_T lRequestDateTime (lRequestDate, lRequestTime);
   const stdair::CabinCode_T lPreferredCabin ("Eco");
-  const stdair::NbOfSeats_T lPartySize (1);
+  const stdair::PartySize_T lPartySize (3);
   const stdair::ChannelLabel_T lChannel ("IN");
   const stdair::TripType_T lTripType ("RI");
   const stdair::DayDuration_T lStayDuration (7);
@@ -139,7 +139,7 @@ BOOST_AUTO_TEST_CASE (simcrs_simple_simulation_test) {
                                                       lPreferredDepartureTime,
                                                       lWTP, lValueOfTime);
   const stdair::SegmentPathList_T lSegmentPath =
-    simcrsService.calculateSegmentPathList(lBookingRequest);
+    simcrsService.calculateSegmentPathList (lBookingRequest);
   
   // Price the travel solution
   stdair::TravelSolutionList_T lTravelSolutionList =
@@ -165,14 +165,12 @@ BOOST_AUTO_TEST_CASE (simcrs_simple_simulation_test) {
                       << lNbOfTravelSolutions << ", but it should be equal to "
                       << lExpectedNbOfTravelSolutions);
   
-  /* TODO: uncomment as soon as travel solutions are found for that
-     booking request
   //
   const stdair::TravelSolutionStruct& lTravelSolution =
     lTravelSolutionList.front();
 
   //  
-  const unsigned int lExpectedPrice = 1000;
+  const unsigned int lExpectedPrice = 2000;
   
   // DEBUG
   STDAIR_LOG_DEBUG ("The price given by the fare quoter for '"
@@ -189,12 +187,9 @@ BOOST_AUTO_TEST_CASE (simcrs_simple_simulation_test) {
                        << lTravelSolution.describe() << "' is: "
                        << lTravelSolution.getFare() << " Euros, and should be "
                        << lExpectedPrice);
-  */
 
-  // Make a booking
-  // const std::string lAirlineCode ("SV");
-  // const stdair::PartySize_T lPartySize = 5;
-  // BOOST_CHECK_NO_THROW (simcrsService.sell (lAirlineCode, lPartySize));
+  // Make a booking (reminder: party size is 3)
+  BOOST_CHECK_NO_THROW (simcrsService.sell (lTravelSolution, lPartySize));
 
   // Close the log file
   logOutputFile.close();
