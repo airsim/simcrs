@@ -9,13 +9,18 @@ SUBDIRS =
 EXTRA_DIST =
 
 ##
-check_PROGRAMS = FQTTestSuite
-TESTS = $(check_PROGRAMS)
-XFAIL_TESTS = #
+nofail_PRG = FQTTestSuite
+fail_PRG =
 
-FQTTestSuite_SOURCES = FQTTestSuite.hpp FQTTestSuite.cpp
-FQTTestSuite_CXXFLAGS = $(CPPUNIT_CFLAGS) $(BOOST_CFLAGS) \
-	$(EXTRACC_CFLAGS) $(STDAIR_CFLAGS)
+#
+check_PROGRAMS = $(nofail_PRG) $(fail_PRG)
+TESTS = $(check_PROGRAMS)
+XFAIL_TESTS = $(fail_PRG)
+
+#
+FQTTestSuite_SOURCES = $(simfqt_test_bin_cc_sources)
+FQTTestSuite_CXXFLAGS = $(BOOST_CFLAGS) $(STDAIR_CFLAGS)
 FQTTestSuite_LDADD =
-FQTTestSuite_LDFLAGS = $(CPPUNIT_LIBS) $(EXTRACC_LIBS) $(STDAIR_LIBS) \
+FQTTestSuite_LDFLAGS = \
+	$(BOOST_LIBS) $(BOOST_UNIT_TEST_FRAMEWORK_LIB) $(STDAIR_LIBS) \
 	$(top_builddir)/simfqt/core/libsimfqt.la
