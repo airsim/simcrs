@@ -34,17 +34,17 @@ namespace boost_utf = boost::unit_test;
  */
 struct UnitTestConfig {
   /** Constructor. */
-  UnitTestConfig() : _test_log ("CRSTestSuite_utfresults.xml")  {
+  UnitTestConfig() {
+    static std::ofstream _test_log ("CRSTestSuite_utfresults.xml");
     boost_utf::unit_test_log.set_stream (_test_log);
     boost_utf::unit_test_log.set_format (boost_utf::XML);
     boost_utf::unit_test_log.set_threshold_level (boost_utf::log_test_units);
+    //boost_utf::unit_test_log.set_threshold_level (boost_utf::log_successful_tests);
   }
+
   /** Destructor. */
   ~UnitTestConfig() {
-    boost_utf::unit_test_log.set_stream (std::cout);
   }
-  /** Log file */  
-  std::ofstream _test_log;
 };
 
 
@@ -62,17 +62,17 @@ BOOST_AUTO_TEST_SUITE (master_test_suite)
 BOOST_AUTO_TEST_CASE (simcrs_simple_simulation_test) {
 
   // CRS code
-  const std::string lCRSCode ("1P");
+  const SIMCRS::CRSCode_T lCRSCode ("1P");
     
   // Schedule input filename
-  const std::string lScheduleInputFilename (STDAIR_SAMPLE_DIR
-                                            "/schedule01.csv");
+  const stdair::Filename_T lScheduleInputFilename (STDAIR_SAMPLE_DIR
+                                                   "/schedule01.csv");
     
   // O&D input filename
-  const std::string lODInputFilename (STDAIR_SAMPLE_DIR "/ond01.csv");
+  const stdair::Filename_T lODInputFilename (STDAIR_SAMPLE_DIR "/ond01.csv");
     
   // Fare input filename
-  const std::string lFareInputFilename (STDAIR_SAMPLE_DIR "/fare01.csv");
+  const stdair::Filename_T lFareInputFilename (STDAIR_SAMPLE_DIR "/fare01.csv");
     
   // Check that the file path given as input corresponds to an actual file
   bool doesExistAndIsReadable =
@@ -96,7 +96,7 @@ BOOST_AUTO_TEST_CASE (simcrs_simple_simulation_test) {
                        << "' input file can not be open and read");
 
   // Output log File
-  const std::string lLogFilename ("CRSTestSuite.log");
+  const stdair::Filename_T lLogFilename ("CRSTestSuite.log");
 
   // Set the log parameters
   std::ofstream logOutputFile;
