@@ -61,7 +61,7 @@ BOOST_AUTO_TEST_CASE (simfqt_simple_pricing_test) {
   const stdair::Filename_T lFareInputFilename (STDAIR_SAMPLE_DIR "/fare01.csv");
     
   // Check that the file path given as input corresponds to an actual file
-  const doesExistAndIsReadable =
+  const bool doesExistAndIsReadable =
     stdair::BasFileMgr::doesExistAndIsReadable (lFareInputFilename);
   BOOST_CHECK_MESSAGE (doesExistAndIsReadable == true,
                        "The '" << lFareInputFilename

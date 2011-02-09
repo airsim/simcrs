@@ -1,5 +1,6 @@
 ## test/simfqt sub-directory
 include $(top_srcdir)/Makefile.common
+include $(srcdir)/sources.mk
 
 MAINTAINERCLEANFILES = Makefile.in
 
