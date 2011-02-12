@@ -1,7 +1,6 @@
 ## test/avlcal sub-directory
 include $(top_srcdir)/Makefile.common
-
-MAINTAINERCLEANFILES = Makefile.in
+include $(srcdir)/sources.mk
 
 ##
 SUBDIRS =
@@ -9,15 +8,23 @@ SUBDIRS =
 EXTRA_DIST =
 
 ##
-check_PROGRAMS = AvlCalTestSuite
-TESTS = $(check_PROGRAMS)
-XFAIL_TESTS = #
+nofail_PRG = AvlCalTestSuite
+fail_PRG =
 
-AvlCalTestSuite_SOURCES = AvlCalTestSuite.hpp AvlCalTestSuite.cpp
-AvlCalTestSuite_CXXFLAGS = $(CPPUNIT_CFLAGS) $(BOOST_CFLAGS) \
-	$(EXTRACC_CFLAGS) $(STDAIR_CFLAGS)
+#
+MAINTAINERCLEANFILES = Makefile.in
+CLEANFILES = ${nofail_PRG:%=%_utfresults.xml} ${nofail_PRG:%=%.log}
+
+#
+check_PROGRAMS = $(nofail_PRG) $(fail_PRG)
+TESTS = $(check_PROGRAMS)
+XFAIL_TESTS = $(fail_PRG)
+
+#
+AvlCalTestSuite_SOURCES = $(avlcal_test_bin_cc_sources)
+AvlCalTestSuite_CXXFLAGS = $(BOOST_CFLAGS) $(STDAIR_CFLAGS)
 AvlCalTestSuite_LDADD =
 AvlCalTestSuite_LDFLAGS = \
-		$(BOOST_LIBS) $(CPPUNIT_LIBS) $(EXTRACC_LIBS) $(STDAIR_LIBS) \
+		$(BOOST_LIBS) $(BOOST_UNIT_TEST_FRAMEWORK_LIB) $(STDAIR_LIBS) \
 		$(top_builddir)/avlcal/core/libavlcal.la
 

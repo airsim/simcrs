@@ -1,27 +1,65 @@
+/*!
+ * \page AvlCalTestSuite_cpp Command-Line Test to Demonstrate How To Test the AvlCal Project
+ * \code
+ */
+// //////////////////////////////////////////////////////////////////////
+// Import section
+// //////////////////////////////////////////////////////////////////////
 // STL
 #include <sstream>
 #include <fstream>
 #include <string>
-// CPPUNIT
-#include <extracppunit/CppUnitCore.hpp>
+// Boost Unit Test Framework (UTF)
+#define BOOST_TEST_DYN_LINK
+#define BOOST_TEST_MAIN
+#define BOOST_TEST_MODULE InventoryTestSuite
+#include <boost/test/unit_test.hpp>
 // StdAir
 #include <stdair/basic/BasLogParams.hpp>
 #include <stdair/basic/BasDBParams.hpp>
+#include <stdair/basic/BasFileMgr.hpp>
 #include <stdair/bom/TravelSolutionStruct.hpp>
+#include <stdair/bom/BookingRequestStruct.hpp>
 #include <stdair/service/Logger.hpp>
 // Avlcal
-#include <avlcal/AVLCAL_Types.hpp>
 #include <avlcal/AVLCAL_Service.hpp>
 #include <avlcal/config/avlcal-paths.hpp>
-// Avlcal Test Suite
-#include <test/avlcal/AvlCalTestSuite.hpp>
 
-// //////////////////////////////////////////////////////////////////////
-// Test is based on ...
-// //////////////////////////////////////////////////////////////////////
+namespace boost_utf = boost::unit_test;
 
-// //////////////////////////////////////////////////////////////////////
-void AvlCalTestSuite::simpleAvlCalHelper() {
+// (Boost) Unit Test XML Report
+std::ofstream utfReportStream ("AvlCalTestSuite_utfresults.xml");
+
+/**
+ * Configuration for the Boost Unit Test Framework (UTF)
+ */
+struct UnitTestConfig {
+  /** Constructor. */
+  UnitTestConfig() {
+    boost_utf::unit_test_log.set_stream (utfReportStream);
+    boost_utf::unit_test_log.set_format (boost_utf::XML);
+    boost_utf::unit_test_log.set_threshold_level (boost_utf::log_test_units);
+    //boost_utf::unit_test_log.set_threshold_level (boost_utf::log_successful_tests);
+  }
+
+  /** Destructor. */
+  ~UnitTestConfig() {
+  }
+};
+
+
+// /////////////// Main: Unit Test Suite //////////////
+
+// Set the UTF configuration (re-direct the output to a specific file)
+BOOST_GLOBAL_FIXTURE (UnitTestConfig);
+
+// Start the test suite
+BOOST_AUTO_TEST_SUITE (master_test_suite)
+
+/**
+ * Test a simple availability calculation
+ */
+BOOST_AUTO_TEST_CASE (avlcal_simple_availability_calculation) {
 
   // Airline code
   const stdair::AirlineCode_T lAirlineCode ("SV");
@@ -30,10 +68,18 @@ void AvlCalTestSuite::simpleAvlCalHelper() {
   const stdair::PartySize_T lPartySize = 5;
 
   // Input file
-  const std::string lInputFile (STDAIR_SAMPLE_DIR "/schedule01.csv");
+  const stdair::Filename_T lScheduleInputFile (STDAIR_SAMPLE_DIR
+                                               "/schedule01.csv");
     
+  // Check that the file path given as input corresponds to an actual file
+  bool doesExistAndIsReadable =
+    stdair::BasFileMgr::doesExistAndIsReadable (lScheduleInputFile);
+  BOOST_CHECK_MESSAGE (doesExistAndIsReadable == true,
+                       "The '" << lScheduleInputFile
+                       << "' input file can not be open and read");
+
   // Output log File
-  const std::string lLogFilename ("AvlCalTestSuite.log");
+  const stdair::Filename_T lLogFilename ("AvlCalTestSuite.log");
 
   // Set the log parameters
   std::ofstream logOutputFile;
@@ -47,24 +93,15 @@ void AvlCalTestSuite::simpleAvlCalHelper() {
   
   // Perform an availability calculation
   avlcalService.avlCalculate (lPartySize);
+
+  // Close the log file
+  logOutputFile.close();
 }
 
-// //////////////////////////////////////////////////////////////////////
-void AvlCalTestSuite::simpleAvlCal () {
-  // TODO: Check that the availability calculation goes as expected
-  CPPUNIT_ASSERT_NO_THROW ( simpleAvlCalHelper(););
-}
+// End the test suite
+BOOST_AUTO_TEST_SUITE_END()
 
-// //////////////////////////////////////////////////////////////////////
-// void AvlCalTestSuite::errorCase () {
-//  CPPUNIT_ASSERT (false);
-// }
-
-// //////////////////////////////////////////////////////////////////////
-AvlCalTestSuite::AvlCalTestSuite () {
-  _describeKey << "Running test on availability calculation";  
-}
-
-// /////////////// M A I N /////////////////
-CPPUNIT_MAIN()
+/*!
+ * \endcode
+ */
 
