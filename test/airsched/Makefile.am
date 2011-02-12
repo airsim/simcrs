@@ -1,24 +1,30 @@
 ## test/airsched sub-directory
 include $(top_srcdir)/Makefile.common
-
-MAINTAINERCLEANFILES = Makefile.in
+include $(srcdir)/sources.mk
 
 ##
 SUBDIRS =
 
 EXTRA_DIST =
+
 ##
+nofail_PRG = AirlineScheduleTestSuite
+fail_PRG =
 
-check_PROGRAMS = AirlineScheduleTestSuite
+#
+MAINTAINERCLEANFILES = Makefile.in
+CLEANFILES = ${nofail_PRG:%=%_utfresults.xml} ${nofail_PRG:%=%.log}
+
+#
+check_PROGRAMS = $(nofail_PRG) $(fail_PRG)
 TESTS = $(check_PROGRAMS)
-XFAIL_TESTS = #
+XFAIL_TESTS = $(fail_PRG)
 
-AirlineScheduleTestSuite_SOURCES = AirlineScheduleTestSuite.hpp \
-								AirlineScheduleTestSuite.cpp
-AirlineScheduleTestSuite_CXXFLAGS= $(BOOST_CFLAGS) $(CPPUNIT_CFLAGS) \
-	$(EXTRACC_CFLAGS) $(STDAIR_CFLAGS)
+#
+AirlineScheduleTestSuite_SOURCES = $(airsched_test_bin_cc_sources)
+AirlineScheduleTestSuite_CXXFLAGS = $(BOOST_CFLAGS) $(STDAIR_CFLAGS)
 AirlineScheduleTestSuite_LDADD = 
-AirlineScheduleTestSuite_LDFLAGS = $(BOOST_LIBS) $(CPPUNIT_LIBS) \
-	$(EXTRACC_LIBS) $(STDAIR_LIBS) \
+AirlineScheduleTestSuite_LDFLAGS = \
+	$(BOOST_LIBS) $(BOOST_UNIT_TEST_FRAMEWORK_LIB) $(STDAIR_LIBS) \
 	$(top_builddir)/airsched/core/libairsched.la
 
