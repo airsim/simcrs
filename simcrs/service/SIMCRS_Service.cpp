@@ -271,7 +271,7 @@ namespace SIMCRS {
   }
   
   // ////////////////////////////////////////////////////////////////////
-  stdair::SegmentPathList_T SIMCRS_Service::
+  stdair::TravelSolutionList_T SIMCRS_Service::
   calculateSegmentPathList(const stdair::BookingRequestStruct& iBookingRequest){
      
     if (_simcrsServiceContext == NULL) {
@@ -293,7 +293,7 @@ namespace SIMCRS {
       // Delegate the booking to the dedicated service
       stdair::BasChronometer lSegmentPathRetrievingChronometer;
       lSegmentPathRetrievingChronometer.start();
-      lAIRSCHED_Service_ptr->buildSegmentPathList (oSegmentPathList,
+      lAIRSCHED_Service_ptr->buildSegmentPathList (oTravelSolutionList,
 						   iBookingRequest);
       
       // DEBUG 
@@ -312,9 +312,9 @@ namespace SIMCRS {
   }
 
   // ////////////////////////////////////////////////////////////////////
-  stdair::TravelSolutionList_T SIMCRS_Service::
+  void SIMCRS_Service::
   fareQuote (const stdair::BookingRequestStruct& iBookingRequest,
-             const stdair::SegmentPathList_T& iSegmentPathList) {
+             stdair::TravelSolutionList_T& ioTravelSolutionList) {
      
     if (_simcrsServiceContext == NULL) {
       throw stdair::NonInitialisedServiceException ("The SimCRS service has "
@@ -323,9 +323,7 @@ namespace SIMCRS {
     assert (_simcrsServiceContext != NULL);
     
     SIMCRS_ServiceContext& lSIMCRS_ServiceContext = *_simcrsServiceContext;
-
-    stdair::TravelSolutionList_T oTravelSolutionList;
-
+    
     try {
       
       // Get a reference on the SIMFQT service handler
@@ -336,8 +334,7 @@ namespace SIMCRS {
       // Delegate the action to the dedicated command
       stdair::BasChronometer lFareQuoteRetrievalChronometer;
       lFareQuoteRetrievalChronometer.start();
-      lSIMFQT_Service_ptr->getFares (oTravelSolutionList, iBookingRequest,
-                                     iSegmentPathList);
+      lSIMFQT_Service_ptr->getFares (iBookingRequest, ioTravelSolutionList);
 
       // DEBUG 
       const double lFareQuoteRetrievalMeasure =
