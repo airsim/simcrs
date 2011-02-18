@@ -115,9 +115,9 @@ BOOST_AUTO_TEST_CASE (airsched_simple_inventory_sell) {
                                                       lWTP, lValueOfTime);
     
   //
-  stdair::SegmentPathList_T lSegmentPathList;
-  airschedService.buildSegmentPathList (lSegmentPathList, lBookingRequest);
-  const unsigned int lNbOfTravelSolutions = lSegmentPathList.size();
+  stdair::TravelSolutionList_T lTravelSolutionList;
+  airschedService.buildSegmentPathList (lTravelSolutionList, lBookingRequest);
+  const unsigned int lNbOfTravelSolutions = lTravelSolutionList.size();
   
   // TODO: change the expected number of travel solutions to the actual number
   const unsigned int lExpectedNbOfTravelSolutions = 4;
