@@ -28,29 +28,6 @@
 
 namespace boost_utf = boost::unit_test;
 
-// //////////////////////////////////////////////////////////////////////
-void InventoryTestSuite::simpleInventoryHelper() {
-
-  // Input file name
-  const stdair::Filename_T lInputFilename (STDAIR_SAMPLE_DIR "/invdump01.csv");
-
-  // Output log File
-  const stdair::Filename_T lLogFilename ("InventoryTestSuite.log");
-  
-  // Set the log parameters
-  std::ofstream logOutputFile;
-  // Open and clean the log outputfile
-  logOutputFile.open (lLogFilename.c_str());
-  logOutputFile.clear();
-  
-  // Initialise the list of classes/buckets
-  const stdair::BasLogParams lLogParams (stdair::LOG::DEBUG, logOutputFile);
-  AIRINV::AIRINV_Master_Service airinvService (lLogParams, lInputFilename);
-  
-  // Make a booking
-  // airinvService.sell (lTravelSolution, lPartySize);
-}
-=======
 // (Boost) Unit Test XML Report
 std::ofstream utfReportStream ("InventoryTestSuite_utfresults.xml");
 
@@ -65,7 +42,6 @@ struct UnitTestConfig {
     boost_utf::unit_test_log.set_threshold_level (boost_utf::log_test_units);
     //boost_utf::unit_test_log.set_threshold_level (boost_utf::log_successful_tests);
   }
->>>>>>> trunk
 
   /** Destructor. */
   ~UnitTestConfig() {
@@ -110,9 +86,12 @@ BOOST_AUTO_TEST_CASE (airinv_simple_inventory_sell) {
   const stdair::BasLogParams lLogParams (stdair::LOG::DEBUG, logOutputFile);
   AIRINV::AIRINV_Master_Service airinvService (lLogParams,
                                                lInventoryInputFilename);
-  
+
   // Make a booking
-  // airinvService.sell (lTravelSolution, lPartySize);
+  const std::string lSegmentDateKey ("SV/5/110310/KBP/JFK");
+  const stdair::ClassCode_T lClassCode ("J");
+  const stdair::PartySize_T lPartySize (2);
+  airinvService.sell (lSegmentDateKey, lClassCode, lPartySize);
 
   // Close the log file
   logOutputFile.close();

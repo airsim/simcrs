@@ -30,7 +30,7 @@ MAINTAINERCLEANFILES = Makefile.in aclocal.m4 configure \
 EXTRA_DIST =
 
 # Build in these directories:
-SUBDIRS = airsched avlcal airinv simfqt simlfs simcrs \
+SUBDIRS = airsched rmol airinv avlcal simfqt simlfs simcrs \
 	man samples $(HTML_DOC_DIR) $(TEST_DIR)
 
 

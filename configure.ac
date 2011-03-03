@@ -237,15 +237,15 @@ AC_CONFIG_FILES(
 	airsched/config/Makefile
 	airsched/core/Makefile
 	airsched/batches/Makefile
-	avlcal/Makefile
-	avlcal/basic/Makefile
-	avlcal/bom/Makefile
-	avlcal/factory/Makefile
-	avlcal/command/Makefile
-	avlcal/service/Makefile
-	avlcal/config/Makefile
-	avlcal/core/Makefile
-	avlcal/batches/Makefile
+	rmol/Makefile
+	rmol/basic/Makefile
+	rmol/bom/Makefile
+	rmol/factory/Makefile
+	rmol/command/Makefile
+	rmol/service/Makefile
+	rmol/core/Makefile
+	rmol/config/Makefile
+	rmol/batches/Makefile
 	airinv/Makefile
 	airinv/basic/Makefile
 	airinv/bom/Makefile
@@ -256,6 +256,15 @@ AC_CONFIG_FILES(
 	airinv/core/Makefile
 	airinv/batches/Makefile
 	airinv/server/Makefile
+	avlcal/Makefile
+	avlcal/basic/Makefile
+	avlcal/bom/Makefile
+	avlcal/factory/Makefile
+	avlcal/command/Makefile
+	avlcal/service/Makefile
+	avlcal/config/Makefile
+	avlcal/core/Makefile
+	avlcal/batches/Makefile
 	simfqt/Makefile
 	simfqt/basic/Makefile
 	simfqt/bom/Makefile
@@ -294,8 +303,9 @@ AC_CONFIG_FILES(
 	doc/doxygen_html.cfg
 	test/Makefile
 	test/airsched/Makefile
-	test/avlcal/Makefile
+	test/rmol/Makefile
 	test/airinv/Makefile
+	test/avlcal/Makefile
 	test/simfqt/Makefile
 	test/simlfs/Makefile
 	test/simcrs/Makefile
