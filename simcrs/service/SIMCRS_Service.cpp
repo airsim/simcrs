@@ -373,13 +373,8 @@ namespace SIMCRS {
     lAvlChronometer.start();
 
     DistributionManager::calculateAvailability (lAIRINV_Master_Service,
-                                                iTravelSolution);
-
-    // DEBUG
-    STDAIR_LOG_DEBUG ("Calculating the availability of "
-                      << "the following travel solution: "
-                      << iTravelSolution.describe());
-
+                                                ioTravelSolutionList);
+    
     // DEBUG
     const double lAvlMeasure = lAvlChronometer.elapsed();
     STDAIR_LOG_DEBUG ("Availability retrieval: " << lAvlMeasure << " - "
