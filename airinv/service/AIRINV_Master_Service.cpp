@@ -26,20 +26,80 @@
 
 namespace AIRINV {
 
-  // //////////////////////////////////////////////////////////////////////
+  // ////////////////////////////////////////////////////////////////////
   AIRINV_Master_Service::AIRINV_Master_Service() 
     : _airinvMasterServiceContext (NULL) {
     assert (false);
   }
 
-  // //////////////////////////////////////////////////////////////////////
+  // ////////////////////////////////////////////////////////////////////
   AIRINV_Master_Service::
   AIRINV_Master_Service (const AIRINV_Master_Service& iService)
     : _airinvMasterServiceContext (NULL) {
     assert (false);
   }
 
-  // //////////////////////////////////////////////////////////////////////
+  // ////////////////////////////////////////////////////////////////////
+  AIRINV_Master_Service::
+  AIRINV_Master_Service (const stdair::BasLogParams& iLogParams,
+                         const stdair::BasDBParams& iDBParams)
+    : _airinvMasterServiceContext (NULL) {
+    
+    // Initialise the STDAIR service handler
+    stdair::STDAIR_ServicePtr_T lSTDAIR_Service_ptr =
+      initStdAirService (iLogParams, iDBParams);
+    
+    // Initialise the service context
+    initServiceContext();
+
+    // Add the StdAir service context to the AIRINV service context
+    // \note RMOL owns the STDAIR service resources here.
+    const bool ownStdairService = true;
+    addStdAirService (lSTDAIR_Service_ptr, ownStdairService);
+    
+    // Initialise the (remaining of the) context
+    initSlaveAirinvService (lSTDAIR_Service_ptr);
+  }
+
+  // ////////////////////////////////////////////////////////////////////
+  AIRINV_Master_Service::
+  AIRINV_Master_Service (const stdair::BasLogParams& iLogParams)
+    : _airinvMasterServiceContext (NULL) {
+    
+    // Initialise the STDAIR service handler
+    stdair::STDAIR_ServicePtr_T lSTDAIR_Service_ptr =
+      initStdAirService (iLogParams);
+
+    // Initialise the service context
+    initServiceContext();
+    
+    // Add the StdAir service context to the AIRINV service context
+    // \note RMOL owns the STDAIR service resources here.
+    const bool ownStdairService = true;
+    addStdAirService (lSTDAIR_Service_ptr, ownStdairService);
+
+    // Initialise the (remaining of the) context
+    initSlaveAirinvService (lSTDAIR_Service_ptr);
+  }
+
+  // ////////////////////////////////////////////////////////////////////
+  AIRINV_Master_Service::
+  AIRINV_Master_Service (stdair::STDAIR_ServicePtr_T ioSTDAIR_Service_ptr)
+    : _airinvMasterServiceContext (NULL) {
+
+    // Initialise the service context
+    initServiceContext();
+
+    // Store the STDAIR service object within the (AIRINV) service context
+    // \note AirInv does not own the STDAIR service resources here.
+    const bool doesNotOwnStdairService = false;
+    addStdAirService (ioSTDAIR_Service_ptr, doesNotOwnStdairService);
+    
+    // Initialise the (remaining of the) context
+    initSlaveAirinvService (ioSTDAIR_Service_ptr);
+  }
+
+  // ////////////////////////////////////////////////////////////////////
   AIRINV_Master_Service::
   AIRINV_Master_Service (const stdair::BasLogParams& iLogParams,
                          const stdair::BasDBParams& iDBParams)
@@ -122,7 +182,7 @@ namespace AIRINV {
     initSlaveAirinvService (lSTDAIR_Service_ptr, iInventoryInputFilename);
   }
 
-  // //////////////////////////////////////////////////////////////////////
+  // ////////////////////////////////////////////////////////////////////
   AIRINV_Master_Service::
   AIRINV_Master_Service (const stdair::BasLogParams& iLogParams,
                          const stdair::Filename_T& iInventoryInputFilename)
@@ -144,7 +204,7 @@ namespace AIRINV {
     initSlaveAirinvService (lSTDAIR_Service_ptr, iInventoryInputFilename);
   }
 
-  // //////////////////////////////////////////////////////////////////////
+  // ////////////////////////////////////////////////////////////////////
   AIRINV_Master_Service::
   AIRINV_Master_Service (stdair::STDAIR_ServicePtr_T ioSTDAIR_Service_ptr,
                          const stdair::Filename_T& iInventoryInputFilename)
@@ -162,7 +222,7 @@ namespace AIRINV {
     initSlaveAirinvService (ioSTDAIR_Service_ptr, iInventoryInputFilename);
   }
 
-  // //////////////////////////////////////////////////////////////////////
+  // ////////////////////////////////////////////////////////////////////
   AIRINV_Master_Service::
   AIRINV_Master_Service (const stdair::BasLogParams& iLogParams,
                          const stdair::BasDBParams& iDBParams,
@@ -187,7 +247,7 @@ namespace AIRINV {
                             iODInputFilename);
   }
 
-  // //////////////////////////////////////////////////////////////////////
+  // ////////////////////////////////////////////////////////////////////
   AIRINV_Master_Service::
   AIRINV_Master_Service (const stdair::BasLogParams& iLogParams,
                          const stdair::Filename_T& iScheduleInputFilename,
@@ -211,7 +271,7 @@ namespace AIRINV {
                             iODInputFilename);
   }
 
-  // //////////////////////////////////////////////////////////////////////
+  // ////////////////////////////////////////////////////////////////////
   AIRINV_Master_Service::
   AIRINV_Master_Service (stdair::STDAIR_ServicePtr_T ioSTDAIR_Service_ptr,
                          const stdair::Filename_T& iScheduleInputFilename,
@@ -231,13 +291,13 @@ namespace AIRINV {
                             iODInputFilename);
   }
 
-  // //////////////////////////////////////////////////////////////////////
+  // ////////////////////////////////////////////////////////////////////
   AIRINV_Master_Service::~AIRINV_Master_Service() {
     // Delete/Clean all the objects from memory
     finalise();
   }
 
-  // //////////////////////////////////////////////////////////////////////
+  // ////////////////////////////////////////////////////////////////////
   void AIRINV_Master_Service::initServiceContext() {
     // Initialise the context
     AIRINV_Master_ServiceContext& lAIRINV_Master_ServiceContext = 
@@ -245,7 +305,7 @@ namespace AIRINV {
     _airinvMasterServiceContext = &lAIRINV_Master_ServiceContext;
   }
 
-  // //////////////////////////////////////////////////////////////////////
+  // ////////////////////////////////////////////////////////////////////
   void AIRINV_Master_Service::
   addStdAirService (stdair::STDAIR_ServicePtr_T ioSTDAIR_Service_ptr,
                     const bool iOwnStdairService) {
@@ -260,7 +320,7 @@ namespace AIRINV {
                                                      iOwnStdairService);
   }
   
-  // //////////////////////////////////////////////////////////////////////
+  // ////////////////////////////////////////////////////////////////////
   stdair::STDAIR_ServicePtr_T AIRINV_Master_Service::
   initStdAirService (const stdair::BasLogParams& iLogParams,
                      const stdair::BasDBParams& iDBParams) {
@@ -274,7 +334,7 @@ namespace AIRINV {
     return lSTDAIR_Service_ptr;
   }
   
-  // //////////////////////////////////////////////////////////////////////
+  // ////////////////////////////////////////////////////////////////////
   stdair::STDAIR_ServicePtr_T AIRINV_Master_Service::
   initStdAirService (const stdair::BasLogParams& iLogParams) {
 
@@ -287,7 +347,7 @@ namespace AIRINV {
     return lSTDAIR_Service_ptr;
   }
   
-  // //////////////////////////////////////////////////////////////////////
+  // ////////////////////////////////////////////////////////////////////
   void AIRINV_Master_Service::
   initSlaveAirinvService (stdair::STDAIR_ServicePtr_T ioSTDAIR_Service_ptr) {
     // Retrieve the AIRINV Master service context.
@@ -306,7 +366,7 @@ namespace AIRINV {
     lAIRINV_Master_ServiceContext.setAIRINV_Service (lAIRINV_Service_ptr);
   }
   
-  // //////////////////////////////////////////////////////////////////////
+  // ////////////////////////////////////////////////////////////////////
   void AIRINV_Master_Service::
   initSlaveAirinvService (stdair::STDAIR_ServicePtr_T ioSTDAIR_Service_ptr,
                           const stdair::Filename_T& iInventoryInputFilename) {
@@ -327,7 +387,7 @@ namespace AIRINV {
     lAIRINV_Master_ServiceContext.setAIRINV_Service (lAIRINV_Service_ptr);
   }
   
-  // //////////////////////////////////////////////////////////////////////
+  // ////////////////////////////////////////////////////////////////////
   void AIRINV_Master_Service::
   initSlaveAirinvService (stdair::STDAIR_ServicePtr_T ioSTDAIR_Service_ptr,
                           const stdair::Filename_T& iScheduleInputFilename,
@@ -350,14 +410,14 @@ namespace AIRINV {
     lAIRINV_Master_ServiceContext.setAIRINV_Service (lAIRINV_Service_ptr);
   }
   
-  // //////////////////////////////////////////////////////////////////////
+  // ////////////////////////////////////////////////////////////////////
   void AIRINV_Master_Service::finalise() {
     assert (_airinvMasterServiceContext != NULL);
     // Reset the (Boost.)Smart pointer pointing on the STDAIR_Service object.
     _airinvMasterServiceContext->reset();
   }
 
-  // //////////////////////////////////////////////////////////////////////
+  // ////////////////////////////////////////////////////////////////////
   void AIRINV_Master_Service::
   buildSampleBom (const bool isForRMOL,
                   const stdair::CabinCapacity_T iCapacity) {
@@ -373,14 +433,14 @@ namespace AIRINV {
       *_airinvMasterServiceContext;
   
     // Retrieve the slave AIRINV service object from the (AIRINV) service context
-    AIRINV_ServicePtr_T lAIRINV_Service_ptr =
+    AIRINV_Service& lAIRINV_Service =
       lAIRINV_Master_ServiceContext.getAIRINV_Service();
 
     // Delegate the BOM building to the dedicated service
-    lAIRINV_Service_ptr->buildSampleBom();
+    lAIRINV_Service.buildSampleBom();
   }
 
-  // //////////////////////////////////////////////////////////////////////
+  // ////////////////////////////////////////////////////////////////////
   std::string AIRINV_Master_Service::csvDisplay() const {
 
     // Retrieve the AIRINV service context
@@ -393,15 +453,48 @@ namespace AIRINV {
     AIRINV_Master_ServiceContext& lAIRINV_Master_ServiceContext =
       *_airinvMasterServiceContext;
   
-    // Retrieve the slave AIRINV service object from the (AIRINV) service context
-    AIRINV_ServicePtr_T lAIRINV_Service_ptr =
+    // Retrieve the slave AIRINV service object from
+    // the (AIRINV) service context
+    AIRINV_Service& lAIRINV_Service =
       lAIRINV_Master_ServiceContext.getAIRINV_Service();
 
     // Delegate the BOM building to the dedicated service
-    return lAIRINV_Service_ptr->csvDisplay();
+    return lAIRINV_Service.csvDisplay();
   }
 
-  // //////////////////////////////////////////////////////////////////////
+  // ////////////////////////////////////////////////////////////////////
+  void AIRINV_Master_Service::
+  calculateAvailability (stdair::TravelSolutionStruct& ioTravelSolution) {
+
+    // Retrieve the AIRINV service context
+    if (_airinvMasterServiceContext == NULL) {
+      throw stdair::NonInitialisedServiceException ("The AirInvMaster service "
+                                                    "has not been initialised");
+    }
+    assert (_airinvMasterServiceContext != NULL);
+
+    AIRINV_Master_ServiceContext& lAIRINV_Master_ServiceContext =
+      *_airinvMasterServiceContext;
+  
+    // Retrieve the slave AIRINV service object from the (AIRINV)
+    // service context
+    AIRINV_Service& lAIRINV_Service =
+      lAIRINV_Master_ServiceContext.getAIRINV_Service();
+
+    // Delegate the availability retrieval to the dedicated service
+    stdair::BasChronometer lAvlChronometer;
+    lAvlChronometer.start();
+
+    lAIRINV_Service.calculateAvailability (ioTravelSolution);
+
+    // DEBUG
+    const double lAvlMeasure = lAvlChronometer.elapsed();
+    STDAIR_LOG_DEBUG ("Availability retrieval: " << lAvlMeasure << " - "
+                      << lAIRINV_Master_ServiceContext.display());
+    
+  }
+
+  // ////////////////////////////////////////////////////////////////////
   bool AIRINV_Master_Service::sell (const std::string& iSegmentDateKey,
                                     const stdair::ClassCode_T& iClassCode,
                                     const stdair::PartySize_T& iPartySize) {
@@ -416,8 +509,9 @@ namespace AIRINV {
     AIRINV_Master_ServiceContext& lAIRINV_Master_ServiceContext =
       *_airinvMasterServiceContext;
   
-    // Retrieve the slave AIRINV service object from the (AIRINV) service context
-    AIRINV_ServicePtr_T lAIRINV_Service_ptr =
+    // Retrieve the slave AIRINV service object from the (AIRINV)
+    // service context
+    AIRINV_Service& lAIRINV_Service =
       lAIRINV_Master_ServiceContext.getAIRINV_Service();
 
     // Delegate the booking to the dedicated command
@@ -426,7 +520,7 @@ namespace AIRINV {
 
     // Delegate the BOM building to the dedicated service
     const bool hasBeenSaleSuccessful =
-      lAIRINV_Service_ptr->sell (iSegmentDateKey, iClassCode, iPartySize);
+      lAIRINV_Service.sell (iSegmentDateKey, iClassCode, iPartySize);
 
     const double lSellMeasure = lSellChronometer.elapsed();
 
