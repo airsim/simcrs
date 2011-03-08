@@ -102,66 +102,6 @@ namespace AIRINV {
   // ////////////////////////////////////////////////////////////////////
   AIRINV_Master_Service::
   AIRINV_Master_Service (const stdair::BasLogParams& iLogParams,
-                         const stdair::BasDBParams& iDBParams)
-    : _airinvMasterServiceContext (NULL) {
-    
-    // Initialise the STDAIR service handler
-    stdair::STDAIR_ServicePtr_T lSTDAIR_Service_ptr =
-      initStdAirService (iLogParams, iDBParams);
-    
-    // Initialise the service context
-    initServiceContext();
-
-    // Add the StdAir service context to the AIRINV service context
-    // \note RMOL owns the STDAIR service resources here.
-    const bool ownStdairService = true;
-    addStdAirService (lSTDAIR_Service_ptr, ownStdairService);
-    
-    // Initialise the (remaining of the) context
-    initSlaveAirinvService (lSTDAIR_Service_ptr);
-  }
-
-  // //////////////////////////////////////////////////////////////////////
-  AIRINV_Master_Service::
-  AIRINV_Master_Service (const stdair::BasLogParams& iLogParams)
-    : _airinvMasterServiceContext (NULL) {
-    
-    // Initialise the STDAIR service handler
-    stdair::STDAIR_ServicePtr_T lSTDAIR_Service_ptr =
-      initStdAirService (iLogParams);
-
-    // Initialise the service context
-    initServiceContext();
-    
-    // Add the StdAir service context to the AIRINV service context
-    // \note RMOL owns the STDAIR service resources here.
-    const bool ownStdairService = true;
-    addStdAirService (lSTDAIR_Service_ptr, ownStdairService);
-
-    // Initialise the (remaining of the) context
-    initSlaveAirinvService (lSTDAIR_Service_ptr);
-  }
-
-  // //////////////////////////////////////////////////////////////////////
-  AIRINV_Master_Service::
-  AIRINV_Master_Service (stdair::STDAIR_ServicePtr_T ioSTDAIR_Service_ptr)
-    : _airinvMasterServiceContext (NULL) {
-
-    // Initialise the service context
-    initServiceContext();
-
-    // Store the STDAIR service object within the (AIRINV) service context
-    // \note AirInv does not own the STDAIR service resources here.
-    const bool doesNotOwnStdairService = false;
-    addStdAirService (ioSTDAIR_Service_ptr, doesNotOwnStdairService);
-    
-    // Initialise the (remaining of the) context
-    initSlaveAirinvService (ioSTDAIR_Service_ptr);
-  }
-
-  // //////////////////////////////////////////////////////////////////////
-  AIRINV_Master_Service::
-  AIRINV_Master_Service (const stdair::BasLogParams& iLogParams,
                          const stdair::BasDBParams& iDBParams,
                          const stdair::Filename_T& iInventoryInputFilename)
     : _airinvMasterServiceContext (NULL) {
