@@ -293,6 +293,7 @@ AC_CONFIG_FILES(
 	simcrs/core/Makefile
 	simcrs/batches/Makefile
 	samples/Makefile
+	samples/RDS01/Makefile
 	man/Makefile
 	man/doxygen_man.cfg
 	doc/Makefile
