@@ -237,6 +237,15 @@ AC_CONFIG_FILES(
 	airsched/config/Makefile
 	airsched/core/Makefile
 	airsched/batches/Makefile
+	airrac/Makefile
+	airrac/basic/Makefile
+	airrac/bom/Makefile
+	airrac/factory/Makefile
+	airrac/command/Makefile
+	airrac/service/Makefile
+	airrac/config/Makefile
+	airrac/core/Makefile
+	airrac/batches/Makefile
 	rmol/Makefile
 	rmol/basic/Makefile
 	rmol/bom/Makefile
@@ -304,6 +313,7 @@ AC_CONFIG_FILES(
 	doc/doxygen_html.cfg
 	test/Makefile
 	test/airsched/Makefile
+	test/airrac/Makefile
 	test/rmol/Makefile
 	test/airinv/Makefile
 	test/avlcal/Makefile
