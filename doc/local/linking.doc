@@ -17,6 +17,28 @@ programs with the SimCRS library. The first one employs the \c
 http://pkgconfig.freedesktop.org/</a>), whereas the second one uses \c
 `simcrs-config' script. These methods are shortly described below.
 
+\section dependencies Dependencies
+
+The SimCRS library depends on several other C++ components.
+
+\subsection stdairdep StdAir
+Among them, as for now, only StdAir has been packaged. The support for StdAir
+is taken in charge by a dedicated M4 macro file (namely, <tt>`stdair.m4'</tt>), 
+from the configuration script (generated thanks to <tt>`configure.ac'</tt>).
+
+\subsection compdep Other Simulation-Related Components
+SimCRS, as shown on the diagram below, depends on
+- <a href="http://sourceforge.net/projects/air-sched/">AirSched</a>
+- <a href="http://sourceforge.net/projects/simfqt/">SimFQT</a>
+- <a href="http://sourceforge.net/projects/airrac/">AirRAC</a>
+- <a href="http://sourceforge.net/projects/rmol/">RMOL</a>
+- <a href="http://sourceforge.net/projects/airinv/">AirInv</a>
+- <a href="http://sourceforge.net/projects/avlcal/">AvlCal</a>
+- <a href="http://sourceforge.net/projects/simlfs/">SimLFS</a>
+
+\image html simcrs_dependencies.png "SimCRS Dependencies"
+\image rtf simcrs_dependencies.png "SimCRS Dependencies"
+\image latex simcrs_dependencies.png "SimCRS Dependencies" width=15cm
 
 \section pkgconfig Using the pkg-config command
 

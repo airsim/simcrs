@@ -39,7 +39,7 @@
 
 
 \section development SimCRS Development
-- <a href="https://svn.simcrs.org/viewvc/simcrs/">SVN Repository</a>
+- <a href="https://github.com/denisarnaud/simcrs">Git Repository</a>  (on <a href="http://github.com">GitHub</a>)
 - \ref coding_rules
 - \ref documentation
 - \ref test
