@@ -227,6 +227,33 @@ int main (int argc, char* argv[]) {
     return 0;
   }
     
+  // Check that the file path given as input corresponds to an actual file
+  bool doesExistAndIsReadable =
+    stdair::BasFileMgr::doesExistAndIsReadable (lScheduleInputFilename);
+  if (doesExistAndIsReadable == false) {
+    STDAIR_LOG_ERROR ("The '" << lScheduleInputFilename
+                      << "' input file can not be open and read");
+    return -1;
+  }
+
+  // Check that the file path given as input corresponds to an actual file
+  doesExistAndIsReadable =
+    stdair::BasFileMgr::doesExistAndIsReadable (lOnDInputFilename);
+  if (doesExistAndIsReadable == false) {
+    STDAIR_LOG_ERROR ("The '" << lOnDInputFilename
+                      << "' input file can not be open and read");
+    return -1;
+  }
+
+  // Check that the file path given as input corresponds to an actual file
+  doesExistAndIsReadable =
+    stdair::BasFileMgr::doesExistAndIsReadable (lFareInputFilename);
+  if (doesExistAndIsReadable == false) {
+    STDAIR_LOG_ERROR ("The '" << lFareInputFilename
+                      << "' input file can not be open and read");
+    return -1;
+  }
+
   // Set the database parameters
   const stdair::BasDBParams lDBParams (lDBUser, lDBPasswd, lDBHost, lDBPort,
                                        lDBDBName);
