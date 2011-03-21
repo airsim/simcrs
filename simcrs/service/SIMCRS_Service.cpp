@@ -330,10 +330,6 @@ namespace SIMCRS {
     // Delegate the BOM building to the dedicated service
     lSTDAIR_Service.buildSampleTravelSolutions (ioTravelSolutionList);
   }
-  
-  // //////////////////////////////////////////////////////////////////////
-  std::string SIMCRS_Service::
-  csvDisplay (const stdair::TravelSolutionList_T& ioTravelSolutionList) const {
 
   // //////////////////////////////////////////////////////////////////////
   stdair::BookingRequestStruct SIMCRS_Service::
