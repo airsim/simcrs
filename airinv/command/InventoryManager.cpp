@@ -5,6 +5,7 @@
 #include <exception>
 // StdAir
 #include <stdair/basic/BasConst_Inventory.hpp>
+#include <stdair/basic/BasConst_BomDisplay.hpp>
 #include <stdair/bom/BomManager.hpp>
 #include <stdair/bom/BomKeyManager.hpp> 
 #include <stdair/bom/BomRoot.hpp>
@@ -14,9 +15,8 @@
 #include <stdair/bom/SegmentCabin.hpp>
 #include <stdair/bom/LegDate.hpp>
 #include <stdair/bom/LegCabin.hpp>
-#include <stdair/bom/FareFamily.hpp>
-#include <stdair/bom/BookingClass.hpp>
 #include <stdair/bom/TravelSolutionStruct.hpp>
+#include <stdair/bom/FareOptionStruct.hpp>
 #include <stdair/factory/FacBomManager.hpp>
 #include <stdair/service/Logger.hpp>
 // AirInv
@@ -46,8 +46,84 @@ namespace AIRINV {
 
       InventoryHelper::calculateAvailability (lInventory, lSegmentKey,
                                               ioTravelSolution);
+
+      // Compute the availabitliy for each fare option using the AU's.
+      calculateAvailabilityByAU (ioTravelSolution);
     }
-  }  
+  }
+
+  // ////////////////////////////////////////////////////////////////////
+  void InventoryManager::
+  calculateAvailabilityByAU (stdair::TravelSolutionStruct& ioTravelSolution) {
+    // Browse the fare options
+    stdair::FareOptionList_T& lFOList = ioTravelSolution.getFareOptionListRef();
+    for (stdair::FareOptionList_T::iterator itFO = lFOList.begin();
+         itFO != lFOList.end(); ++itFO) {
+
+      stdair::FareOptionStruct& lFO = *itFO;
+      
+      // Check the availability
+      const stdair::ClassList_StringList_T& lClassPath = lFO.getClassPath();
+      
+      const stdair::ClassAvailabilityMapHolder_T& lClassAvailabilityMapHolder =
+        ioTravelSolution.getClassAvailabilityMapHolder();
+      
+      // Initialise the flag stating whether the availability is enough
+      stdair::Availability_T lAvl =
+        std::numeric_limits<stdair::Availability_T>::max();
+      
+      // Sanity check: the travel solution must contain two lists,
+      // one for the booking class availabilities, the other for the
+      // fare options.
+      assert (lClassAvailabilityMapHolder.empty() == false
+              && lClassPath.empty() == false);
+      
+      // List of booking class availability maps (one map per segment)
+      stdair::ClassAvailabilityMapHolder_T::const_iterator itCAMH =
+        lClassAvailabilityMapHolder.begin();
+      
+      // List of fare options
+      stdair::ClassList_StringList_T::const_iterator itClassList =
+        lClassPath.begin();
+      
+      // Browse both lists at the same time, i.e., one element per segment
+      for (; itCAMH != lClassAvailabilityMapHolder.end()
+             && itClassList != lClassPath.end(); ++itCAMH, ++itClassList) {
+        
+        // Retrieve the booking class list for the current segment
+        const stdair::ClassList_String_T& lCurrentClassList = *itClassList;
+        assert (lCurrentClassList.size() > 0);
+        
+        // TODO: instead of just extracting the first booking class,
+        //       perform a choice on the full list of classes.
+        // Extract one booking class key (class code)
+        stdair::ClassCode_T lFirstClass;
+        lFirstClass.append (lCurrentClassList, 0, 1);
+        
+        // Retrieve the booking class map for the current segment
+        const stdair::ClassAvailabilityMap_T& lClassAvlMap = *itCAMH;
+        
+        // Retrieve the availability of the chosen booking class
+        const stdair::ClassAvailabilityMap_T::const_iterator itClassAvl =
+          lClassAvlMap.find (lFirstClass);
+        
+        if (itClassAvl == lClassAvlMap.end()) {
+          // DEBUG
+          STDAIR_LOG_DEBUG ("No availability has been set up for the class '"
+                            << lFirstClass << "'. Travel solution: "
+                            << ioTravelSolution.display());
+        }
+        assert (itClassAvl != lClassAvlMap.end());
+        
+        const stdair::Availability_T& lCurrentAvl = itClassAvl->second;
+        if (lAvl > lCurrentAvl) {
+          lAvl = lCurrentAvl;
+        }
+      }
+      
+      lFO.setAvailability (lAvl);
+    }
+  }
 
   // ////////////////////////////////////////////////////////////////////
   bool InventoryManager::sell (stdair::Inventory& ioInventory,
@@ -72,6 +148,7 @@ namespace AIRINV {
          itInv != lInvList.end(); ++itInv) {
       stdair::Inventory* lCurrentInv_ptr = *itInv;
       assert (lCurrentInv_ptr != NULL);
+
       createDirectAccesses (*lCurrentInv_ptr);
     }
 
@@ -82,6 +159,7 @@ namespace AIRINV {
   // ////////////////////////////////////////////////////////////////////
   void InventoryManager::
   createDirectAccesses (stdair::Inventory& ioInventory) {
+
     // Browse the list of flight-dates and create direct accesses
     // within each flight-date.
     const stdair::FlightDateList_T& lFlightDateList = 
@@ -91,6 +169,7 @@ namespace AIRINV {
          itFlightDate != lFlightDateList.end(); ++itFlightDate) {
       stdair::FlightDate* lCurrentFlightDate_ptr = *itFlightDate;
       assert (lCurrentFlightDate_ptr != NULL);
+
       createDirectAccesses (*lCurrentFlightDate_ptr);
     }
   }
@@ -98,6 +177,7 @@ namespace AIRINV {
   // ////////////////////////////////////////////////////////////////////
   void InventoryManager::
   createDirectAccesses (stdair::FlightDate& ioFlightDate) {
+
     // Browse the list of segment-dates and create direct accesses
     // within each segment-date.
     const stdair::SegmentDateList_T& lSegmentDateList = 
@@ -105,10 +185,13 @@ namespace AIRINV {
     for (stdair::SegmentDateList_T::const_iterator itSegmentDate = 
            lSegmentDateList.begin();
          itSegmentDate != lSegmentDateList.end(); ++itSegmentDate) {
+
       stdair::SegmentDate* lCurrentSegmentDate_ptr = *itSegmentDate;
       assert (lCurrentSegmentDate_ptr != NULL);
+
       const stdair::AirportCode_T& lBoardingPoint =
         lCurrentSegmentDate_ptr->getBoardingPoint();
+
       stdair::AirportCode_T currentBoardingPoint = lBoardingPoint;
       const stdair::AirportCode_T& lOffPoint =
         lCurrentSegmentDate_ptr->getOffPoint();
@@ -124,11 +207,13 @@ namespace AIRINV {
         // Retrieve the (unique) LegDate getting that Boarding Point
         stdair::LegDate& lLegDate = stdair::BomManager::
           getObject<stdair::LegDate> (ioFlightDate, currentBoardingPoint);
+
         // Link the SegmentDate and LegDate together
         stdair::FacBomManager::
           instance().addToListAndMap (*lCurrentSegmentDate_ptr, lLegDate);
         stdair::FacBomManager::
           instance().addToListAndMap (lLegDate, *lCurrentSegmentDate_ptr);
+
         // Prepare the next iteration
         currentBoardingPoint = lLegDate.getOffPoint();
         ++i;
@@ -145,6 +230,7 @@ namespace AIRINV {
   // ////////////////////////////////////////////////////////////////////
   void InventoryManager::
   createDirectAccesses (stdair::SegmentDate& ioSegmentDate) {
+
     // Browse the list of segment-cabins and create direct accesses
     // within each segment-cabin.
     const stdair::SegmentCabinList_T& lSegmentCabinList = 
@@ -152,12 +238,14 @@ namespace AIRINV {
     for (stdair::SegmentCabinList_T::const_iterator itSegmentCabin = 
            lSegmentCabinList.begin();
          itSegmentCabin != lSegmentCabinList.end(); ++itSegmentCabin) {
+
+      //
       stdair::SegmentCabin* lCurrentSegmentCabin_ptr = *itSegmentCabin;
       assert (lCurrentSegmentCabin_ptr != NULL);
-        const stdair::CabinCode_T& lCabinCode =
+
+      //
+      const stdair::CabinCode_T& lCabinCode =
           lCurrentSegmentCabin_ptr->getCabinCode();
-      stdair::MapKey_T lSegmentCabinFullKey =
-        ioSegmentDate.describeKey() + ", " + lCabinCode;
       
       // Iterate on the routing legs
       const stdair::LegDateList_T& lLegDateList =
@@ -165,6 +253,7 @@ namespace AIRINV {
       for (stdair::LegDateList_T::const_iterator itLegDate =
              lLegDateList.begin();
            itLegDate != lLegDateList.end(); ++itLegDate) {
+
         const stdair::LegDate* lCurrentLegDate_ptr = *itLegDate;        
         assert (lCurrentLegDate_ptr != NULL);
 
@@ -172,16 +261,34 @@ namespace AIRINV {
         // (cabin code) as the SegmentCabin.
         stdair::LegCabin& lLegCabin = stdair::BomManager::
           getObject<stdair::LegCabin> (*lCurrentLegDate_ptr, lCabinCode);
-        stdair::MapKey_T lLegCabinFullKey =
-          lCurrentLegDate_ptr->describeKey() + ", " + lCabinCode;
 
-        // Link the SegmentCabin and LegCabin together
+        /**
+         * Add the leg-cabin to the segment-cabin routing.
+         *
+         * As several leg-cabins may compose the segment-cabin routing,
+         * and as the leg-cabin key is only made by a cabin code (which
+         * is the same as for the segment-cabin), all the leg-cabins
+         * composing the routing would have the same key.
+         * Hence, the leg-cabins must be differentiated according to their
+         * boarding point as well.
+         */
         stdair::FacBomManager::
           instance().addToListAndMap (*lCurrentSegmentCabin_ptr,
-                                      lLegCabin, lLegCabinFullKey);
+                                      lLegCabin, lLegCabin.getFullerKey());
+
+        /**
+         * Add the segment-cabin to the list which the leg-cabin crosses.
+         *
+         * As several segment-cabins may cross the leg-cabin,
+         * and as the segment-cabin key is only made by a cabin code (which
+         * is the same as for the leg-cabin), all the segment-cabins
+         * crossing the leg-cabin would have the same key.
+         * Hence, the segment-cabins must be differentiated according to their
+         * boarding and off points as well.
+         */
         stdair::FacBomManager::
           instance().addToListAndMap (lLegCabin, *lCurrentSegmentCabin_ptr,
-                                      lSegmentCabinFullKey);
+                                      lCurrentSegmentCabin_ptr->getFullerKey());
       }      
     }
   }
