@@ -440,6 +440,8 @@ namespace SIMFQT {
                           << ". A corresponding fare option for the '"
                           << lCurrentAirlineClassList_ptr->describeKey()
                           << "' class is: " << iFareOption);
+
+        iFareOption.emptyClassList();
       }
     }
     
