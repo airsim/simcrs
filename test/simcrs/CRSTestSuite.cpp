@@ -127,7 +127,7 @@ BOOST_AUTO_TEST_CASE (simcrs_simple_simulation_test) {
   const stdair::AirportCode_T lOrigin ("SIN");
   const stdair::AirportCode_T lDestination ("BKK");
   const stdair::AirportCode_T lPOS ("SIN");
-  const stdair::Date_T lPreferredDepartureDate(2011, boost::gregorian::Feb, 10);
+  const stdair::Date_T lPreferredDepartureDate(2011, boost::gregorian::Jan, 31);
   const stdair::Date_T lRequestDate (2011, boost::gregorian::Jan, 22);
   const stdair::Duration_T lRequestTime (boost::posix_time::hours(10));
   const stdair::DateTime_T lRequestDateTime (lRequestDate, lRequestTime);
