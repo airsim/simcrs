@@ -3,6 +3,7 @@
 
 \section toc Table of Contents
 - \ref intro
+- \ref dependencies
 - \ref pkgconfig
 - \ref simcrs_config
 - \ref autotools
