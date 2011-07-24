@@ -51,7 +51,7 @@ init_build ()
 
 ##
 # Sub-modules
-add_modules (airrac rmol airinv airsched simfqt ${PROJECT_NAME})
+add_modules (airrac rmol airinv avlcal airsched simfqt ${PROJECT_NAME})
 # avlcal simlfs
 
 ##
