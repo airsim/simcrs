@@ -73,9 +73,6 @@ test "x$ax_cv_boost_date_time" != xno && enable_exceptions=yes
 # Set the data directory for SimCRS
 pkgdatadir="${datadir}/simcrs"
 AC_SUBST(pkgdatadir)
-# Set the directory for data samples exported by SimCRS
-sampledir="${pkgdatadir}/samples"
-AC_SUBST(sampledir)
 
 # Check for info pages
 AC_ARG_ENABLE(info-doc, 
@@ -254,6 +251,7 @@ AC_CONFIG_FILES(
 	airsched/command/Makefile
 	airsched/service/Makefile
 	airsched/config/Makefile
+	airsched/config/airsched-paths.hpp
 	airsched/core/Makefile
 	airsched/batches/Makefile
 	airrac/Makefile
@@ -283,6 +281,7 @@ AC_CONFIG_FILES(
 	airinv/command/Makefile
 	airinv/service/Makefile
 	airinv/config/Makefile
+	airinv/config/airinv-paths.hpp
 	airinv/core/Makefile
 	airinv/batches/Makefile
 	airinv/server/Makefile
@@ -325,6 +324,7 @@ AC_CONFIG_FILES(
 	simcrs/command/Makefile
 	simcrs/service/Makefile
 	simcrs/config/Makefile
+	simcrs/config/simcrs-paths.hpp
 	simcrs/core/Makefile
 	simcrs/batches/Makefile
 	samples/Makefile

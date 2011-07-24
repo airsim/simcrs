@@ -1,6 +1,6 @@
 /*!
 \page simcrs-library
-	  C++ Simulated Travel Distribution Library
+	  C++ Simulated Travel-Oriented Distribution System Library
 
 \section sec_synopsis SYNOPSIS
 
@@ -10,29 +10,23 @@
 
 \section sec_description DESCRIPTION
 
-The Standard Airline IT (SIMCRS) library is a collection of routines
-for travel market simulation. The routines are written from scratch by
-the SimCRS team in C++, and present a modern Applications Programming
-Interface (API) for C/C++ programmers, allowing wrappers to be written
-for very high level languages.
+SimCRS aims at providing a clean API and a simple implementation, as a
+C++ library, of a Travel-oriented Distribution System. It corresponds
+to the simulated version of the real-world Computerized Reservation
+Systems (CRS).
+
+SimCRS makes an extensive use of existing open-source libraries for
+increased functionality, speed and accuracy. In particular the Boost
+(C++ Standard Extensions: http://www.boost.org) library is used.
 
 The library covers the following areas:
-- (Airline) Network-related classes:
-  - Network, ReachableUniverse
-- (Air) Travel-related classes:
-  - TravelSolution, OriginDestination, 
-- (Airline) Inventory-related classes:
-  - Inventory, FlightDate, SegmentDate, SegmentCabin, BookingClass, 
-    LegDate, LegCabin, 
-    Bucket
-- (Airline) Schedule-related classes:
-  - FlightPeriod, SegmentPeriod, LegPeriod
-- (Simulated) Passenger-related demand classes:
-  - DemandStream, BookingRequest
-- (Air) Price-related classes:
-  - YieldStore
-- Architecture
-
+- Schedule (flight-periods) parsing and management:
+  travel solution finding
+- Inventory (flight-dates) parsing and management:
+  availability calculation and sell management
+- Pricing
+- Distributed airline inventories
+- Codeshare and alliances
 
 \section sec_see_also SEE ALSO
  \b simcrs(1), \b simcrs-config(1)

@@ -1,6 +1,6 @@
 /*!
 \page simcrs
-	  C++ Simulated Travel Distribution Library
+	  C++ Simulated Travel-Oriented Distribution System Library
 
 \section sec_synopsis SYNOPSIS
 
@@ -28,6 +28,12 @@
     the \b simcrs program builds a simple use case directly from internal
     hard-coded parameters (demand distribution details and resource/cabin
     capacities).
+
+ \b -r, \b --simcrs<br>
+    The sample BOM tree corresponds to a typical usage by SimCRS
+
+ \b -c, \b --crs<br>
+    The sample BOM tree corresponds to a typical usage by SimCRS
 
  \b -i, \b --input <path-to-input-file><br>
     Path (absolute or relative) of the (CVS) input file specifying the demand

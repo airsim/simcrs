@@ -1,7 +1,7 @@
 /*!
 
 \page simcrs-config
-	  Configuration Script for the C++ Simulated Travel Distribution Library
+	Configuration Script for the C++ Simulated Travel-Oriented Distribution System Library
 
 \section sec_synopsis SYNOPSIS
 <b>simcrs-config</b> <tt>[--prefix] [--version] [--libs] [--cflags]</tt>
@@ -34,7 +34,7 @@ macros, that are included with \e SimCRS, for GNU autoconf.
     Show the SimCRS installation prefix.
 
 \section sec_see_also SEE ALSO
- \b simcrs-config(1), \b boost-config(1)
+ \b simcrs(1), \b simcrs-config(1), \b boost-config(1)
 
 \section sec_copyright COPYRIGHT
 
