@@ -31,7 +31,7 @@ EXTRA_DIST =
 
 # Build in these directories:
 SUBDIRS = airsched airrac rmol airinv avlcal simfqt simlfs simcrs \
-	man samples $(HTML_DOC_DIR) $(TEST_DIR)
+	man $(HTML_DOC_DIR) $(TEST_DIR)
 
 
 # Configuration helpers

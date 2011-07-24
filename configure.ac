@@ -294,6 +294,7 @@ AC_CONFIG_FILES(
 	avlcal/command/Makefile
 	avlcal/service/Makefile
 	avlcal/config/Makefile
+	avlcal/config/avlcal-paths.hpp
 	avlcal/core/Makefile
 	avlcal/batches/Makefile
 	simfqt/Makefile
@@ -315,6 +316,7 @@ AC_CONFIG_FILES(
 	simlfs/command/Makefile
 	simlfs/service/Makefile
 	simlfs/config/Makefile
+	simlfs/config/simlfs-paths.hpp
 	simlfs/core/Makefile
 	simlfs/batches/Makefile
 	simcrs/Makefile
@@ -327,8 +329,6 @@ AC_CONFIG_FILES(
 	simcrs/config/simcrs-paths.hpp
 	simcrs/core/Makefile
 	simcrs/batches/Makefile
-	samples/Makefile
-	samples/RDS01/Makefile
 	man/Makefile
 	man/doxygen_man.cfg
 	doc/Makefile
