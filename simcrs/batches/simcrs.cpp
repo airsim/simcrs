@@ -112,9 +112,6 @@ int readConfiguration (int argc, char* argv[],
     ("fare,f",
      boost::program_options::value< std::string >(&ioFareInputFilename)->default_value(K_SIMCRS_DEFAULT_FARE_INPUT_FILENAME),
      "(CVS) input file for the fares")
-    ("yield,f",
-     boost::program_options::value< std::string >(&ioYieldInputFilename)->default_value(K_SIMCRS_DEFAULT_YIELD_INPUT_FILENAME),
-     "(CVS) input file for the yields")
     ("log,l",
      boost::program_options::value< std::string >(&ioLogFilename)->default_value(K_SIMCRS_DEFAULT_LOG_FILENAME),
      "Filepath for the logs")
@@ -237,11 +234,6 @@ int readConfiguration (int argc, char* argv[],
     }
   }
 
-  if (vm.count ("yield")) {
-    ioYieldInputFilename = vm["yield"].as< std::string >();
-    std::cout << "Yield input filename is: " << ioYieldInputFilename << std::endl;
-  }
-
   if (vm.count ("log")) {
     ioLogFilename = vm["log"].as< std::string >();
     std::cout << "Log filename is: " << ioLogFilename << std::endl;
@@ -318,42 +310,6 @@ int main (int argc, char* argv[]) {
     return 0;
   }
     
-  // Check that the file path given as input corresponds to an actual file
-  bool doesExistAndIsReadable =
-    stdair::BasFileMgr::doesExistAndIsReadable (lScheduleInputFilename);
-  if (doesExistAndIsReadable == false) {
-    STDAIR_LOG_ERROR ("The '" << lScheduleInputFilename
-                      << "' input file can not be open and read");
-    return -1;
-  }
-
-  // Check that the file path given as input corresponds to an actual file
-  doesExistAndIsReadable =
-    stdair::BasFileMgr::doesExistAndIsReadable (lOnDInputFilename);
-  if (doesExistAndIsReadable == false) {
-    STDAIR_LOG_ERROR ("The '" << lOnDInputFilename
-                      << "' input file can not be open and read");
-    return -1;
-  }
-
-  // Check that the file path given as input corresponds to an actual file
-  doesExistAndIsReadable =
-    stdair::BasFileMgr::doesExistAndIsReadable (lFareInputFilename);
-  if (doesExistAndIsReadable == false) {
-    STDAIR_LOG_ERROR ("The '" << lFareInputFilename
-                      << "' input file can not be open and read");
-    return -1;
-  }
-
-  // Check that the file path given as input corresponds to an actual file
-  doesExistAndIsReadable =
-    stdair::BasFileMgr::doesExistAndIsReadable (lYieldInputFilename);
-  if (doesExistAndIsReadable == false) {
-    STDAIR_LOG_ERROR ("The '" << lYieldInputFilename
-                      << "' input file can not be open and read");
-    return -1;
-  }
-
   // Set the database parameters
   const stdair::BasDBParams lDBParams (lDBUser, lDBPasswd, lDBHost, lDBPort,
                                        lDBDBName);
