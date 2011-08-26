@@ -8,6 +8,7 @@
 #include <stdair/stdair_basic_types.hpp>
 #include <stdair/stdair_service_types.hpp>
 #include <stdair/basic/ForecastingMethod.hpp>
+#include <stdair/basic/PartnershipTechnique.hpp>
 #include <stdair/bom/TravelSolutionTypes.hpp>
 // SimCRS
 #include <simcrs/SIMCRS_Types.hpp>
@@ -17,6 +18,7 @@ namespace stdair {
   struct BasLogParams;
   struct BasDBParams;
   struct BookingRequestStruct;
+  struct CancellationStruct;
   struct SnapshotStruct;
   struct RMEventStruct;
 }
@@ -134,7 +136,8 @@ namespace SIMCRS {
     /**
      * Compute the availability for each travel solution in the list.
      */
-    void calculateAvailability (stdair::TravelSolutionList_T&);
+    void calculateAvailability (stdair::TravelSolutionList_T&,
+                                const stdair::PartnershipTechnique&);
     
     /**
      * Register a booking.
@@ -145,12 +148,18 @@ namespace SIMCRS {
      * Take inventory snapshots.
      */
     void takeSnapshots (const stdair::SnapshotStruct&);
+
+    /**
+     * Play cancellation.
+     */
+    bool playCancellation (const stdair::CancellationStruct&);
     
     /**
      * Optimise (revenue management) an flight-date/network-date
      */
     void optimise (const stdair::RMEventStruct&,
-                   const stdair::ForecastingMethod&);
+                   const stdair::ForecastingMethod&,
+                   const stdair::PartnershipTechnique&);
     
     /**
      * Build a sample BOM tree, and attach it to the BomRoot instance.

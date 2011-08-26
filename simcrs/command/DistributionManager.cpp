@@ -6,6 +6,7 @@
 // StdAir
 #include <stdair/bom/FareOptionStruct.hpp>
 #include <stdair/bom/TravelSolutionStruct.hpp>
+#include <stdair/bom/CancellationStruct.hpp>
 #include <stdair/service/Logger.hpp>
 // Airline Inventory
 #include <airinv/AIRINV_Master_Service.hpp>
@@ -17,14 +18,16 @@ namespace SIMCRS {
   // ////////////////////////////////////////////////////////////////////
   void DistributionManager::
   calculateAvailability (AIRINV::AIRINV_Master_Service& ioAIRINV_Master_Service,
-                         stdair::TravelSolutionList_T& ioTravelSolutionList) {
+                         stdair::TravelSolutionList_T& ioTravelSolutionList,
+                         const stdair::PartnershipTechnique& iPartnershipTechnique) {
     for (stdair::TravelSolutionList_T::iterator itTS =
            ioTravelSolutionList.begin();
          itTS != ioTravelSolutionList.end(); ++itTS) {
       stdair::TravelSolutionStruct& lCurrentTravelSolution = *itTS;
 
       // Forward the work to the dedicated service.
-      ioAIRINV_Master_Service.calculateAvailability (lCurrentTravelSolution);
+      ioAIRINV_Master_Service.calculateAvailability (lCurrentTravelSolution,
+                                                     iPartnershipTechnique);
     }
   }
   
@@ -59,6 +62,33 @@ namespace SIMCRS {
     }
 
     return hasSaleBeenSuccessful;
+  }
+
+  // ////////////////////////////////////////////////////////////////////
+  bool DistributionManager::
+  playCancellation (AIRINV::AIRINV_Master_Service& ioAIRINV_Master_Service,
+                    const stdair::CancellationStruct& iCancellation) {
+    bool hasCancellationBeenSuccessful = false;
+
+    const stdair::PartySize_T& lPartySize = iCancellation.getPartySize();
+    const stdair::KeyList_T& lSegmentDateKeyList =
+      iCancellation.getSegmentPath();
+    const stdair::ClassList_String_T& lClassList = iCancellation.getClassList();
+    stdair::ClassList_String_T::const_iterator itClass = lClassList.begin();
+    for (stdair::KeyList_T::const_iterator itKey= lSegmentDateKeyList.begin();
+         itKey != lSegmentDateKeyList.end(); ++itKey, ++itClass) {
+      const std::string& lSegmentDateKey = *itKey;
+      
+      // TODO: Removed this hardcode.
+      std::ostringstream ostr;
+      ostr << *itClass;
+      const stdair::ClassCode_T lClassCode (ostr.str());
+      
+      hasCancellationBeenSuccessful =
+        ioAIRINV_Master_Service.cancel (lSegmentDateKey, lClassCode,
+                                        lPartySize);
+    }    
+    return hasCancellationBeenSuccessful;
   }
   
 }
