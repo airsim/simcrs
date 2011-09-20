@@ -22,6 +22,8 @@
 #include <stdair/bom/TravelSolutionStruct.hpp>
 #include <stdair/bom/BookingRequestStruct.hpp>
 #include <stdair/service/Logger.hpp>
+// SimFQT
+#include <simfqt/SIMFQT_Types.hpp>
 // SimCRS
 #include <simcrs/SIMCRS_Service.hpp>
 #include <simcrs/config/simcrs-paths.hpp>
@@ -122,8 +124,9 @@ BOOST_AUTO_TEST_CASE (simcrs_simple_simulation_test) {
   SIMCRS::SIMCRS_Service simcrsService (lLogParams, lCRSCode);
 
   // Build the BOM tree from parsing input files
+  SIMFQT::FareFilePath lFareFilePath (lFareInputFilename);
   simcrsService.parseAndLoad (lScheduleInputFilename, lOnDInputFilename,
-                              lYieldInputFilename, lFareInputFilename);
+                              lYieldInputFilename, lFareFilePath);
 
   // Create an empty booking request structure
   // TODO: fill the booking request structure from the input parameters
