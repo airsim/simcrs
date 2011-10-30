@@ -1,0 +1,75 @@
+
+Summary:
+--------
+SimCRS aims at providing a clean API and a simple implementation, as
+a C++ library, of a Travel-oriented Distribution System. It
+corresponds to the simulated version of the real-world Computerized
+Reservation Systems (CRS).
+
+SimCRS makes an extensive use of existing open-source libraries for
+increased functionality, speed and accuracy. In particular the
+Boost (C++ Standard Extensions: http://www.boost.org) library is used.
+
+
+Getting and installing from the Fedora/CentOS/RedHat distribution:
+------------------------------------------------------------------
+Just use Yum:
+yum -y install simcrs-devel simcrs-doc
+
+You can also get the RPM packages (which may work on Linux
+distributions like Novel Suse and Mandriva) from the Fedora repository
+(e.g., for Fedora 16, 
+http://fr2.rpmfind.net/linux/fedora/releases/16/Everything/)
+
+
+Building the library and test binary from Git repository:
+----------------------------------------------------------------
+The Sourceforge Git repository may be cloned as following:
+git clone ssh://simcrs.git.sourceforge.net/gitroot/simcrs/simcrs simcrsgit
+cd simcrsgit
+git checkout trunk
+
+Then, you need the following packages (Fedora/RedHat/CentOS names here, 
+but names may vary according to distributions):
+  * cmake
+  * gcc-c++
+  * stdair-devel, airrac-devel, rmol-devel, airinv-devel, simfqt-devel
+  * boost-devel
+  * zeromq-devel
+  * readline-devel
+  * soci-mysql-devel
+  * python-devel
+  * gettext-devel (optional)
+  * doxygen, ghostscript, graphviz and tetex-latex (optional)
+  * rpm-build (optional)
+
+Building the library and test binary from the tarball:
+------------------------------------------------------
+The latest stable source tarball (simcrs*.tar.gz or .bz2) can be found here:
+http://sourceforge.net/project/showfiles.php?group_id=282944
+
+Then, as usual:
+* To configure the project, type something like:
+  mkdir build && cd build
+  cmake -DCMAKE_INSTALL_PREFIX=/home/user/dev/deliveries/simcrs-99.99.99 \
+   -DWITH_STDAIR_PREFIX=/home/user/dev/deliveries/stdair-stable \
+   -DWITH_AIRRAC_PREFIX=/home/user/dev/deliveries/airsched-stable \
+   -DWITH_AIRRAC_PREFIX=/home/user/dev/deliveries/airrac-stable \
+   -DWITH_RMOL_PREFIX=/home/user/dev/deliveries/rmol-stable \
+   -DWITH_RMOL_PREFIX=/home/user/dev/deliveries/airinv-stable \
+   -DWITH_RMOL_PREFIX=/home/user/dev/deliveries/simfqt-stable \
+   -DCMAKE_BUILD_TYPE:STRING=Debug -DINSTALL_DOC:BOOL=ON ..
+* To build the project, type:
+  make
+* To test the project, type:
+  make check
+* To install the library (libsimcrs*.so*) and the binary (simcrs),
+  just type:
+  make install
+* To package the source files, type:
+  make dist
+* To package the binary and the (HTML and PDF) documentation:
+  make package
+
+Denis Arnaud (October 2011)
+
