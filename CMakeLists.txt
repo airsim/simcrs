@@ -52,7 +52,7 @@ init_build ()
 
 ##
 # Sub-modules
-add_modules (avlcal ${PROJECT_NAME})
+add_modules (${PROJECT_NAME})
 # avlcal simlfs
 
 ##
