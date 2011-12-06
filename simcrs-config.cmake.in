@@ -1,20 +1,22 @@
 #
-# Config file for the RMOL package. It defines the following variables:
-#  RMOL_INCLUDE_DIRS - include directories for RMOL
-#  RMOL_LIBRARY_DIRS - library directories for RMOL (normally not used!)
-#  RMOL_BINARY_DIRS  - binary directories for RMOL (normally not used!)
-#  RMOL_LIBRARIES    - libraries to link against
-#  RMOL_EXECUTABLES  - the RMOL binaries/executables
+# Config file for the SimCRS package. It defines the following variables:
+#  SIMCRS_VERSION      - version of SimCRS
+#  SIMCRS_BINARY_DIRS  - binary directories for SimCRS
+#  SIMCRS_INCLUDE_DIRS - include directories for SimCRS
+#  SIMCRS_LIBRARY_DIRS - library directories for SimCRS (normally not used!)
+#  SIMCRS_LIBRARIES    - libraries to link against
+#  SIMCRS_EXECUTABLES  - the SimCRS binaries/executables
 
-# Tell the user project where to find RMOL headers and libraries
-set (RMOL_INCLUDE_DIRS "@RMOL_INCLUDE_DIRS@")
-set (RMOL_LIBRARY_DIRS "@RMOL_LIB_DIR@")
-set (RMOL_BINARY_DIRS "@RMOL_BIN_DIR@")
+# Tell the user project where to find SimCRS headers and libraries
+set (SIMCRS_VERSION "@PACKAGE_VERSION@")
+set (SIMCRS_BINARY_DIRS "@SIMCRS_BIN_DIR@")
+set (SIMCRS_INCLUDE_DIRS "@SIMCRS_INCLUDE_DIRS@")
+set (SIMCRS_LIBRARY_DIRS "@SIMCRS_LIB_DIR@")
 
-# Library dependencies for RMOL (contains definitions for the RMOL IMPORTED
+# Library dependencies for SimCRS (contains definitions for the SimCRS IMPORTED
 # targets)
-include ("@RMOL_CMAKE_DIR@/rmol-library-depends.cmake")
+include ("@SIMCRS_CMAKE_DIR@/simcrs-library-depends.cmake")
 
-# These are the RMOL IMPORTED targets, created by rmol-library-depends.cmake
-set (RMOL_LIBRARIES airraclib rmollib)
-set (RMOL_EXECUTABLES rmol)
+# These are the SimCRS IMPORTED targets, created by simcrs-library-depends.cmake
+set (SIMCRS_LIBRARIES simcrslib)
+set (SIMCRS_EXECUTABLES simcrs)
