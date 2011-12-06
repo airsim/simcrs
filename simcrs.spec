@@ -15,8 +15,8 @@ BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 BuildRequires:  cmake, python-devel
 BuildRequires:  boost-devel, soci-mysql-devel, zeromq-devel, readline-devel
-BuildRequires:  stdair-devel, trademgen-devel, travelccm-devel, airsched-devel,
-BuildRequires:  airrac-devel, rmol-devel, airinv-devel, simfqt-devel
+BuildRequires:  stdair-devel, airsched-devel, simfqt-devel
+BuildRequires:  airrac-devel, rmol-devel, airinv-devel
 
 
 %description
