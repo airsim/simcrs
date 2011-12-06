@@ -1,3 +1,14 @@
+
+2011-12-06:
+- Version 0.1.1
+- [Dev] Adapted the database-related source code to the new SOCI-3.1 API.
+- [Build] Improved the CMake build framework. For instance, the package
+  versions are now correctly handled, for the simulator-related components,
+  as well as for third-party libraries (e.g., Xapian, SOCI, Boost). The
+  rpath/run-path is now inserted into the (library, executable) binaries
+  (only when needed, though).
+- [Build] Removed any support for the GNU Autotools.
+
 2011-11-23:
 - Version 0.1.0
 - First release
