@@ -40,31 +40,58 @@ namespace SIMCRS {
 
     const stdair::ClassObjectIDMapHolder_T& lClassObjectIDMapHolder =
       iTravelSolution.getClassObjectIDMapHolder();
-    const stdair::FareOptionStruct& lChosenFareOption =
-      iTravelSolution.getChosenFareOption ();
-    const stdair::ClassList_StringList_T& lClassPath =
-      lChosenFareOption.getClassPath();
-    stdair::ClassList_StringList_T::const_iterator itClassKeyList =
-      lClassPath.begin();
-    for (stdair::ClassObjectIDMapHolder_T::const_iterator itClassObjectIDMap =
-           lClassObjectIDMapHolder.begin();
-         itClassObjectIDMap != lClassObjectIDMapHolder.end();
-         ++itClassObjectIDMap, ++itClassKeyList) {
-      const stdair::ClassObjectIDMap_T& lClassObjectIDMap = *itClassObjectIDMap;
+    if (lClassObjectIDMapHolder.size() > 0) {
+      const stdair::FareOptionStruct& lChosenFareOption =
+        iTravelSolution.getChosenFareOption ();
+      const stdair::ClassList_StringList_T& lClassPath =
+        lChosenFareOption.getClassPath();
+      stdair::ClassList_StringList_T::const_iterator itClassKeyList =
+        lClassPath.begin();
+      for (stdair::ClassObjectIDMapHolder_T::const_iterator itClassObjectIDMap =
+             lClassObjectIDMapHolder.begin();
+           itClassObjectIDMap != lClassObjectIDMapHolder.end();
+           ++itClassObjectIDMap, ++itClassKeyList) {
+        const stdair::ClassObjectIDMap_T& lClassObjectIDMap =
+          *itClassObjectIDMap;
       
-      // TODO: Removed this hardcode.
-      std::ostringstream ostr;
-      const stdair::ClassList_String_T& lClassList = *itClassKeyList;
-      assert (lClassList.size() > 0);
-      ostr << lClassList.at(0);
-      const stdair::ClassCode_T lClassCode (ostr.str());
-      stdair::ClassObjectIDMap_T::const_iterator itClassID =
-        lClassObjectIDMap.find (lClassCode);
-      assert (itClassID != lClassObjectIDMap.end());
-      const stdair::BookingClassID_T& lClassID = itClassID->second;
+        // TODO: Removed this hardcode.
+        std::ostringstream ostr;
+        const stdair::ClassList_String_T& lClassList = *itClassKeyList;
+        assert (lClassList.size() > 0);
+        ostr << lClassList.at(0);
+        const stdair::ClassCode_T lClassCode (ostr.str());
+        stdair::ClassObjectIDMap_T::const_iterator itClassID =
+          lClassObjectIDMap.find (lClassCode);
+        assert (itClassID != lClassObjectIDMap.end());
+        const stdair::BookingClassID_T& lClassID = itClassID->second;
       
-      hasSaleBeenSuccessful = 
-        ioAIRINV_Master_Service.sell (lClassID, iPartySize);
+        hasSaleBeenSuccessful = 
+          ioAIRINV_Master_Service.sell (lClassID, iPartySize);
+      }
+    } else {
+      const stdair::KeyList_T& lSegmentDateKeyList =
+        iTravelSolution.getSegmentPath();
+      const stdair::FareOptionStruct& lChosenFareOption =
+        iTravelSolution.getChosenFareOption ();
+      const stdair::ClassList_StringList_T& lClassPath =
+        lChosenFareOption.getClassPath();
+      stdair::ClassList_StringList_T::const_iterator itClassKeyList =
+        lClassPath.begin();
+      for (stdair::KeyList_T::const_iterator itKey= lSegmentDateKeyList.begin();
+           itKey != lSegmentDateKeyList.end(); ++itKey, ++itClassKeyList) {
+        const std::string& lSegmentDateKey = *itKey;
+      
+        // TODO: Removed this hardcode.
+        std::ostringstream ostr;
+        const stdair::ClassList_String_T& lClassList = *itClassKeyList;
+        assert (lClassList.size() > 0);
+        ostr << lClassList.at(0);
+        const stdair::ClassCode_T lClassCode (ostr.str());
+      
+        hasSaleBeenSuccessful = 
+          ioAIRINV_Master_Service.sell (lSegmentDateKey, lClassCode,
+                                        iPartySize);
+      }
     }
 
     return hasSaleBeenSuccessful;
