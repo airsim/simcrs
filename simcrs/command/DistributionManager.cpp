@@ -38,17 +38,19 @@ namespace SIMCRS {
         const stdair::NbOfSeats_T& iPartySize) {
     bool hasSaleBeenSuccessful = false;
 
-    const stdair::KeyList_T& lSegmentDateKeyList =
-      iTravelSolution.getSegmentPath();
+    const stdair::ClassObjectIDMapHolder_T& lClassObjectIDMapHolder =
+      iTravelSolution.getClassObjectIDMapHolder();
     const stdair::FareOptionStruct& lChosenFareOption =
       iTravelSolution.getChosenFareOption ();
     const stdair::ClassList_StringList_T& lClassPath =
       lChosenFareOption.getClassPath();
     stdair::ClassList_StringList_T::const_iterator itClassKeyList =
       lClassPath.begin();
-    for (stdair::KeyList_T::const_iterator itKey= lSegmentDateKeyList.begin();
-         itKey != lSegmentDateKeyList.end(); ++itKey, ++itClassKeyList) {
-      const std::string& lSegmentDateKey = *itKey;
+    for (stdair::ClassObjectIDMapHolder_T::const_iterator itClassObjectIDMap =
+           lClassObjectIDMapHolder.begin();
+         itClassObjectIDMap != lClassObjectIDMapHolder.end();
+         ++itClassObjectIDMap, ++itClassKeyList) {
+      const stdair::ClassObjectIDMap_T& lClassObjectIDMap = *itClassObjectIDMap;
       
       // TODO: Removed this hardcode.
       std::ostringstream ostr;
@@ -56,9 +58,13 @@ namespace SIMCRS {
       assert (lClassList.size() > 0);
       ostr << lClassList.at(0);
       const stdair::ClassCode_T lClassCode (ostr.str());
+      stdair::ClassObjectIDMap_T::const_iterator itClassID =
+        lClassObjectIDMap.find (lClassCode);
+      assert (itClassID != lClassObjectIDMap.end());
+      const stdair::BookingClassID_T& lClassID = itClassID->second;
       
       hasSaleBeenSuccessful = 
-        ioAIRINV_Master_Service.sell (lSegmentDateKey, lClassCode, iPartySize);
+        ioAIRINV_Master_Service.sell (lClassID, iPartySize);
     }
 
     return hasSaleBeenSuccessful;
@@ -71,22 +77,15 @@ namespace SIMCRS {
     bool hasCancellationBeenSuccessful = false;
 
     const stdair::PartySize_T& lPartySize = iCancellation.getPartySize();
-    const stdair::KeyList_T& lSegmentDateKeyList =
-      iCancellation.getSegmentPath();
-    const stdair::ClassList_String_T& lClassList = iCancellation.getClassList();
-    stdair::ClassList_String_T::const_iterator itClass = lClassList.begin();
-    for (stdair::KeyList_T::const_iterator itKey= lSegmentDateKeyList.begin();
-         itKey != lSegmentDateKeyList.end(); ++itKey, ++itClass) {
-      const std::string& lSegmentDateKey = *itKey;
-      
-      // TODO: Removed this hardcode.
-      std::ostringstream ostr;
-      ostr << *itClass;
-      const stdair::ClassCode_T lClassCode (ostr.str());
-      
+    const stdair::BookingClassIDList_T& lClassIDList =
+      iCancellation.getClassIDList();
+
+    for (stdair::BookingClassIDList_T::const_iterator itClassID =
+           lClassIDList.begin(); itClassID != lClassIDList.end(); ++itClassID) {
+      const stdair::BookingClassID_T& lClassID = *itClassID;
+            
       hasCancellationBeenSuccessful =
-        ioAIRINV_Master_Service.cancel (lSegmentDateKey, lClassCode,
-                                        lPartySize);
+        ioAIRINV_Master_Service.cancel (lClassID, lPartySize);
     }    
     return hasCancellationBeenSuccessful;
   }
