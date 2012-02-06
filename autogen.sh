@@ -94,8 +94,8 @@ cat > configure << _EOF
 # The Hudson/Jenkins-based CI build-server often builds any simulator-related
 # projects with the same set up of options:
 # ./configure --with-stdair=/opt/stdair --with-airsched=/opt/airsched
-#   --with-airrac=/opt/airrac --with-rmol=/opt/rmol --with-airinv=/opt/airinv
-#   --with-simfqt=/opt/simfqt
+#   --with-sevmgr=/opt/sevmgr --with-airrac=/opt/airrac --with-rmol=/opt/rmol 
+#   --with-airinv=/opt/airinv --with-simfqt=/opt/simfqt
 #
 _EOF
 
@@ -115,6 +115,7 @@ fi
 cat >> configure << _EOF
 PREFIX_OPTION=""
 STDAIR_OPTION=""
+SEVMGR_OPTION=""
 AIRSCHED_OPTION=""
 AIRRAC_OPTION=""
 RMOL_OPTION=""
@@ -130,7 +131,7 @@ do
   then
     echo ""
     echo "Usage:"
-    echo "    \$0 [--prefix=<install_dir>] [--with-stdair=<stdair_install_dir>] [--with-airsched=<airsched_install_dir>] [--with-airrac=<airrac_install_dir>] [--with-rmol=<rmol_install_dir>] [--with-airinv=<airinv_install_dir>] [--with-simfqt=<simfqt_install_dir>] [--with-doc | --without-doc] [-n|-N|--norm] [-b|--buildir]"
+    echo "    \$0 [--prefix=<install_dir>] [--with-stdair=<stdair_install_dir>] [--with-sevmgr=<sevmgr_install_dir>] [--with-airsched=<airsched_install_dir>] [--with-airrac=<airrac_install_dir>] [--with-rmol=<rmol_install_dir>] [--with-airinv=<airinv_install_dir>] [--with-simfqt=<simfqt_install_dir>] [--with-doc | --without-doc] [-n|-N|--norm] [-b|--buildir]"
     echo "      --with-doc/--without-doc : Force the (resp. non) generation of the documentation" 
     echo "      -n/-N/--norm             : Do not remove/clean older potential 'build' sub-directory" 
     echo "      -b/-B/--buildir          : Do the build in a dedicated 'build' sub-directory, rather than in-place" 
@@ -153,6 +154,18 @@ then
   then
     STDAIR_DIR=\`echo "\${opt_elem}" | sed -e "s/^--with-stdair=\(.*\)\$/\1/"\`
     STDAIR_OPTION="-DWITH_STDAIR_PREFIX=\${STDAIR_DIR}"
+  fi
+_EOF
+fi
+#
+if [ "${PROJECT_NAME}" != "sevmgr" ]
+then
+	cat >> configure << _EOF
+  IS_OPTION_SEVMGR=\`echo "\${opt_elem}" | grep "^--with-sevmgr="\`
+  if [ "\${IS_OPTION_SEVMGR}" != "" ]
+  then
+    SEVMGR_DIR=\`echo "\${opt_elem}" | sed -e "s/^--with-sevmgr=\(.*\)\$/\1/"\`
+    SEVMGR_OPTION="-DWITH_SEVMGR_PREFIX=\${SEVMGR_DIR}"
   fi
 _EOF
 fi
@@ -250,7 +263,7 @@ fi
 BUILD_OPTION="-DCMAKE_BUILD_TYPE:STRING=Debug"
 
 #
-CMAKE_CMD="cmake \${PREFIX_OPTION} \${STDAIR_OPTION} \${AIRSCHED_OPTION} \${AIRRAC_OPTION} \${RMOL_OPTION} \${AIRINV_OPTION} \${SIMFQT_OPTION} \${LIB_OPTION} \${BUILD_OPTION} \${DOC_OPTION} \${SOURCE_DIR}"
+CMAKE_CMD="cmake \${PREFIX_OPTION} \${STDAIR_OPTION} \${AIRSCHED_OPTION} \${AIRRAC_OPTION} \${RMOL_OPTION} \${SEVMGR_OPTION} \${AIRINV_OPTION} \${SIMFQT_OPTION} \${LIB_OPTION} \${BUILD_OPTION} \${DOC_OPTION} \${SOURCE_DIR}"
 
 # Trace on
 set -x
