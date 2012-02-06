@@ -10,6 +10,8 @@
 #include <stdair/basic/ForecastingMethod.hpp>
 #include <stdair/basic/PartnershipTechnique.hpp>
 #include <stdair/bom/TravelSolutionTypes.hpp>
+// SEvMgr
+#include <sevmgr/SEVMGR_Types.hpp>
 // SimFQT
 #include <simfqt/SIMFQT_Types.hpp>
 // AIRRAC
@@ -85,10 +87,13 @@ namespace SIMCRS {
      * is itself being initialised by another library service such as
      * DSIM_Service).
      *
-     * @param stdair::STDAIR_ServicePtr_T Reference on the STDAIR service.
+     * @param stdair::STDAIR_ServicePtr_T Reference on the STDAIR service.   
+     * @param SEVMGR::SEVMGR_ServicePtr_T Reference on the SEVMGR_Service.
+     * @param const stdair::RandomSeed_T& Seed for the random generation.
      * @param const CRSCode_T& Code of the owner of the distribution system.
      */
-    SIMCRS_Service (stdair::STDAIR_ServicePtr_T, const CRSCode_T&); 
+    SIMCRS_Service (stdair::STDAIR_ServicePtr_T, SEVMGR::SEVMGR_ServicePtr_T, 
+		    const CRSCode_T&); 
 
 
     /**
@@ -328,7 +333,15 @@ namespace SIMCRS {
      *        resources.
      */
     void addStdAirService (stdair::STDAIR_ServicePtr_T,
-                           const bool iOwnStdairService);
+                           const bool iOwnStdairService);  
+
+    /**
+     * Attach the SEVMGR service to the SIMCRS_Service.
+     *
+     * @param SEVMGR::SEVMGR_ServicePtr_T Reference on the SEVMGR service.
+     */
+    void addSEVMGRService (SEVMGR::SEVMGR_ServicePtr_T,
+			   const bool iOwnSEVMGRService);
     
     /**
      * Initialise the (SimCRS) service context (i.e., the
