@@ -12,6 +12,8 @@
 // StdAir
 #include <stdair/stdair_basic_types.hpp>
 #include <stdair/stdair_service_types.hpp>
+// SEvMgr
+#include <sevmgr/SEVMGR_Types.hpp>
 // AirInv
 #include <airinv/AIRINV_Types.hpp>
 // AirSched
@@ -67,7 +69,29 @@ namespace SIMCRS {
      */
     const bool getOwnStdairServiceFlag() const {
       return _ownStdairService;
+    }  
+
+    /**
+     * Get the pointer on the SEvMgr service handler.
+     */
+    SEVMGR::SEVMGR_ServicePtr_T getSEVMGR_ServicePtr() const {
+      return _sevmgrService;
     }
+
+    /**
+     * Get the SEvMgr service handler.
+     */
+    SEVMGR::SEVMGR_Service& getSEVMGR_Service() const {
+      assert (_sevmgrService != NULL);
+      return *_sevmgrService;
+    } 
+
+    /**
+     * State whether or not SIMCRS_Service owns the SEVMGR service resources.
+     */
+    const bool getOwnSEVMGRServiceFlag() const {
+      return _ownSEVMGRService;
+    }  
 
     /**
      * Get the AirInv service handler.
@@ -110,6 +134,15 @@ namespace SIMCRS {
                             const bool iOwnStdairService) {
       _stdairService = ioSTDAIR_ServicePtr;
       _ownStdairService = iOwnStdairService;
+    }
+
+    /**
+     * Set the pointer on the SEvMgr service handler.
+     */
+    void setSEVMGR_Service (SEVMGR::SEVMGR_ServicePtr_T ioSEVMGR_ServicePtr,
+			    const bool iOwnSEVMGRService) {
+      _sevmgrService = ioSEVMGR_ServicePtr;
+      _ownSEVMGRService = iOwnSEVMGRService;
     }
     
     /**
@@ -187,7 +220,17 @@ namespace SIMCRS {
     /**
      * State whether or not AIRINV owns the STDAIR service resources.
      */
-    bool _ownStdairService;
+    bool _ownStdairService;   
+
+    /**
+     * Standard event queue (SEvMgr) Service Handler.
+     */
+    SEVMGR::SEVMGR_ServicePtr_T _sevmgrService;  
+
+    /**
+     * State whether or not AIRINV owns the SEVMGR service resources.
+     */
+    bool _ownSEVMGRService;   
 
     /**
      * Airline Schedule Service Handler.

@@ -14,17 +14,18 @@ namespace SIMCRS {
 
   // //////////////////////////////////////////////////////////////////////
   SIMCRS_ServiceContext::SIMCRS_ServiceContext ()
-    : _ownStdairService (false), _CRSCode (DEFAULT_CRS_CODE) {
+    : _ownStdairService (false), _ownSEVMGRService (true),
+      _CRSCode (DEFAULT_CRS_CODE) {
   }
 
   // //////////////////////////////////////////////////////////////////////
   SIMCRS_ServiceContext::SIMCRS_ServiceContext (const SIMCRS_ServiceContext&)
-    : _ownStdairService (false) {
+    : _ownStdairService (false), _ownSEVMGRService (true) {
   }
 
   // //////////////////////////////////////////////////////////////////////
   SIMCRS_ServiceContext::SIMCRS_ServiceContext (const CRSCode_T& iCRSCode)
-    : _CRSCode (iCRSCode) {
+    : _ownSEVMGRService (true),_CRSCode (iCRSCode) {
   }
 
   // //////////////////////////////////////////////////////////////////////

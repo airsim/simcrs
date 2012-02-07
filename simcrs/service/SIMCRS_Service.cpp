@@ -19,6 +19,8 @@
 #include <stdair/bom/Inventory.hpp>
 #include <stdair/service/Logger.hpp>
 #include <stdair/STDAIR_Service.hpp>
+// SEvMgr
+#include <sevmgr/SEVMGR_Service.hpp>
 // Airline Inventory
 #include <airinv/AIRINV_Master_Service.hpp>
 // Airline Schedule
@@ -108,6 +110,7 @@ namespace SIMCRS {
   // ////////////////////////////////////////////////////////////////////
   SIMCRS_Service::
   SIMCRS_Service (stdair::STDAIR_ServicePtr_T ioSTDAIR_Service_ptr,
+		  SEVMGR::SEVMGR_ServicePtr_T ioSEVMGR_Service_ptr,
                   const CRSCode_T& iCRSCode)
     : _simcrsServiceContext (NULL) {
 
@@ -117,7 +120,11 @@ namespace SIMCRS {
     // Store the STDAIR service object within the (AIRINV) service context
     // \note AirInv does not own the STDAIR service resources here.
     const bool doesNotOwnStdairService = false;
-    addStdAirService (ioSTDAIR_Service_ptr, doesNotOwnStdairService);
+    addStdAirService (ioSTDAIR_Service_ptr, doesNotOwnStdairService); 
+
+    //Add the SEvMgr service to the TRADEMGEN service context. 
+    const bool doesNotOwnSEVMGRService = false;
+    addSEVMGRService (ioSEVMGR_Service_ptr, doesNotOwnSEVMGRService);
 
     // Initalise the SIMFQT service.
     initSIMFQTService();
@@ -165,6 +172,20 @@ namespace SIMCRS {
     // Store the StdAir service object within the (SimCRS) service context
     lSIMCRS_ServiceContext.setSTDAIR_Service (ioSTDAIR_Service_ptr,
                                               iOwnStdairService);
+  }  
+
+  // ////////////////////////////////////////////////////////////////////
+  void SIMCRS_Service::
+  addSEVMGRService (SEVMGR::SEVMGR_ServicePtr_T ioSEVMGR_Service_ptr,
+		    const bool iOwnSEVMGRService) {
+
+    // Retrieve the SimCRS service context
+    assert (_simcrsServiceContext != NULL);
+    SIMCRS_ServiceContext& lSIMCRS_ServiceContext = *_simcrsServiceContext;
+
+    // Store the STDAIR service object within the (TRADEMGEN) service context
+    lSIMCRS_ServiceContext.setSEVMGR_Service (ioSEVMGR_Service_ptr,
+					      iOwnSEVMGRService);
   }
   
   // ////////////////////////////////////////////////////////////////////
@@ -261,7 +282,7 @@ namespace SIMCRS {
 
     // Retrieve the StdAir service context
     stdair::STDAIR_ServicePtr_T lSTDAIR_Service_ptr =
-      lSIMCRS_ServiceContext.getSTDAIR_ServicePtr();
+      lSIMCRS_ServiceContext.getSTDAIR_ServicePtr(); 
 
     /**
      * Initialise the AIRINV service handler.
@@ -270,11 +291,25 @@ namespace SIMCRS {
      *       on the Service object, and deletes that object when it is
      *       no longer referenced (e.g., at the end of the process).
      */
-    AIRINV::AIRINV_Master_ServicePtr_T lAIRINV_Service_ptr = 
-      boost::make_shared<AIRINV::AIRINV_Master_Service> (lSTDAIR_Service_ptr);
+    AIRINV::AIRINV_Master_ServicePtr_T lAIRINV_Master_Service_ptr;
+    const bool ownSEVMGRService = 
+      lSIMCRS_ServiceContext.getOwnSEVMGRServiceFlag();
+    if (ownSEVMGRService == false) { 
+      // Retrieve the SEVMGR service
+      SEVMGR::SEVMGR_ServicePtr_T lSEVMGR_Service_ptr =
+	lSIMCRS_ServiceContext.getSEVMGR_ServicePtr();
+      assert (lSEVMGR_Service_ptr != NULL);
+      lAIRINV_Master_Service_ptr = 
+	boost::make_shared<AIRINV::AIRINV_Master_Service> (lSTDAIR_Service_ptr, 
+							   lSEVMGR_Service_ptr);
+    } else {
+      lAIRINV_Master_Service_ptr = 
+	boost::make_shared<AIRINV::AIRINV_Master_Service> (lSTDAIR_Service_ptr);
+    }
+    assert (lAIRINV_Master_Service_ptr != NULL);
     
     // Store the AIRINV service object within the (SimCRS) service context
-    lSIMCRS_ServiceContext.setAIRINV_Service (lAIRINV_Service_ptr);
+    lSIMCRS_ServiceContext.setAIRINV_Service (lAIRINV_Master_Service_ptr);
   }
   
   // ////////////////////////////////////////////////////////////////////
