@@ -466,9 +466,7 @@ namespace SIMCRS {
 
   // ////////////////////////////////////////////////////////////////////
   std::string SIMCRS_Service::
-  jsonExportFlightDateObjects (const stdair::AirlineCode_T& iAirlineCode,
-              const stdair::FlightNumber_T& iFlightNumber,
-              const stdair::Date_T& iDepartureDate) const {
+  jsonHandler (const std::string& iJSONString) const {
 
     // Retrieve the SimCRS service context
     if (_simcrsServiceContext == NULL) {
@@ -476,16 +474,14 @@ namespace SIMCRS {
                                                     "has not been initialised");
     }
     assert (_simcrsServiceContext != NULL);
-
-    // Retrieve the StdAir service object from the (SimCRS) service context
     SIMCRS_ServiceContext& lSIMCRS_ServiceContext = *_simcrsServiceContext;
-    stdair::STDAIR_Service& lSTDAIR_Service =
-      lSIMCRS_ServiceContext.getSTDAIR_Service();
 
-    // Delegate the JSON export to the dedicated service
-    return lSTDAIR_Service.jsonExportFlightDateObjects (iAirlineCode, 
-							iFlightNumber,
-							iDepartureDate);
+    // Retrieve the AIRINV Master service.
+    AIRINV::AIRINV_Master_Service& lAIRINV_Master_Service =
+      lSIMCRS_ServiceContext.getAIRINV_Service();
+
+    return lAIRINV_Master_Service.jsonHandler (iJSONString);
+    
   }
 
   // ////////////////////////////////////////////////////////////////////
