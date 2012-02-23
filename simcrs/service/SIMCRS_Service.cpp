@@ -9,6 +9,7 @@
 // Standard Airline Object Model
 #include <stdair/stdair_exceptions.hpp>
 #include <stdair/stdair_basic_types.hpp>
+#include <stdair/stdair_json.hpp>
 #include <stdair/basic/BasChronometer.hpp>
 #include <stdair/basic/BasFileMgr.hpp>
 #include <stdair/bom/BomManager.hpp> 
@@ -466,7 +467,7 @@ namespace SIMCRS {
 
   // ////////////////////////////////////////////////////////////////////
   std::string SIMCRS_Service::
-  jsonHandler (const std::string& iJSONString) const {
+  jsonHandler (const stdair::JSONString& iJSONString) const {
 
     // Retrieve the SimCRS service context
     if (_simcrsServiceContext == NULL) {

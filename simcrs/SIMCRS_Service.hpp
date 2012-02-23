@@ -27,6 +27,7 @@ namespace stdair {
   struct CancellationStruct;
   struct SnapshotStruct;
   struct RMEventStruct;
+  class JSONString;
 }
 
 namespace SIMCRS {
@@ -242,11 +243,12 @@ namespace SIMCRS {
      * Dispatch the JSon command string to the AirInv service.
      * (Only AirInv has json export commands for now).
      * 
-     * @param std::string& Input string which contained the JSon command string.
+     * @param const stdair::JSONString& Input string which contained the JSon
+     *        command string.
      * @return std::string Output string in which the asking objects are
      *         logged/dumped with a JSon format.
      */
-    std::string jsonHandler (const std::string& iJSONString) const;
+    std::string jsonHandler (const stdair::JSONString&) const;
 
   public:
     // //////////////// Display support methods /////////////////
