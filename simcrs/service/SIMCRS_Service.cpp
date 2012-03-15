@@ -466,6 +466,27 @@ namespace SIMCRS {
   }
 
   // ////////////////////////////////////////////////////////////////////
+  bool SIMCRS_Service::sell (const std::string& iSegmentDateKey,
+                             const stdair::ClassCode_T& iClassCode,
+                             const stdair::PartySize_T& iPartySize) {
+
+    // Retrieve the SimCRS service context
+    if (_simcrsServiceContext == NULL) {
+      throw stdair::NonInitialisedServiceException ("The SimCRS service "
+                                                    "has not been initialised");
+    }
+    assert (_simcrsServiceContext != NULL);
+    SIMCRS_ServiceContext& lSIMCRS_ServiceContext = *_simcrsServiceContext;
+
+    // Retrieve the AIRINV Master service.
+    AIRINV::AIRINV_Master_Service& lAIRINV_Master_Service =
+      lSIMCRS_ServiceContext.getAIRINV_Service();
+
+    return lAIRINV_Master_Service.sell (iSegmentDateKey, iClassCode,
+                                        iPartySize);
+  }
+
+  // ////////////////////////////////////////////////////////////////////
   std::string SIMCRS_Service::
   jsonHandler (const stdair::JSONString& iJSONString) const {
 
@@ -543,7 +564,51 @@ namespace SIMCRS {
     // Delegate the BOM building to the dedicated service
     return lSTDAIR_Service.csvDisplay (ioTravelSolutionList);
   }
-  
+
+  // ////////////////////////////////////////////////////////////////////
+  std::string SIMCRS_Service::
+  list (const stdair::AirlineCode_T& iAirlineCode,
+        const stdair::FlightNumber_T& iFlightNumber) const {
+
+    // Retrieve the SimCRS service context
+    if (_simcrsServiceContext == NULL) {
+      throw stdair::NonInitialisedServiceException ("The SimCRS service has "
+                                                    "not been initialised");
+    }
+    assert (_simcrsServiceContext != NULL);
+    SIMCRS_ServiceContext& lSIMCRS_ServiceContext = *_simcrsServiceContext;
+
+    // Retrieve the AIRINV Master service.
+    AIRINV::AIRINV_Master_Service& lAIRINV_Master_Service =
+      lSIMCRS_ServiceContext.getAIRINV_Service();
+
+    // Delegate the BOM display to the dedicated service
+    return lAIRINV_Master_Service.list (iAirlineCode, iFlightNumber);
+  }
+
+  // ////////////////////////////////////////////////////////////////////
+  std::string SIMCRS_Service::
+  csvDisplay (const stdair::AirlineCode_T& iAirlineCode,
+              const stdair::FlightNumber_T& iFlightNumber,
+              const stdair::Date_T& iDepartureDate) const {
+
+    // Retrieve the SimCRS service context
+    if (_simcrsServiceContext == NULL) {
+      throw stdair::NonInitialisedServiceException ("The SimCRS service has "
+                                                    "not been initialised");
+    }
+    assert (_simcrsServiceContext != NULL);
+    SIMCRS_ServiceContext& lSIMCRS_ServiceContext = *_simcrsServiceContext;
+
+    // Retrieve the AIRINV Master service.
+    AIRINV::AIRINV_Master_Service& lAIRINV_Master_Service =
+      lSIMCRS_ServiceContext.getAIRINV_Service();
+
+    // Delegate the BOM display to the dedicated service
+    return lAIRINV_Master_Service.csvDisplay (iAirlineCode, iFlightNumber,
+                                              iDepartureDate);
+  }
+   
   // ////////////////////////////////////////////////////////////////////
   stdair::TravelSolutionList_T SIMCRS_Service::
   calculateSegmentPathList(const stdair::BookingRequestStruct& iBookingRequest){
