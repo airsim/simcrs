@@ -7,8 +7,6 @@
 // StdAir
 #include <stdair/stdair_basic_types.hpp>
 #include <stdair/stdair_service_types.hpp>
-#include <stdair/basic/ForecastingMethod.hpp>
-#include <stdair/basic/PartnershipTechnique.hpp>
 #include <stdair/bom/TravelSolutionTypes.hpp>
 // SEvMgr
 #include <sevmgr/SEVMGR_Types.hpp>
@@ -146,8 +144,7 @@ namespace SIMCRS {
     /**
      * Compute the availability for each travel solution in the list.
      */
-    void calculateAvailability (stdair::TravelSolutionList_T&,
-                                const stdair::PartnershipTechnique&);
+    void calculateAvailability (stdair::TravelSolutionList_T&);
     
     /**
      * Register a booking.
@@ -167,9 +164,7 @@ namespace SIMCRS {
     /**
      * Optimise (revenue management) an flight-date/network-date
      */
-    void optimise (const stdair::RMEventStruct&,
-                   const stdair::ForecastingMethod&,
-                   const stdair::PartnershipTechnique&);
+    void optimise (const stdair::RMEventStruct&);
 
     /**
      * Register a booking.

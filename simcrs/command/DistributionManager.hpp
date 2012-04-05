@@ -7,7 +7,6 @@
 // StdAir
 #include <stdair/stdair_basic_types.hpp>
 #include <stdair/bom/TravelSolutionTypes.hpp>
-#include <stdair/basic/PartnershipTechnique.hpp>
 // Airinv
 #include <airinv/AIRINV_Types.hpp>
 // Simcrs
@@ -33,8 +32,7 @@ namespace SIMCRS {
   private:
     /** Get the availability for each travel solution in the list.. */
     static void calculateAvailability (AIRINV::AIRINV_Master_Service&,
-                                       stdair::TravelSolutionList_T&,
-                                       const stdair::PartnershipTechnique&);
+                                       stdair::TravelSolutionList_T&);
     
     /** Register a booking (segment sell). */
     static bool sell (AIRINV::AIRINV_Master_Service&,

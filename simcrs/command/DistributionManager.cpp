@@ -18,16 +18,14 @@ namespace SIMCRS {
   // ////////////////////////////////////////////////////////////////////
   void DistributionManager::
   calculateAvailability (AIRINV::AIRINV_Master_Service& ioAIRINV_Master_Service,
-                         stdair::TravelSolutionList_T& ioTravelSolutionList,
-                         const stdair::PartnershipTechnique& iPartnershipTechnique) {
+                         stdair::TravelSolutionList_T& ioTravelSolutionList) {
     for (stdair::TravelSolutionList_T::iterator itTS =
            ioTravelSolutionList.begin();
          itTS != ioTravelSolutionList.end(); ++itTS) {
       stdair::TravelSolutionStruct& lCurrentTravelSolution = *itTS;
 
       // Forward the work to the dedicated service.
-      ioAIRINV_Master_Service.calculateAvailability (lCurrentTravelSolution,
-                                                     iPartnershipTechnique);
+      ioAIRINV_Master_Service.calculateAvailability (lCurrentTravelSolution);
     }
   }
   
