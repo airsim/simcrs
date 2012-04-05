@@ -678,8 +678,7 @@ namespace SIMCRS {
 
   // ////////////////////////////////////////////////////////////////////
   void SIMCRS_Service::
-  calculateAvailability (stdair::TravelSolutionList_T& ioTravelSolutionList,
-                         const stdair::PartnershipTechnique& iPartnershipTechnique) {
+  calculateAvailability (stdair::TravelSolutionList_T& ioTravelSolutionList) {
 
     // Retrieve the SimCRS service context
     if (_simcrsServiceContext == NULL) {
@@ -702,8 +701,7 @@ namespace SIMCRS {
     lAvlChronometer.start();
 
     DistributionManager::calculateAvailability (lAIRINV_Master_Service,
-                                                ioTravelSolutionList,
-                                                iPartnershipTechnique);
+                                                ioTravelSolutionList);
     
     // DEBUG
     const double lAvlMeasure = lAvlChronometer.elapsed();
@@ -818,9 +816,7 @@ namespace SIMCRS {
 
   // ////////////////////////////////////////////////////////////////////
   void SIMCRS_Service::
-  optimise (const stdair::RMEventStruct& iRMEvent,
-            const stdair::ForecastingMethod& iForecastingMethod,
-            const stdair::PartnershipTechnique& iPartnershipTechnique) {
+  optimise (const stdair::RMEventStruct& iRMEvent) {
 
     // Retrieve the SimCRS service context
     if (_simcrsServiceContext == NULL) {
@@ -834,6 +830,6 @@ namespace SIMCRS {
     AIRINV::AIRINV_Master_Service& lAIRINV_Master_Service =
       lSIMCRS_ServiceContext.getAIRINV_Service();
 
-    lAIRINV_Master_Service.optimise (iRMEvent, iForecastingMethod, iPartnershipTechnique);
+    lAIRINV_Master_Service.optimise (iRMEvent);
   }
 }
