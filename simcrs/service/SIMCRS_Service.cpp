@@ -321,8 +321,8 @@ namespace SIMCRS {
 
   // ////////////////////////////////////////////////////////////////////
   void SIMCRS_Service::
-  parseAndLoad (const stdair::Filename_T& iScheduleInputFilename,
-                const stdair::Filename_T& iODInputFilename,
+  parseAndLoad (const stdair::ScheduleFilePath& iScheduleInputFilepath,
+                const stdair::ODFilePath& iODInputFilepath,
                 const AIRRAC::YieldFilePath& iYieldInputFilepath,
                 const SIMFQT::FareFilePath& iFareInputFilepath) {
 
@@ -337,7 +337,7 @@ namespace SIMCRS {
      */
     AIRSCHED::AIRSCHED_Service& lAIRSCHED_Service =
       lSIMCRS_ServiceContext.getAIRSCHED_Service();
-    lAIRSCHED_Service.parseAndLoad (iScheduleInputFilename);
+    lAIRSCHED_Service.parseAndLoad (iScheduleInputFilepath);
 
     /**
      * Let the inventory manager (i.e., the AirInv component) parse
@@ -347,7 +347,7 @@ namespace SIMCRS {
      */
     AIRINV::AIRINV_Master_Service& lAIRINV_Service =
       lSIMCRS_ServiceContext.getAIRINV_Service();
-    lAIRINV_Service.parseAndLoad (iScheduleInputFilename, iODInputFilename,
+    lAIRINV_Service.parseAndLoad (iScheduleInputFilepath, iODInputFilepath,
                                   iYieldInputFilepath);
 
     /**

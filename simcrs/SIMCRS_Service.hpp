@@ -6,6 +6,7 @@
 // //////////////////////////////////////////////////////////////////////
 // StdAir
 #include <stdair/stdair_basic_types.hpp>
+#include <stdair/stdair_file.hpp>
 #include <stdair/stdair_service_types.hpp>
 #include <stdair/bom/TravelSolutionTypes.hpp>
 // SEvMgr
@@ -101,15 +102,15 @@ namespace SIMCRS {
      * The CSV files, describing the airline schedule, O&Ds, fares and yields
      * for the simulator, are parsed and instantiated in memory accordingly.
      *
-     * @param const stdair::Filename_T& Filename of the input schedule file.
-     * @param const stdair::Filename_T& Filename of the input O&D file.
+     * @param const stdair::ScheduleFilePath Filename of the input schedule file.
+     * @param const stdair::ODFilePath Filename of the input O&D file.
      * @param const AIRRAC::YieldFilePath& Filename of the input yield file.
      * @param const SIMFQT::FareFilePath& Filename of the input fare file.
      */
-    void parseAndLoad (const stdair::Filename_T& iScheduleInputFilename,
-                       const stdair::Filename_T& iODInputFilename,
-                       const AIRRAC::YieldFilePath& iYieldInputFilepath,
-                       const SIMFQT::FareFilePath& iFareInputFilepath);
+    void parseAndLoad (const stdair::ScheduleFilePath&,
+                       const stdair::ODFilePath&,
+                       const AIRRAC::YieldFilePath&,
+                       const SIMFQT::FareFilePath&);
 
     /**
      * Initialise the snapshot and RM events for the inventories.
