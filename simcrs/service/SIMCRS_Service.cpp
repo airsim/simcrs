@@ -325,11 +325,32 @@ namespace SIMCRS {
                 const stdair::ODFilePath& iODInputFilepath,
                 const AIRRAC::YieldFilePath& iYieldInputFilepath,
                 const SIMFQT::FareFilePath& iFareInputFilepath) {
-
+ 
     // Retrieve the SimCRS service context
+    if (_simcrsServiceContext == NULL) {
+      throw stdair::NonInitialisedServiceException ("The SimCRS service "
+                                                    "has not been initialised");
+    }
     assert (_simcrsServiceContext != NULL);
+
+    // Retrieve the SimCRS service context and whether it owns the Stdair
+    // service
     SIMCRS_ServiceContext& lSIMCRS_ServiceContext = *_simcrsServiceContext;
-    
+    const bool doesOwnStdairService =
+      lSIMCRS_ServiceContext.getOwnStdairServiceFlag(); 
+
+    // Retrieve the StdAir service object from the (SimCRS) service context
+    stdair::STDAIR_Service& lSTDAIR_Service =
+      lSIMCRS_ServiceContext.getSTDAIR_Service();
+
+    // Retrieve the persistent BOM root object.
+    stdair::BomRoot& lPersistentBomRoot = 
+      lSTDAIR_Service.getPersistentBomRoot();
+
+    /**
+     * 1. Delegate the complementary building of objects and links by the
+     *    appropriate levels/components.
+     */
     /**
      * Let the schedule manager (i.e., the AirSched component) parse
      * the schedules and O&Ds. AirSched holds the flight-periods (aka schedule)
@@ -355,7 +376,22 @@ namespace SIMCRS {
      */
     SIMFQT::SIMFQT_Service& lSIMFQT_Service =
       lSIMCRS_ServiceContext.getSIMFQT_Service();
-    lSIMFQT_Service.parseAndLoad (iFareInputFilepath);
+    lSIMFQT_Service.parseAndLoad (iFareInputFilepath); 
+
+    /**
+     * 2. Build the complementary objects/links for the current component (here,
+     *    SimCRS).
+     */  
+    buildComplementaryLinks (lPersistentBomRoot);  
+    
+    /**
+     * 3. Have SimCRS clone the whole persistent BOM tree, only when the StdAir
+     *    service is owned by the current component (SimCRS here)
+     */  
+    if (doesOwnStdairService == true) {
+      //
+      clonePersistentBom ();
+    }
   }
   
   // ////////////////////////////////////////////////////////////////////
@@ -377,6 +413,10 @@ namespace SIMCRS {
     // Retrieve the StdAir service object from the (SimCRS) service context
     stdair::STDAIR_Service& lSTDAIR_Service =
       lSIMCRS_ServiceContext.getSTDAIR_Service();
+
+    // Retrieve the persistent BOM root object.
+    stdair::BomRoot& lPersistentBomRoot = 
+      lSTDAIR_Service.getPersistentBomRoot();
 
     /**
      * 1. Have StdAir build the whole BOM tree, only when the StdAir service is
@@ -420,9 +460,89 @@ namespace SIMCRS {
     /**
      * 3. Build the complementary objects/links for the current component (here,
      *    SimCRS).
-     *
-     * \note: Currently, no more things to do by SimCRS.
+     */  
+    buildComplementaryLinks (lPersistentBomRoot);
+
+    /**
+     * 4. Have SimCRS clone the whole persistent BOM tree, only when the StdAir
+     *    service is owned by the current component (SimCRS here)
      */
+    if (doesOwnStdairService == true) {
+      //
+      clonePersistentBom ();
+    }
+  } 
+
+  // ////////////////////////////////////////////////////////////////////
+  void SIMCRS_Service::clonePersistentBom () {   
+
+    // Retrieve the SimCRS service context
+    if (_simcrsServiceContext == NULL) {
+      throw stdair::NonInitialisedServiceException ("The SimCRS service "
+                                                    "has not been initialised");
+    }
+    assert (_simcrsServiceContext != NULL);
+
+    // Retrieve the SimCRS service context and whether it owns the Stdair
+    // service
+    SIMCRS_ServiceContext& lSIMCRS_ServiceContext = *_simcrsServiceContext;
+    const bool doesOwnStdairService =
+      lSIMCRS_ServiceContext.getOwnStdairServiceFlag();
+
+    // Retrieve the StdAir service object from the (SimCRS) service context
+    stdair::STDAIR_Service& lSTDAIR_Service =
+      lSIMCRS_ServiceContext.getSTDAIR_Service();
+ 
+    /**
+     * 1. Have StdAir clone the whole persistent BOM tree, only when the StdAir
+     *    service is owned by the current component (TravelCCM here)
+     */
+    if (doesOwnStdairService == true) {
+      //
+      lSTDAIR_Service.clonePersistentBom ();
+    } 
+
+    /**
+     * 2. Delegate the complementary building of objects and links by the
+     *    appropriate levels/components.
+     */
+    /**
+     * Let the schedule manager (i.e., the AirSched component) build
+     * the schedules and O&Ds. AirSched holds the flight-periods (aka schedule)
+     * only, not the flight-dates (aka the inventory).
+     */
+    AIRSCHED::AIRSCHED_Service& lAIRSCHED_Service =
+      lSIMCRS_ServiceContext.getAIRSCHED_Service();
+    lAIRSCHED_Service.clonePersistentBom ();
+
+    /**
+     * Let the inventory manager (i.e., the AirInv component) build
+     * the schedules, O&Ds and yields. From the schedules and O&Ds,
+     * AirInv builds the flight-dates (aka the inventory).
+     * The flight-periods (aka schedule) are then dropped.
+     */
+    AIRINV::AIRINV_Master_Service& lAIRINV_Service =
+      lSIMCRS_ServiceContext.getAIRINV_Service();
+    lAIRINV_Service.clonePersistentBom ();
+
+    /**
+     * Let the pricing component to build the fare rules.
+     */
+    SIMFQT::SIMFQT_Service& lSIMFQT_Service =
+      lSIMCRS_ServiceContext.getSIMFQT_Service();
+    lSIMFQT_Service.clonePersistentBom ();    
+  
+    /**
+     * 3. Build the complementary objects/links for the current component (here,
+     *    SimCRS).
+     */  
+    stdair::BomRoot& lBomRoot = lSTDAIR_Service.getBomRoot();
+    buildComplementaryLinks (lBomRoot);
+  }
+
+  // ////////////////////////////////////////////////////////////////////
+  void SIMCRS_Service::buildComplementaryLinks (stdair::BomRoot& ioBomRoot) {
+    // Currently, no more things to do by TravelCCM at that stage.
   }
 
   // //////////////////////////////////////////////////////////////////////
