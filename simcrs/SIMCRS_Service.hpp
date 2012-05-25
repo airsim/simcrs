@@ -20,6 +20,7 @@
 
 /// Forward declarations
 namespace stdair {
+  class BomRoot;
   struct BasLogParams;
   struct BasDBParams;
   struct BookingRequestStruct;
@@ -188,6 +189,17 @@ namespace SIMCRS {
      *      more details.
      */
     void buildSampleBom ();
+  
+    /**
+     * Clone the persistent BOM object.
+     */
+    void clonePersistentBom (); 
+
+    /**
+     * Build all the complementary links in the given bom root object.
+     * \note Do nothing for now.
+     */
+    void buildComplementaryLinks (stdair::BomRoot&); 
 
     /**
      * Build a sample list of travel solutions.
