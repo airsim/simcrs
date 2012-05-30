@@ -659,10 +659,11 @@ namespace SIMCRS {
     // Retrieve the StdAir service object from the (SimCRS) service context
     SIMCRS_ServiceContext& lSIMCRS_ServiceContext = *_simcrsServiceContext;
     stdair::STDAIR_Service& lSTDAIR_Service =
-      lSIMCRS_ServiceContext.getSTDAIR_Service();
+      lSIMCRS_ServiceContext.getSTDAIR_Service(); 
+    const stdair::BomRoot& lBomRoot = lSTDAIR_Service.getBomRoot();
 
     // Delegate the BOM building to the dedicated service
-    return lSTDAIR_Service.csvDisplay();
+    return lSTDAIR_Service.csvDisplay(lBomRoot);
   }
   
   // //////////////////////////////////////////////////////////////////////
