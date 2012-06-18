@@ -323,6 +323,8 @@ namespace SIMCRS {
   void SIMCRS_Service::
   parseAndLoad (const stdair::ScheduleFilePath& iScheduleInputFilepath,
                 const stdair::ODFilePath& iODInputFilepath,
+                const stdair::FRAT5FilePath& iFRAT5InputFilepath,
+                const stdair::FFDisutilityFilePath& iFFDisutilityInputFilepath,
                 const AIRRAC::YieldFilePath& iYieldInputFilepath,
                 const SIMFQT::FareFilePath& iFareInputFilepath) {
  
@@ -369,6 +371,8 @@ namespace SIMCRS {
     AIRINV::AIRINV_Master_Service& lAIRINV_Service =
       lSIMCRS_ServiceContext.getAIRINV_Service();
     lAIRINV_Service.parseAndLoad (iScheduleInputFilepath, iODInputFilepath,
+                                  iFRAT5InputFilepath,
+                                  iFFDisutilityInputFilepath,
                                   iYieldInputFilepath);
 
     /**

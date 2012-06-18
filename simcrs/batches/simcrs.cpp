@@ -37,6 +37,17 @@ const std::string K_SIMCRS_DEFAULT_OND_INPUT_FILENAME (STDAIR_SAMPLE_DIR
                                                        "/ond01.csv");
 
 /**
+ * FRAT5 curve input file name
+ */
+const std::string K_SIMCRS_DEFAULT_FRAT5_INPUT_FILENAME (STDAIR_SAMPLE_DIR
+                                                       "/frat5.csv");
+/**
+ * Fare family disutility curve input file name
+ */
+const std::string K_SIMCRS_DEFAULT_FF_DISUTILITY_INPUT_FILENAME (STDAIR_SAMPLE_DIR
+                                                               "/ffDisutility.csv");
+
+/**
  * Default name and location for the (CSV) yield input file.
  */
 const std::string K_SIMCRS_DEFAULT_YIELD_INPUT_FILENAME (STDAIR_SAMPLE_DIR
@@ -80,6 +91,8 @@ int readConfiguration (int argc, char* argv[],
                        bool& ioIsBuiltin,
                        stdair::Filename_T& ioScheduleInputFilename,
                        stdair::Filename_T& ioOnDInputFilename,
+                       stdair::Filename_T& ioFRAT5Filename,
+                       stdair::Filename_T& ioFFDisutilityFilename,
                        stdair::Filename_T& ioYieldInputFilename,
                        stdair::Filename_T& ioFareInputFilename,
                        stdair::Filename_T& ioLogFilename,
@@ -108,6 +121,12 @@ int readConfiguration (int argc, char* argv[],
     ("ond,o",
      boost::program_options::value< std::string >(&ioOnDInputFilename)->default_value(K_SIMCRS_DEFAULT_OND_INPUT_FILENAME),
      "(CVS) input file for the O&D definitions")
+    ("frat5,r",
+     boost::program_options::value< std::string >(&ioFRAT5Filename)->default_value(K_SIMCRS_DEFAULT_FRAT5_INPUT_FILENAME),
+     "(CSV) input file for the FRAT5 Curve")
+    ("ff_disutility,d",
+     boost::program_options::value< std::string >(&ioFFDisutilityFilename)->default_value(K_SIMCRS_DEFAULT_FF_DISUTILITY_INPUT_FILENAME),
+     "(CSV) input file for the FF disutility Curve")
     ("yield,y",
      boost::program_options::value< std::string >(&ioYieldInputFilename)->default_value(K_SIMCRS_DEFAULT_YIELD_INPUT_FILENAME),
      "(CVS) input file for the yields")
@@ -213,6 +232,27 @@ int readConfiguration (int argc, char* argv[],
       std::cerr << oErrorMessageStr.str() << std::endl;
     }
 
+    if (vm.count ("frat5")) {
+      ioFRAT5Filename = vm["frat5"].as< std::string >();
+      std::cout << "FRAT5 input filename is: " << ioFRAT5Filename << std::endl;
+
+    } else {
+      // The built-in option is not selected. However, no frat5 input file
+      // is specified
+      std::cerr << oErrorMessageStr.str() << std::endl;
+    }
+
+    if (vm.count ("ff_disutility")) {
+      ioFRAT5Filename = vm["ff_disutility"].as< std::string >();
+      std::cout << "FF disutility input filename is: "
+                << ioFFDisutilityFilename << std::endl;
+
+    } else {
+      // The built-in option is not selected. However, no ff
+      // disutility input file is specified
+      std::cerr << oErrorMessageStr.str() << std::endl;
+    }
+
     if (vm.count ("yield")) {
       ioYieldInputFilename = vm["yield"].as< std::string >();
       std::cout << "Yield input filename is: " << ioYieldInputFilename
@@ -281,6 +321,12 @@ int main (int argc, char* argv[]) {
     
   // O&D input filename
   stdair::Filename_T lOnDInputFilename;
+
+  // FRAT5 input filename
+  std::string lFRAT5InputFilename;
+
+  // FF disutility input filename
+  std::string lFFDisutilityInputFilename;
     
   // Yield input filename
   stdair::Filename_T lYieldInputFilename;
@@ -305,6 +351,7 @@ int main (int argc, char* argv[]) {
   const int lOptionParserStatus = 
     readConfiguration (argc, argv, isBuiltin,
                        lScheduleInputFilename, lOnDInputFilename,
+                       lFRAT5InputFilename, lFFDisutilityInputFilename,
                        lYieldInputFilename, lFareInputFilename, lLogFilename,
                        lDBUser, lDBPasswd, lDBHost, lDBPort, lDBDBName);
 
@@ -336,9 +383,12 @@ int main (int argc, char* argv[]) {
     // Build the BOM tree from parsing input files
     stdair::ScheduleFilePath lScheduleFilePath (lScheduleInputFilename);
     stdair::ODFilePath lODFilePath (lOnDInputFilename);
+    stdair::FRAT5FilePath lFRAT5FilePath (lFRAT5InputFilename);
+    stdair::FFDisutilityFilePath lFFDisutilityFilePath (lFFDisutilityInputFilename);
     const SIMFQT::FareFilePath lFareFilePath (lFareInputFilename);
     const AIRRAC::YieldFilePath lYieldFilePath (lYieldInputFilename);
     simcrsService.parseAndLoad (lScheduleFilePath, lODFilePath,
+                                lFRAT5FilePath, lFFDisutilityFilePath,
                                 lYieldFilePath, lFareFilePath);
   }
 
