@@ -54,9 +54,25 @@ namespace SIMCRS {
 
   // //////////////////////////////////////////////////////////////////////
   void SIMCRS_ServiceContext::reset() {
-    if (_ownStdairService == true) {
-      _stdairService.reset();
-    }
+
+    // The shared_ptr<>::reset() method drops the refcount by one.
+    // If the count result is dropping to zero, the resource pointed to
+    // by the shared_ptr<> will be freed.
+    
+    // Reset the stdair shared pointer
+    _stdairService.reset();
+
+    // Reset the simfqt shared pointer
+    _simfqtService.reset();
+    
+     // Reset the airsched shared pointer
+    _airschedService.reset();
+
+    // Reset the airinv shared pointer 
+    _airinvService.reset();
+
+    // Reset the sevmgr shared pointer
+    _sevmgrService.reset();
   }
 
 }
