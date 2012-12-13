@@ -1,3 +1,14 @@
+* Thu Dec 13 2012 Denis Arnaud <denis_arnaud at users dot sourceforge dot net> 1.00.0
+- Open source release
+- [Dev] List of available services in the Computerised Reservation System:
+	1) Build the list of travel solutions corresponding to the booking request.
+	2) Calculate the fare of each travel solution in the list.
+	3) Compute the availability for each travel solution in the list.
+	4) Register a booking.
+	5) Take inventory snapshots.
+	6) Register a  cancellation.
+	7) Optimise (revenue management) a flight-date/network-date.
+- [Build] Test coverage option with gcov.
 
 * Tue Dec 06 2011 Denis Arnaud <denis_arnaud at users dot sourceforge dot net> 0.1.1
 - [Dev] Adapted the database-related source code to the new SOCI-3.1 API.
