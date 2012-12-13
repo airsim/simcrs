@@ -33,7 +33,7 @@ Then, you need the following packages (Fedora/RedHat/CentOS names here,
 but names may vary according to distributions):
   * cmake
   * gcc-c++
-  * stdair-devel, airrac-devel, rmol-devel, airinv-devel, simfqt-devel
+  * stdair-devel, airrac-devel, rmol-devel, airinv-devel, simfqt-devel, sevmgr-devel
   * boost-devel
   * zeromq-devel
   * readline-devel
@@ -59,6 +59,7 @@ Then, as usual:
   cmake -DCMAKE_INSTALL_PREFIX=${INSTALL_BASEDIR}/simcrs-99.99.99 \
    -DWITH_STDAIR_PREFIX=${INSTALL_BASEDIR}/stdair-stable \
    -DWITH_AIRRAC_PREFIX=${INSTALL_BASEDIR}/airsched-stable \
+   -DWITH_SEVMGR_PREFIX=${INSTALL_BASEDIR}/sevmgr-stable \
    -DWITH_AIRRAC_PREFIX=${INSTALL_BASEDIR}/airrac-stable \
    -DWITH_RMOL_PREFIX=${INSTALL_BASEDIR}/rmol-stable \
    -DWITH_RMOL_PREFIX=${INSTALL_BASEDIR}/airinv-stable \
@@ -85,6 +86,7 @@ Then, as usual:
   export LD_LIBRARY_PATH=${INSTALL_BASEDIR}/rmol-stable/lib:$LD_LIBRARY_PATH
   export LD_LIBRARY_PATH=${INSTALL_BASEDIR}/airinv-stable/lib:$LD_LIBRARY_PATH
   export LD_LIBRARY_PATH=${INSTALL_BASEDIR}/simfqt-stable/lib:$LD_LIBRARY_PATH
+  export LD_LIBRARY_PATH=${INSTALL_BASEDIR}/sevmgr-stable/lib:$LD_LIBRARY_PATH
   export LD_LIBRARY_PATH=${INSTALL_BASEDIR}/simcrs-99.99.99/lib:$LD_LIBRARY_PATH
   ${INSTALL_BASEDIR}/simcrs-stable/bin/simcrs -b
 
