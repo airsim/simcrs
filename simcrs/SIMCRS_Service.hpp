@@ -86,7 +86,7 @@ namespace SIMCRS {
      * initialised with the proper log output stream by some other
      * methods in the calling chain (for instance, when the SIMCRS_Service
      * is itself being initialised by another library service such as
-     * DSIM_Service).
+     * TVLSIM_Service).
      *
      * @param stdair::STDAIR_ServicePtr_T Reference on the STDAIR service.   
      * @param SEVMGR::SEVMGR_ServicePtr_T Reference on the SEVMGR_Service.
