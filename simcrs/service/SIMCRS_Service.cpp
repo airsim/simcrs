@@ -25,7 +25,7 @@
 // Airline Inventory
 #include <airinv/AIRINV_Master_Service.hpp>
 // Airline Schedule
-#include <airsched/AIRSCHED_Service.hpp>
+#include <airtsp/AIRTSP_Service.hpp>
 // Fare Quote
 #include <simfqt/SIMFQT_Service.hpp>
 // SimCRS
@@ -67,8 +67,8 @@ namespace SIMCRS {
     // Initalise the SimFQT service.
     initSIMFQTService();
     
-    // Initalise the AirSched service.
-    initAIRSCHEDService();
+    // Initalise the AirTSP service.
+    initAIRTSPService();
     
     // Initalise the AirInv service.
     initAIRINVService();
@@ -98,8 +98,8 @@ namespace SIMCRS {
     // Initalise the SIMFQT service.
     initSIMFQTService();
     
-    // Initalise the AIRSCHED service.
-    initAIRSCHEDService();
+    // Initalise the AIRTSP service.
+    initAIRTSPService();
     
     // Initalise the AIRINV service.
     initAIRINVService();
@@ -130,8 +130,8 @@ namespace SIMCRS {
     // Initalise the SIMFQT service.
     initSIMFQTService();
     
-    // Initalise the AIRSCHED service.
-    initAIRSCHEDService();
+    // Initalise the AIRTSP service.
+    initAIRTSPService();
     
     // Initalise the AIRINV service.
     initAIRINVService();
@@ -225,7 +225,7 @@ namespace SIMCRS {
   }
   
   // ////////////////////////////////////////////////////////////////////
-  void SIMCRS_Service::initAIRSCHEDService() {
+  void SIMCRS_Service::initAIRTSPService() {
 
     // Retrieve the SimCRS service context
     assert (_simcrsServiceContext != NULL);
@@ -236,17 +236,17 @@ namespace SIMCRS {
       lSIMCRS_ServiceContext.getSTDAIR_ServicePtr();
 
     /**
-     * Initialise the AIRSCHED service handler.
+     * Initialise the AIRTSP service handler.
      *
      * \note The (Boost.)Smart Pointer keeps track of the references
      *       on the Service object, and deletes that object when it is
      *       no longer referenced (e.g., at the end of the process).
      */
-    AIRSCHED::AIRSCHED_ServicePtr_T lAIRSCHED_Service_ptr = 
-      boost::make_shared<AIRSCHED::AIRSCHED_Service> (lSTDAIR_Service_ptr);
+    AIRTSP::AIRTSP_ServicePtr_T lAIRTSP_Service_ptr = 
+      boost::make_shared<AIRTSP::AIRTSP_Service> (lSTDAIR_Service_ptr);
     
-    // Store the AIRSCHED service object within the (SimCRS) service context
-    lSIMCRS_ServiceContext.setAIRSCHED_Service (lAIRSCHED_Service_ptr);
+    // Store the AIRTSP service object within the (SimCRS) service context
+    lSIMCRS_ServiceContext.setAIRTSP_Service (lAIRTSP_Service_ptr);
   }
   
   // ////////////////////////////////////////////////////////////////////
@@ -354,13 +354,13 @@ namespace SIMCRS {
      *    appropriate levels/components.
      */
     /**
-     * Let the schedule manager (i.e., the AirSched component) parse
-     * the schedules and O&Ds. AirSched holds the flight-periods (aka schedule)
+     * Let the schedule manager (i.e., the AirTSP component) parse
+     * the schedules and O&Ds. AirTSP holds the flight-periods (aka schedule)
      * only, not the flight-dates (aka the inventory).
      */
-    AIRSCHED::AIRSCHED_Service& lAIRSCHED_Service =
-      lSIMCRS_ServiceContext.getAIRSCHED_Service();
-    lAIRSCHED_Service.parseAndLoad (iScheduleInputFilepath);
+    AIRTSP::AIRTSP_Service& lAIRTSP_Service =
+      lSIMCRS_ServiceContext.getAIRTSP_Service();
+    lAIRTSP_Service.parseAndLoad (iScheduleInputFilepath);
 
     /**
      * Let the inventory manager (i.e., the AirInv component) parse
@@ -436,13 +436,13 @@ namespace SIMCRS {
      *    appropriate levels/components.
      */
     /**
-     * Let the schedule manager (i.e., the AirSched component) build
-     * the schedules and O&Ds. AirSched holds the flight-periods (aka schedule)
+     * Let the schedule manager (i.e., the AirTSP component) build
+     * the schedules and O&Ds. AirTSP holds the flight-periods (aka schedule)
      * only, not the flight-dates (aka the inventory).
      */
-    AIRSCHED::AIRSCHED_Service& lAIRSCHED_Service =
-      lSIMCRS_ServiceContext.getAIRSCHED_Service();
-    lAIRSCHED_Service.buildSampleBom();
+    AIRTSP::AIRTSP_Service& lAIRTSP_Service =
+      lSIMCRS_ServiceContext.getAIRTSP_Service();
+    lAIRTSP_Service.buildSampleBom();
 
     /**
      * Let the inventory manager (i.e., the AirInv component) build
@@ -511,13 +511,13 @@ namespace SIMCRS {
      *    appropriate levels/components.
      */
     /**
-     * Let the schedule manager (i.e., the AirSched component) build
-     * the schedules and O&Ds. AirSched holds the flight-periods (aka schedule)
+     * Let the schedule manager (i.e., the AirTSP component) build
+     * the schedules and O&Ds. AirTSP holds the flight-periods (aka schedule)
      * only, not the flight-dates (aka the inventory).
      */
-    AIRSCHED::AIRSCHED_Service& lAIRSCHED_Service =
-      lSIMCRS_ServiceContext.getAIRSCHED_Service();
-    lAIRSCHED_Service.clonePersistentBom ();
+    AIRTSP::AIRTSP_Service& lAIRTSP_Service =
+      lSIMCRS_ServiceContext.getAIRTSP_Service();
+    lAIRTSP_Service.clonePersistentBom ();
 
     /**
      * Let the inventory manager (i.e., the AirInv component) build
@@ -749,15 +749,15 @@ namespace SIMCRS {
 
     stdair::TravelSolutionList_T oTravelSolutionList;
     
-    // Get a reference on the AIRSCHED service handler
-    AIRSCHED::AIRSCHED_Service& lAIRSCHED_Service =
-      lSIMCRS_ServiceContext.getAIRSCHED_Service();
+    // Get a reference on the AIRTSP service handler
+    AIRTSP::AIRTSP_Service& lAIRTSP_Service =
+      lSIMCRS_ServiceContext.getAIRTSP_Service();
     
     // Delegate the booking to the dedicated service
     stdair::BasChronometer lTravelSolutionRetrievingChronometer;
     lTravelSolutionRetrievingChronometer.start();
 
-    lAIRSCHED_Service.buildSegmentPathList (oTravelSolutionList,
+    lAIRTSP_Service.buildSegmentPathList (oTravelSolutionList,
                                             iBookingRequest);
       
     // DEBUG

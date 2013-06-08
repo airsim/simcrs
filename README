@@ -33,7 +33,8 @@ Then, you need the following packages (Fedora/RedHat/CentOS names here,
 but names may vary according to distributions):
   * cmake
   * gcc-c++
-  * stdair-devel, airrac-devel, rmol-devel, airinv-devel, simfqt-devel, sevmgr-devel
+  * stdair-devel, airrac-devel, rmol-devel, airinv-devel, simfqt-devel,
+    sevmgr-devel, airtsp-devel
   * boost-devel
   * zeromq-devel
   * readline-devel
@@ -58,7 +59,7 @@ Then, as usual:
   mkdir build && cd build
   cmake -DCMAKE_INSTALL_PREFIX=${INSTALL_BASEDIR}/simcrs-99.99.99 \
    -DWITH_STDAIR_PREFIX=${INSTALL_BASEDIR}/stdair-stable \
-   -DWITH_AIRRAC_PREFIX=${INSTALL_BASEDIR}/airsched-stable \
+   -DWITH_AIRRAC_PREFIX=${INSTALL_BASEDIR}/airtsp-stable \
    -DWITH_SEVMGR_PREFIX=${INSTALL_BASEDIR}/sevmgr-stable \
    -DWITH_AIRRAC_PREFIX=${INSTALL_BASEDIR}/airrac-stable \
    -DWITH_RMOL_PREFIX=${INSTALL_BASEDIR}/rmol-stable \
@@ -81,7 +82,7 @@ Then, as usual:
 * To run the installed version (the first following line must be done once
   per session only):
   export LD_LIBRARY_PATH=${INSTALL_BASEDIR}/stdair-stable/lib:$LD_LIBRARY_PATH
-  export LD_LIBRARY_PATH=${INSTALL_BASEDIR}/airsched-stable/lib:$LD_LIBRARY_PATH
+  export LD_LIBRARY_PATH=${INSTALL_BASEDIR}/airtsp-stable/lib:$LD_LIBRARY_PATH
   export LD_LIBRARY_PATH=${INSTALL_BASEDIR}/airrac-stable/lib:$LD_LIBRARY_PATH
   export LD_LIBRARY_PATH=${INSTALL_BASEDIR}/rmol-stable/lib:$LD_LIBRARY_PATH
   export LD_LIBRARY_PATH=${INSTALL_BASEDIR}/airinv-stable/lib:$LD_LIBRARY_PATH
@@ -90,5 +91,5 @@ Then, as usual:
   export LD_LIBRARY_PATH=${INSTALL_BASEDIR}/simcrs-99.99.99/lib:$LD_LIBRARY_PATH
   ${INSTALL_BASEDIR}/simcrs-stable/bin/simcrs -b
 
-Denis Arnaud (November 2011)
+Denis Arnaud (June 2013)
 
