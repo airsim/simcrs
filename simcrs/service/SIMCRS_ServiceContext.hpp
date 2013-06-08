@@ -16,8 +16,8 @@
 #include <sevmgr/SEVMGR_Types.hpp>
 // AirInv
 #include <airinv/AIRINV_Types.hpp>
-// AirSched
-#include <airsched/AIRSCHED_Types.hpp>
+// AirTSP
+#include <airtsp/AIRTSP_Types.hpp>
 // SimFQT
 #include <simfqt/SIMFQT_Types.hpp>
 // SimCRS
@@ -102,11 +102,11 @@ namespace SIMCRS {
     }
 
     /**
-     * Get the AirSched service handler.
+     * Get the AirTSP service handler.
      */
-    AIRSCHED::AIRSCHED_Service& getAIRSCHED_Service() const {
-      assert (_airschedService != NULL);
-      return *_airschedService;
+    AIRTSP::AIRTSP_Service& getAIRTSP_Service() const {
+      assert (_airtspService != NULL);
+      return *_airtspService;
     }
 
     /**
@@ -153,10 +153,10 @@ namespace SIMCRS {
     }
     
     /**
-     * Set the pointer on the AirSched service handler.
+     * Set the pointer on the AirTSP service handler.
      */
-    void setAIRSCHED_Service (AIRSCHED::AIRSCHED_ServicePtr_T ioServicePtr) {
-      _airschedService = ioServicePtr;
+    void setAIRTSP_Service (AIRTSP::AIRTSP_ServicePtr_T ioServicePtr) {
+      _airtspService = ioServicePtr;
     }
     
     /**
@@ -235,7 +235,7 @@ namespace SIMCRS {
     /**
      * Airline Schedule Service Handler.
      */
-    AIRSCHED::AIRSCHED_ServicePtr_T _airschedService;
+    AIRTSP::AIRTSP_ServicePtr_T _airtspService;
 
     /**
      * Airline Inventory Service Handler.

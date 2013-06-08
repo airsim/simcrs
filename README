@@ -37,7 +37,8 @@ Then, you need the following packages (Fedora/RedHat/CentOS names here,
 but names may vary according to distributions):
   * cmake
   * gcc-c++
-  * stdair-devel, airrac-devel, rmol-devel, airinv-devel, simfqt-devel, sevmgr-devel
+  * stdair-devel, airrac-devel, rmol-devel, airinv-devel, simfqt-devel,
+    sevmgr-devel, airtsp-devel
   * boost-devel
   * zeromq-devel
   * readline-devel, ncurses-devel
@@ -62,7 +63,7 @@ Then, as usual:
   mkdir build && cd build
   cmake -DCMAKE_INSTALL_PREFIX=${INSTALL_BASEDIR}/simcrs-1.00.0 \
    -DWITH_STDAIR_PREFIX=${INSTALL_BASEDIR}/stdair-stable \
-   -DWITH_AIRRAC_PREFIX=${INSTALL_BASEDIR}/airsched-stable \
+   -DWITH_AIRRAC_PREFIX=${INSTALL_BASEDIR}/airtsp-stable \
    -DWITH_SEVMGR_PREFIX=${INSTALL_BASEDIR}/sevmgr-stable \
    -DWITH_AIRRAC_PREFIX=${INSTALL_BASEDIR}/airrac-stable \
    -DWITH_RMOL_PREFIX=${INSTALL_BASEDIR}/rmol-stable \
@@ -92,5 +93,5 @@ Then, as usual:
 * To run the installed version:
   ${INSTALL_BASEDIR}/simcrs-stable/bin/simcrs -b
 
-Denis Arnaud (December 2012)
+Denis Arnaud (June 2013)
 

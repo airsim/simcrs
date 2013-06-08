@@ -361,9 +361,9 @@ namespace SIMCRS {
     stdair::STDAIR_ServicePtr_T initStdAirService (const stdair::BasLogParams&);
     
     /**
-     * Initialise the AirSched service (including the log service).
+     * Initialise the AirTSP service (including the log service).
      */
-    void initAIRSCHEDService();
+    void initAIRTSPService();
     
     /**
      * Initialise the SimFQT service (including the log service).

@@ -6,7 +6,7 @@
 // Standard Airline Object Model
 #include <stdair/STDAIR_Service.hpp>
 #include <stdair/service/Logger.hpp>
-// Simcrs
+// SimCRS
 #include <simcrs/basic/BasConst_SIMCRS_Service.hpp>
 #include <simcrs/service/SIMCRS_ServiceContext.hpp>
 
@@ -59,19 +59,19 @@ namespace SIMCRS {
     // If the count result is dropping to zero, the resource pointed to
     // by the shared_ptr<> will be freed.
     
-    // Reset the stdair shared pointer
+    // Reset the StdAir shared pointer
     _stdairService.reset();
 
-    // Reset the simfqt shared pointer
+    // Reset the SimFQT shared pointer
     _simfqtService.reset();
     
-     // Reset the airsched shared pointer
-    _airschedService.reset();
+     // Reset the AirTSP shared pointer
+    _airtspService.reset();
 
-    // Reset the airinv shared pointer 
+    // Reset the AirInv shared pointer 
     _airinvService.reset();
 
-    // Reset the sevmgr shared pointer
+    // Reset the SEvMgr shared pointer
     _sevmgrService.reset();
   }
 
