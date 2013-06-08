@@ -61,7 +61,7 @@ export LIBSUFFIX_4_CMAKE="-DLIB_SUFFIX=64"
 Then, as usual:
 * To configure the project, type something like:
   mkdir build && cd build
-  cmake -DCMAKE_INSTALL_PREFIX=${INSTALL_BASEDIR}/simcrs-1.00.0 \
+  cmake -DCMAKE_INSTALL_PREFIX=${INSTALL_BASEDIR}/simcrs-1.01.0 \
    -DWITH_STDAIR_PREFIX=${INSTALL_BASEDIR}/stdair-stable \
    -DWITH_AIRRAC_PREFIX=${INSTALL_BASEDIR}/airtsp-stable \
    -DWITH_SEVMGR_PREFIX=${INSTALL_BASEDIR}/sevmgr-stable \
@@ -78,16 +78,16 @@ Then, as usual:
 * To install the library (libsimcrs*.so*) and the binary (simcrs), just type:
   make install
   cd ${INSTALL_BASEDIR}
-  rm -f simcrs-stable && ln -s simcrs-1.00.0 simcrs-stable
+  rm -f simcrs-stable && ln -s simcrs-1.01.0 simcrs-stable
   cd -
 * To package the source files, type:
   make dist
 * To package the binary and the (HTML and PDF) documentation:
   make package
 * To browse the (just installed, if enabled) HTML documentation:
-  midori file://${INSTALL_BASEDIR}/simcrs-stable/share/doc/simcrs-1.00.0/html/index.html
+  midori file://${INSTALL_BASEDIR}/simcrs-stable/share/doc/simcrs-1.01.0/html/index.html
 * To browse the (just installed, if enabled) PDF documentation:
-  evince ${INSTALL_BASEDIR}/simcrs-stable/share/doc/simcrs-1.00.0/html/refman.pdf
+  evince ${INSTALL_BASEDIR}/simcrs-stable/share/doc/simcrs-1.01.0/html/refman.pdf
 * To run the local binary version:
   ./simcrs/simcrs -b
 * To run the installed version:
