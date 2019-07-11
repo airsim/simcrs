@@ -17,22 +17,26 @@ stand-alone mode.
 
 Getting and installing from the Fedora/CentOS/RedHat distribution:
 ------------------------------------------------------------------
-Just use Yum:
-yum -y install simcrs-devel simcrs-doc
+Just use DNF:
+```bash
+dnf -y install simcrs-devel simcrs-doc
+```
 
 You can also get the RPM packages (which may work on Linux
 distributions like Novel Suse and Mandriva) from the Fedora repository
-(e.g., for Fedora 22, 
-http://fr2.rpmfind.net/linux/fedora/releases/22/Everything/)
+(_e.g._, for Fedora 30, 
+http://fr2.rpmfind.net/linux/fedora/releases/30/Everything/)
 
 
 Building the library and test binary from Git repository:
 ----------------------------------------------------------------
 The Git repository may be cloned as following:
+```bash
 $ git clone git@github.com:airsim/simcrs.git simcrsgit # through SSH
 $ git clone https://github.com/airsim/simcrs.git # if the firewall filters SSH
 cd simcrsgit
 git checkout trunk
+```
 
 Then, you need the following packages (Fedora/RedHat/CentOS names here, 
 but names may vary according to distributions):
@@ -58,18 +62,22 @@ but names may vary according to distributions):
 
 Building the library and test binary from the tarball:
 ------------------------------------------------------
-The latest stable source tarball (simcrs*.tar.gz or .bz2) can be found here:
-https://sourceforge.net/projects/simcrs/files/
+The latest stable source tarball (`simcrs*.tar.gz` or `.bz2`)
+can be found here:
+https://github.com/airsim/simcrs/releases
 
 To customise the following to your environment, you can alter the path
 to the installation directory:
+```bash
 export INSTALL_BASEDIR=/home/user/dev/deliveries
 export CRS_VER=1.01.2
 if [ -d /usr/lib64 ]; then LIBSUFFIX=64; fi
 export LIBSUFFIX_4_CMAKE="-DLIB_SUFFIX=$LIBSUFFIX"
+```
 
 Then, as usual:
 * To configure the project, type something like:
+```bash
   mkdir build && cd build
   cmake -DCMAKE_INSTALL_PREFIX=${INSTALL_BASEDIR}/simcrs-$CRS_VER \
    -DWITH_STDAIR_PREFIX=${INSTALL_BASEDIR}/stdair-stable \
@@ -81,27 +89,46 @@ Then, as usual:
    -DWITH_RMOL_PREFIX=${INSTALL_BASEDIR}/simfqt-stable \
    -DCMAKE_BUILD_TYPE:STRING=Debug -DENABLE_TEST:BOOL=ON -DINSTALL_DOC:BOOL=ON \
    -DRUN_GCOV:BOOL=OFF ${LIBSUFFIX_4_CMAKE} ..
+```
 * To build the project, type:
+```bash
   make
+```
 * To test the project, type:
+```bash
   make check
-* To install the library (libsimcrs*.so*) and the binary (simcrs), just type:
+```
+* To install the library (`libsimcrs*.so*`) and the binary (`simcrs`), just type:
+```bash
   make install
   cd ${INSTALL_BASEDIR}
   rm -f simcrs-stable && ln -s simcrs-$CRS_VER simcrs-stable
   cd -
+```
 * To package the source files, type:
+```bash
   make dist
+```
 * To package the binary and the (HTML and PDF) documentation:
+```bash
   make package
+```
 * To browse the (just installed, if enabled) HTML documentation:
+```bash
   midori file://${INSTALL_BASEDIR}/simcrs-$CRS_VER/share/doc/simcrs/html/index.html
+```
 * To browse the (just installed, if enabled) PDF documentation:
+```bash
   evince ${INSTALL_BASEDIR}/simcrs-$CRS_VER/share/doc/simcrs/html/refman.pdf
+```
 * To run the local binary version:
+```bash
   ./simcrs/simcrs -b
+```
 * To run the installed version:
+```bash
   ${INSTALL_BASEDIR}/simcrs-$CRS_VER/bin/simcrs -b
+```
 
 Denis Arnaud (June 2015)
 
