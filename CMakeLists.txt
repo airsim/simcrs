@@ -7,6 +7,7 @@ include (config/project_config_embeddable.cmake)
 
 ##
 # Project info
+project (simcrs)
 set_project_names (simcrs SimCRS)
 set_project_brief ("C++ Simulated Travel-Oriented Distribution System Library")
 set_project_versions (1 01 3)
