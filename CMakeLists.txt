@@ -10,7 +10,7 @@ include (config/project_config_embeddable.cmake)
 project (simcrs)
 set_project_names (simcrs SimCRS)
 set_project_brief ("C++ Simulated Travel-Oriented Distribution System Library")
-set_project_versions (1 01 4)
+set_project_versions (1 01 5)
 
 ##
 # Project options
@@ -26,7 +26,11 @@ set_project_options (on on off)
 #####################################
 #
 packaging_init (${PROJECT_NAME})
-packaging_set_summary ("${PROJECT_NAME} aims at providing a clean API and a simple implementation, as a C++ library, of a Travel-oriented Distribution System. It corresponds to the simulated version of the real-world Computerized Reservation Systems (CRS).
+packaging_set_summary ("${PROJECT_NAME} aims at providing a clean API
+and a simple implementation, as a C++ library, of a Travel-oriented
+Distribution System. It corresponds to the simulated version of
+the real-world Computerized Reservation Systems (CRS).
+
 ${PROJECT_NAME} makes an extensive use of existing open-source libraries for
 increased functionality, speed and accuracy. In particular the Boost
 (C++ Standard Extensions: http://www.boost.org) library is used.")
@@ -42,7 +46,7 @@ packaging_set_other_options (TBZ2 "TBZ2;TGZ")
 ########################################
 #
 get_external_libs (git "boost 1.41" "mysql 5.0" "soci 3.0"
-	"zeromq 2.0" readline curses "doxygen 1.4" "gcov 4.6.3" "lcov 1.9"
+	readline curses "doxygen 1.4" "gcov 4.6.3" "lcov 1.9"
 	"stdair 1.00.0" "airtsp 1.01.0" "airrac 1.00.0" "rmol 1.00.0"
 	"sevmgr 1.00.0" "airinv 1.00.0" "simfqt 1.00.0")
 

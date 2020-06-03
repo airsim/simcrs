@@ -1,3 +1,6 @@
+* Wed Jun 03 2020 Denis Arnaud <denis.arnaud_fedora at m4x.org> - 1.01.5
+- Removed dependency on ZeroMQ
+
 * Sat May 30 2020 Denis Arnaud <denis.arnaud_fedora at m4x.org> - 1.01.4
 - Removed dependency on Python
 
