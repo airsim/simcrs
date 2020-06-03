@@ -299,13 +299,11 @@ BOOST_AUTO_TEST_CASE (simcrs_simple_simulation_test) {
   std::ostringstream oMessageSell;
   const std::string isSellSuccessfulStr = (isSellSuccessful == true)?"Yes":"No";
   oMessageSell << "Was the sell successful? Answer: " << isSellSuccessfulStr;
-  STDAIR_LOG_DEBUG (oMessageSell.str());
+  std::cout << oMessageSell.str() << std::endl;
 
   BOOST_CHECK_EQUAL (isSellSuccessful, true);
 
   BOOST_CHECK_MESSAGE (isSellSuccessful == true, oMessageSell.str());
-
- 
 }
 
 
@@ -338,13 +336,11 @@ BOOST_AUTO_TEST_CASE (simcrs_simple_default_bom_simulation_test) {
   std::ostringstream oMessageSell;
   const std::string isSellSuccessfulStr = (isSellSuccessful == true)?"Yes":"No";
   oMessageSell << "Was the sell successful? Answer: " << isSellSuccessfulStr;
-  STDAIR_LOG_DEBUG (oMessageSell.str());
+  std::cout << oMessageSell.str() << std::endl;
 
   BOOST_CHECK_EQUAL (isSellSuccessful, true);
 
   BOOST_CHECK_MESSAGE (isSellSuccessful == true, oMessageSell.str());
-
- 
 }
 
 // End the test suite
