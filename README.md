@@ -25,8 +25,8 @@ $ dnf -y install simcrs-devel simcrs-doc
 
 You can also get the RPM packages (which may work on Linux
 distributions like Novel Suse and Mandriva) from the Fedora repository
-(_e.g._, for Fedora 32, 
-https://fr2.rpmfind.net/linux/RPM/fedora/32/x86_64/)
+(_e.g._, for Fedora 38,
+https://fr2.rpmfind.net/linux/RPM/fedora/38/x86_64/)
 
 
 ## Building the library and test binary from Git repository
@@ -68,7 +68,7 @@ To customise the following to your environment, you can alter the path
 to the installation directory:
 ```bash
 export INSTALL_BASEDIR=${HOME}/dev/deliveries"
-export CRS_VER="1.01.7"
+export CRS_VER="1.01.8"
 if [ -d /usr/lib64 ]; then LIBSUFFIX="64"; fi
 export LIBSUFFIX_4_CMAKE="-DLIB_SUFFIX=$LIBSUFFIX"
 ```
