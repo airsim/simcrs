@@ -1,3 +1,5 @@
+@PACKAGE_INIT@
+
 #
 # Config file for the SimCRS package. It defines the following variables:
 #  SIMCRS_VERSION      - version of SimCRS
@@ -9,13 +11,13 @@
 
 # Tell the user project where to find SimCRS headers and libraries
 set (SIMCRS_VERSION "@PACKAGE_VERSION@")
-set (SIMCRS_BINARY_DIRS "@SIMCRS_BIN_DIR@")
-set (SIMCRS_INCLUDE_DIRS "@SIMCRS_INCLUDE_DIRS@")
-set (SIMCRS_LIBRARY_DIRS "@SIMCRS_LIB_DIR@")
+set (SIMCRS_BINARY_DIRS "@PACKAGE_SIMCRS_BIN_DIR@")
+set (SIMCRS_INCLUDE_DIRS "@PACKAGE_SIMCRS_INCLUDE_DIRS@")
+set (SIMCRS_LIBRARY_DIRS "@PACKAGE_SIMCRS_LIB_DIR@")
 
 # Library dependencies for SimCRS (contains definitions for the SimCRS IMPORTED
 # targets)
-include ("@SIMCRS_CMAKE_DIR@/simcrs-library-depends.cmake")
+include ("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@-library-depends.cmake")
 
 # These are the SimCRS IMPORTED targets, created by simcrs-library-depends.cmake
 set (SIMCRS_LIBRARIES simcrslib)
