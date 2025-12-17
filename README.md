@@ -68,7 +68,7 @@ To customise the following to your environment, you can alter the path
 to the installation directory:
 ```bash
 export INSTALL_BASEDIR="${HOME}/dev/deliveries"
-export CRS_VER="1.01.11"
+export CRS_VER="1.01.12"
 ```
 
 Then, as usual:
